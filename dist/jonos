@@ -15,7 +15,7 @@ var Debug__default = /*#__PURE__*/_interopDefaultLegacy(Debug);
 var ms__default = /*#__PURE__*/_interopDefaultLegacy(ms);
 var promiseGoodies__default = /*#__PURE__*/_interopDefaultLegacy(promiseGoodies);
 
-var version = "0.0.1";
+var version = "1.0.0";
 
 const debug$2 = Debug__default['default']('jonos:player');
 class Player {
@@ -162,7 +162,6 @@ async function notify (
     p.sonos.playNotification({ uri, volume }),
     timeoutAndExit(timeout)
   ]);
-  debug('Message played');
 }
 async function timeoutAndExit (timeout) {
   await Promise.delay(ms__default['default'](timeout + ''));
@@ -180,7 +179,7 @@ prog
   .describe('Plays a notification message')
   .option('--player', 'the player to use', 'bedroom')
   .option('--volume', 'the volume to play at', 50)
-  .option('--timeout', 'finish after this', '7s')
+  .option('--timeout', 'finish after this', '9s')
   .action(wrap(notify));
 prog.parse(process.argv);
 function wrap (fn) {
