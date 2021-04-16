@@ -89,11 +89,13 @@ class PlayerGroup {
   static async fromSonos (sonosGroup) {
     const group = new PlayerGroup();
     const address = sonosGroup.host;
-    for (const member of sonosGroup.ZoneGroupMember) {
-      const url$1 = new url.URL(member.Location);
-      const player = await Player.fromSonos(new sonos.Sonos(url$1.hostname));
-      group._add(player, { asController: player.address === address });
-    }
+    await Promise.all(
+      sonosGroup.ZoneGroupMember.map(async member => {
+        const url$1 = new url.URL(member.Location);
+        const player = await Player.fromSonos(new sonos.Sonos(url$1.hostname));
+        group._add(player, { asController: player.address === address });
+      })
+    );
     debug$2('Group of size %d discovered', group.members.size);
     return group
   }
