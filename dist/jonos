@@ -15,7 +15,7 @@ var Debug__default = /*#__PURE__*/_interopDefaultLegacy(Debug);
 var ms__default = /*#__PURE__*/_interopDefaultLegacy(ms);
 var promiseGoodies__default = /*#__PURE__*/_interopDefaultLegacy(promiseGoodies);
 
-var version = "1.0.0";
+var version = "1.0.1";
 
 const debug$2 = Debug__default['default']('jonos:player');
 class Player {
