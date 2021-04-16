@@ -88,11 +88,13 @@ class PlayerGroup {
     const group = new PlayerGroup()
     const address = sonosGroup.host
 
-    for (const member of sonosGroup.ZoneGroupMember) {
-      const url = new URL(member.Location)
-      const player = await Player.fromSonos(new Sonos(url.hostname))
-      group._add(player, { asController: player.address === address })
-    }
+    await Promise.all(
+      sonosGroup.ZoneGroupMember.map(async member => {
+        const url = new URL(member.Location)
+        const player = await Player.fromSonos(new Sonos(url.hostname))
+        group._add(player, { asController: player.address === address })
+      })
+    )
 
     debug('Group of size %d discovered', group.members.size)
     return group
