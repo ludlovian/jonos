@@ -21,16 +21,31 @@ export default async function notify (
   if (!uri) throw new Error(`Unknown message: ${message}`)
 
   await Player.discover()
-  const p = Player.get(playerName)
+  const controller = Player.get(playerName).group.controller
+  const players = Array.from(controller.group.members)
+
+  const oldVolumes = await Promise.all(players.map(p => p.sonos.getVolume()))
+  const isPlaying = (await controller.sonos.getCurrentState()) === 'playing'
+
   debug('Playing message: %s', message)
+  // pause the current playing if needed
+  if (isPlaying) await controller.sonos.pause()
 
+  // set the volumes manually
+  await Promise.all(players.map(p => p.sonos.setVolume(volume)))
+
+  // play the notification
   await Promise.race([
-    p.sonos.playNotification({ uri, volume }),
-    timeoutAndExit(timeout)
+    controller.sonos.playNotification({ uri }),
+    Promise.delay(ms(timeout + ''))
   ])
-}
 
-async function timeoutAndExit (timeout) {
-  await Promise.delay(ms(timeout + ''))
-  setImmediate(() => process.exit(0))
+  // now reset the volumes
+  await Promise.all(players.map((p, i) => p.sonos.setVolume(oldVolumes[i])))
+
+  // and restart the music if necessary
+  if (isPlaying) await controller.sonos.play()
+
+  // all done, so schedule an exit
+  setTimeout(() => process.exit(0), 500)
 }
