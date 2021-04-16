@@ -1,0 +1,194 @@
+#!/usr/bin/env node
+'use strict';
+
+var sade = require('sade');
+var Debug = require('debug');
+var url = require('url');
+var sonos = require('sonos');
+var ms = require('ms');
+var promiseGoodies = require('promise-goodies');
+
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+var sade__default = /*#__PURE__*/_interopDefaultLegacy(sade);
+var Debug__default = /*#__PURE__*/_interopDefaultLegacy(Debug);
+var ms__default = /*#__PURE__*/_interopDefaultLegacy(ms);
+var promiseGoodies__default = /*#__PURE__*/_interopDefaultLegacy(promiseGoodies);
+
+var version = "0.0.1";
+
+const debug$2 = Debug__default['default']('jonos:player');
+class Player {
+  constructor (sonosPlayer) {
+    Object.defineProperty(this, 'sonos', {
+      configurable: true,
+      value: sonosPlayer
+    });
+  }
+  async _load () {
+    const desc = await this.sonos.deviceDescription();
+    Object.assign(this, {
+      address: this.sonos.host,
+      name: desc.roomName,
+      model: desc.displayName
+    });
+  }
+  static async getAny () {
+    const discovery = new sonos.AsyncDeviceDiscovery();
+    return Player.fromSonos(await discovery.discover())
+  }
+  static async fromSonos (sonosPlayer) {
+    const p = new Player(sonosPlayer);
+    await p._load();
+    return p
+  }
+  static async discover () {
+    const any = await Player.getAny();
+    const sonosGroups = await any.sonos.getAllGroups();
+    Player.groups.clear();
+    await Promise.all(sonosGroups.map(PlayerGroup.fromSonos));
+    debug$2('%d group(s) discovered', Player.groups.size);
+    return Player.groups
+  }
+  static get (name) {
+    for (const p of Player.all({ includeBoost: true })) {
+      if (p.name === name || p.nickname === name || p.address === name) {
+        return p
+      }
+    }
+    throw new Error(`No such player: ${name}`)
+  }
+  get nickname () {
+    return this.name.replace(/ /g, '').toLowerCase()
+  }
+  isController () {
+    return this === this.group.controller
+  }
+  isPlayer () {
+    return this.model.toLowerCase() !== 'boost'
+  }
+  inGroupWith (other) {
+    return this.group === other.group
+  }
+}
+Player.groups = new Set();
+Player.all = function * all ({ includeBoost } = {}) {
+  for (const group of Player.groups) {
+    for (const player of group.members) {
+      if (includeBoost || player.isPlayer()) {
+        yield player;
+      }
+    }
+  }
+};
+class PlayerGroup {
+  constructor () {
+    this.members = new Set();
+    Player.groups.add(this);
+  }
+  static async fromSonos (sonosGroup) {
+    const group = new PlayerGroup();
+    const address = sonosGroup.host;
+    for (const member of sonosGroup.ZoneGroupMember) {
+      const url$1 = new url.URL(member.Location);
+      const player = await Player.fromSonos(new sonos.Sonos(url$1.hostname));
+      group._add(player, { asController: player.address === address });
+    }
+    debug$2('Group of size %d discovered', group.members.size);
+    return group
+  }
+  get controller () {
+    return this.members.values().next().value
+  }
+  set controller (player) {
+    this.members = new Set([player, ...this.members]);
+  }
+  _add (player, { asController } = {}) {
+    if (player.group) player.group._remove(player);
+    player.group = this;
+    this.members.add(player);
+    if (asController) this.controller = player;
+  }
+}
+
+const debug$1 = Debug__default['default']('jonos:cmd:join');
+const PLAYERS = [
+  { name: 'bedroom', volume: 25 },
+  { name: 'parlour', volume: 25 },
+  { name: 'bookroom', volume: 25 },
+  { name: 'kitchen', volume: 25 },
+  { name: 'office', volume: 12 },
+  { name: 'diningroom', volume: 12 }
+];
+async function join () {
+  await Player.discover();
+  const bedroom = Player.get('bedroom');
+  if ((await bedroom.sonos.getCurrentState()) !== 'playing') {
+    debug$1('Bedroom not playing. Quitting');
+    return
+  }
+  let dirty;
+  for (const { name, volume } of PLAYERS) {
+    const p = Player.get(name);
+    await p.sonos.setVolume(volume);
+    debug$1('%s volume set', name);
+    if (!p.inGroupWith(bedroom)) {
+      await p.sonos.joinGroup(bedroom.name);
+      dirty = true;
+      debug$1('%s added to group', name);
+    }
+  }
+  if (dirty) {
+    await Player.discover();
+  }
+}
+
+const debug = Debug__default['default']('jonos:cmd:notify');
+const NOTIFY_URLS = {
+  downstairs:
+    'https://media-readersludlow.s3-eu-west-1.amazonaws.com/public/come-downstairs.mp3'
+};
+async function notify (
+  message,
+  { player: playerName, volume, timeout }
+) {
+  promiseGoodies__default['default']();
+  const uri = NOTIFY_URLS[message];
+  if (!uri) throw new Error(`Unknown message: ${message}`)
+  await Player.discover();
+  const p = Player.get(playerName);
+  debug('Playing message: %s', message);
+  await Promise.race([
+    p.sonos.playNotification({ uri, volume }),
+    timeoutAndExit(timeout)
+  ]);
+  debug('Message played');
+}
+async function timeoutAndExit (timeout) {
+  await Promise.delay(ms__default['default'](timeout + ''));
+  setImmediate(() => process.exit(0));
+}
+
+const prog = sade__default['default']('jonos');
+prog.version(version);
+prog
+  .command('join')
+  .describe('Join everything with the right volumes')
+  .action(wrap(join));
+prog
+  .command('notify <message>')
+  .describe('Plays a notification message')
+  .option('--player', 'the player to use', 'bedroom')
+  .option('--volume', 'the volume to play at', 50)
+  .option('--timeout', 'finish after this', '7s')
+  .action(wrap(notify));
+prog.parse(process.argv);
+function wrap (fn) {
+  return (...args) =>
+    Promise.resolve()
+      .then(() => fn(...args))
+      .catch(err => {
+        console.log(err);
+        process.exit(1);
+      })
+}

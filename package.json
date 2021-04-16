@@ -1,0 +1,29 @@
+{
+  "name": "jonos",
+  "version": "0.0.1",
+  "description": "CLI control of my sonos installation",
+  "main": "dist/jonos.js",
+  "scripts": {
+    "clean": "rm -rf dist/ node_modules/.cache/",
+    "format": "prettier-standard src/*.js",
+    "lint": "standard src/*.js|snazzy",
+    "build": "rollup -c rollup.config.js",
+    "postbuild": "chmod +x dist/jonos",
+    "version": "npm run build && git add dist/jonos"
+  },
+  "author": "",
+  "license": "Unlicense",
+  "dependencies": {
+    "debug": "^4.3.1",
+    "ms": "^2.1.3",
+    "promise-goodies": "github:ludlovian/promise-goodies",
+    "sade": "^1.7.4",
+    "sonos": "^1.14.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^18.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "esm": "^3.2.25",
+    "rollup-plugin-cleanup": "^3.2.1"
+  }
+}
