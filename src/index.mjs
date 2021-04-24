@@ -1,8 +1,9 @@
 import sade from 'sade'
-import { version } from '../package.json'
 
-import join from './join'
-import notify from './notify'
+import join from './join.mjs'
+import notify from './notify.mjs'
+
+const version = '__VERSION__'
 
 const prog = sade('jonos')
 

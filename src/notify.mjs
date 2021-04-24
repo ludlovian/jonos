@@ -1,8 +1,7 @@
 import Debug from 'debug'
 import ms from 'ms'
-import promiseGoodies from 'promise-goodies'
 
-import Player from './player'
+import Player from './player.mjs'
 
 const debug = Debug('jonos:cmd:notify')
 
@@ -15,7 +14,6 @@ export default async function notify (
   message,
   { player: playerName, volume, timeout }
 ) {
-  promiseGoodies()
 
   const uri = NOTIFY_URLS[message]
   if (!uri) throw new Error(`Unknown message: ${message}`)
@@ -37,7 +35,7 @@ export default async function notify (
   // play the notification
   await Promise.race([
     controller.sonos.playNotification({ uri }),
-    Promise.delay(ms(timeout + ''))
+    delay(ms(timeout + ''))
   ])
 
   // now reset the volumes
@@ -47,5 +45,7 @@ export default async function notify (
   if (isPlaying) await controller.sonos.play()
 
   // all done, so schedule an exit
-  setTimeout(() => process.exit(0), 500)
+  delay(500).then(() => process.exit(0))
 }
+
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms))

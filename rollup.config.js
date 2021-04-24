@@ -1,22 +1,24 @@
-import cleanup from 'rollup-plugin-cleanup'
-import commonjs from '@rollup/plugin-commonjs'
-import json from '@rollup/plugin-json'
+import resolve from '@rollup/plugin-node-resolve'
+import replace from '@rollup/plugin-replace'
 
 export default {
-  input: 'src/index.js',
-  external: [
-    'sade',
-    'sonos',
-    'url',
-    'debug',
-    'promise-goodies',
-    'ms'
+  input: 'src/index.mjs',
+  external: ['sade', 'sonos', 'debug', 'ms'],
+  plugins: [
+    resolve({
+      preferBuiltins: true
+    }),
+    replace({
+      preventAssignment: true,
+      values: {
+        __VERSION__: process.env.npm_package_version
+      }
+    })
   ],
-  plugins: [json(), commonjs(), cleanup()],
   output: [
     {
-      file: 'dist/jonos',
-      format: 'cjs',
+      file: 'dist/jonos.mjs',
+      format: 'esm',
       sourcemap: false,
       banner: '#!/usr/bin/env node'
     }

@@ -1,7 +1,7 @@
 'use strict'
 
 import Debug from 'debug'
-import Player from './player'
+import Player from './player.mjs'
 
 const debug = Debug('jonos:cmd:join')
 
