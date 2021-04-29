@@ -1,6 +1,6 @@
 {
   "name": "jonos",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "CLI control of my sonos installation",
   "scripts": {
     "clean": "rm -rf dist/ node_modules/.cache/",

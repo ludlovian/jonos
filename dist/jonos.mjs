@@ -290,7 +290,7 @@ async function notify (
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-const version = '1.1.0';
+const version = '1.1.1';
 
 const prog = sade('jonos');
 
