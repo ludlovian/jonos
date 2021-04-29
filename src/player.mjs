@@ -1,8 +1,11 @@
 import { URL } from 'url'
 import { Sonos, AsyncDeviceDiscovery } from 'sonos'
-import Debug from 'debug'
+import log from 'logjs'
 
-const debug = Debug('jonos:player')
+const debug = log
+  .prefix('playeri:')
+  .level(2)
+  .colour()
 
 export default class Player {
   constructor (sonosPlayer) {

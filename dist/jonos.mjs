@@ -1,11 +1,91 @@
 #!/usr/bin/env node
 import sade from 'sade';
-import Debug from 'debug';
+import { format } from 'util';
+import { red, green, yellow, blue, magenta, cyan, grey } from 'kleur/colors';
 import { URL } from 'url';
 import { AsyncDeviceDiscovery, Sonos } from 'sonos';
-import ms from 'ms';
+import { parse } from '@lukeed/ms';
 
-const debug$2 = Debug('jonos:player');
+const colourFuncs = { red, green, yellow, blue, magenta, cyan, grey };
+const colours = Object.keys(colourFuncs);
+const CLEAR_LINE = '\r\x1b[0K';
+const RE_DECOLOR = /(^|[^\x1b]*)((?:\x1b\[\d*m)|$)/g; // eslint-disable-line no-control-regex
+
+const state = {
+  dirty: false,
+  width: process.stdout && process.stdout.columns,
+  level: process.env.LOGLEVEL,
+  write: process.stdout.write.bind(process.stdout)
+};
+
+process.stdout &&
+  process.stdout.on('resize', () => (state.width = process.stdout.columns));
+
+function _log (
+  args,
+  { newline = true, limitWidth, prefix = '', level, colour }
+) {
+  if (level && (!state.level || state.level < level)) return
+  const msg = format(...args);
+  let string = prefix + msg;
+  if (colour && colour in colourFuncs) string = colourFuncs[colour](string);
+  if (limitWidth) string = truncate(string, state.width);
+  if (newline) string = string + '\n';
+  if (state.dirty) string = CLEAR_LINE + string;
+  state.dirty = !newline && !!msg;
+  state.write(string);
+}
+
+function truncate (string, max) {
+  max -= 2; // leave two chars at end
+  if (string.length <= max) return string
+  const parts = [];
+  let w = 0
+  ;[...string.matchAll(RE_DECOLOR)].forEach(([, txt, clr]) => {
+    parts.push(txt.slice(0, max - w), clr);
+    w = Math.min(w + txt.length, max);
+  });
+  return parts.join('')
+}
+
+function merge (old, new_) {
+  const prefix = (old.prefix || '') + (new_.prefix || '');
+  return { ...old, ...new_, prefix }
+}
+
+function logger (options) {
+  return Object.defineProperties((...args) => _log(args, options), {
+    _preset: { value: options, configurable: true },
+    _state: { value: state, configurable: true },
+    name: { value: 'log', configurable: true }
+  })
+}
+
+function nextColour () {
+  const clr = colours.shift();
+  colours.push(clr);
+  return clr
+}
+
+function fixup (log) {
+  const p = log._preset;
+  Object.assign(log, {
+    status: logger(merge(p, { newline: false, limitWidth: true })),
+    level: level => fixup(logger(merge(p, { level }))),
+    colour: colour =>
+      fixup(logger(merge(p, { colour: colour || nextColour() }))),
+    prefix: prefix => fixup(logger(merge(p, { prefix }))),
+    ...colourFuncs
+  });
+  return log
+}
+
+const log = fixup(logger({}));
+
+const debug$2 = log
+  .prefix('playeri:')
+  .level(2)
+  .colour();
 
 class Player {
   constructor (sonosPlayer) {
@@ -120,7 +200,10 @@ class PlayerGroup {
   }
 }
 
-const debug$1 = Debug('jonos:cmd:join');
+const debug$1 = log
+  .prefix('join:')
+  .level(1)
+  .colour();
 
 const PLAYERS = [
   { name: 'bedroom', volume: 25 },
@@ -158,7 +241,10 @@ async function join () {
   }
 }
 
-const debug = Debug('jonos:cmd:notify');
+const debug = log
+  .prefix('notify')
+  .level(1)
+  .colour();
 
 const NOTIFY_URLS = {
   downstairs:
@@ -169,7 +255,6 @@ async function notify (
   message,
   { player: playerName, volume, timeout }
 ) {
-
   const uri = NOTIFY_URLS[message];
   if (!uri) throw new Error(`Unknown message: ${message}`)
 
@@ -190,7 +275,7 @@ async function notify (
   // play the notification
   await Promise.race([
     controller.sonos.playNotification({ uri }),
-    delay(ms(timeout + ''))
+    delay(parse(timeout))
   ]);
 
   // now reset the volumes

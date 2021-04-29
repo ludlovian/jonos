@@ -1,9 +1,12 @@
-import Debug from 'debug'
-import ms from 'ms'
+import log from 'logjs'
+import { parse } from '@lukeed/ms'
 
 import Player from './player.mjs'
 
-const debug = Debug('jonos:cmd:notify')
+const debug = log
+  .prefix('notify')
+  .level(1)
+  .colour()
 
 const NOTIFY_URLS = {
   downstairs:
@@ -14,7 +17,6 @@ export default async function notify (
   message,
   { player: playerName, volume, timeout }
 ) {
-
   const uri = NOTIFY_URLS[message]
   if (!uri) throw new Error(`Unknown message: ${message}`)
 
@@ -35,7 +37,7 @@ export default async function notify (
   // play the notification
   await Promise.race([
     controller.sonos.playNotification({ uri }),
-    delay(ms(timeout + ''))
+    delay(parse(timeout))
   ])
 
   // now reset the volumes

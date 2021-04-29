@@ -1,9 +1,11 @@
-'use strict'
+import log from 'logjs'
 
-import Debug from 'debug'
 import Player from './player.mjs'
 
-const debug = Debug('jonos:cmd:join')
+const debug = log
+  .prefix('join:')
+  .level(1)
+  .colour()
 
 const PLAYERS = [
   { name: 'bedroom', volume: 25 },

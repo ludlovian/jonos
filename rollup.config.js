@@ -3,7 +3,7 @@ import replace from '@rollup/plugin-replace'
 
 export default {
   input: 'src/index.mjs',
-  external: ['sade', 'sonos', 'debug', 'ms'],
+  external: ['sade', 'sonos', 'kleur/colors', '@lukeed/ms'],
   plugins: [
     resolve({
       preferBuiltins: true
