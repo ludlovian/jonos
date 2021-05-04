@@ -3,7 +3,7 @@ import { Sonos, AsyncDeviceDiscovery } from 'sonos'
 import log from 'logjs'
 
 const debug = log
-  .prefix('playeri:')
+  .prefix('player:')
   .level(2)
   .colour()
 
