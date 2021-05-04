@@ -83,7 +83,7 @@ function fixup (log) {
 const log = fixup(logger({}));
 
 const debug$2 = log
-  .prefix('playeri:')
+  .prefix('player:')
   .level(2)
   .colour();
 
@@ -290,7 +290,7 @@ async function notify (
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-const version = '1.1.1';
+const version = '1.1.2';
 
 const prog = sade('jonos');
 
