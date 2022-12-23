@@ -1,0 +1,9 @@
+[Unit]
+Description=Jonos server
+After=network.target
+
+[Service]
+User=alan
+WorkingDirectory=/home/alan/dev/jonos
+Environment=NODE_ENV=production
+ExecStart=/usr/local/bin/npm start

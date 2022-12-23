@@ -1,53 +1,70 @@
 import log from 'logjs'
+import timeout from 'pixutil/timeout'
 import { parse } from '@lukeed/ms'
 
 import Player from './player.mjs'
+import { notifyMessages } from './config.mjs'
 
 const debug = log
-  .prefix('notify')
+  .prefix('notify:')
   .level(1)
   .colour()
 
-const NOTIFY_URLS = {
-  downstairs:
-    'https://media-readersludlow.s3-eu-west-1.amazonaws.com/public/come-downstairs.mp3'
-}
+export default async function notify ({
+  message: messageName,
+  player: playerName,
+  volume,
+  timeout: timeoutDelay,
+  resume
+}) {
+  const message = notifyMessages[messageName]
+  if (!message) throw new Error(`Unknown message ${messageName}`)
 
-export default async function notify (
-  message,
-  { player: playerName, volume, timeout }
-) {
-  const uri = NOTIFY_URLS[message]
-  if (!uri) throw new Error(`Unknown message: ${message}`)
+  const allPlayers = await Player.discover()
+  const player = allPlayers.find(p => p.nickname === playerName)
+  if (!player) throw new Error(`Unknown player: ${playerName}`)
 
-  await Player.discover()
-  const controller = Player.get(playerName).group.controller
-  const players = Array.from(controller.group.members)
+  const controller = player.group.controller
+  const players = [...controller.group.members]
 
+  debug('getting old volumes')
   const oldVolumes = await Promise.all(players.map(p => p.sonos.getVolume()))
   const isPlaying = (await controller.sonos.getCurrentState()) === 'playing'
 
-  debug('Playing message: %s', message)
   // pause the current playing if needed
-  if (isPlaying) await controller.sonos.pause()
+  if (isPlaying) {
+    debug('stopping music')
+    await controller.sonos.pause()
+  }
 
   // set the volumes manually
+  debug('Setting volumes to %d', volume)
   await Promise.all(players.map(p => p.sonos.setVolume(volume)))
 
   // play the notification
-  await Promise.race([
-    controller.sonos.playNotification({ uri }),
-    delay(parse(timeout))
-  ])
+  debug('Playing message: %s', messageName)
+  const pNotify = timeout(
+    controller.sonos.playNotification({ uri: message.uri }),
+    parse(timeoutDelay)
+  )
+
+  try {
+    await pNotify
+  } catch (e) {
+    if (e instanceof timeout.TimedOut) {
+      console.error('Timed out playing %s', messageName)
+    } else {
+      throw e
+    }
+  }
 
   // now reset the volumes
+  debug('resetting volumes to %s', oldVolumes)
   await Promise.all(players.map((p, i) => p.sonos.setVolume(oldVolumes[i])))
 
   // and restart the music if necessary
-  if (isPlaying) await controller.sonos.play()
-
-  // all done, so schedule an exit
-  delay(500).then(() => process.exit(0))
+  if (isPlaying && resume) {
+    debug('restarting music')
+    await controller.sonos.play()
+  }
 }
-
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms))

@@ -3,23 +3,20 @@
   "version": "1.1.2",
   "description": "CLI control of my sonos installation",
   "scripts": {
-    "clean": "rm -rf dist/ node_modules/.cache/",
     "format": "prettier-standard src/*.mjs",
     "lint": "standard src/*.mjs|snazzy",
-    "build": "rollup -c rollup.config.js",
-    "postbuild": "chmod +x dist/jonos.mjs",
-    "version": "npm run build && git add dist/jonos.mjs"
+    "start": "node src/index.mjs server"
   },
   "author": "",
   "license": "Unlicense",
   "dependencies": {
-    "@lukeed/ms": "^2.0.0",
+    "@lukeed/ms": "^2.0.1",
+    "@polka/send-type": "^0.5.2",
     "logjs": "github:ludlovian/logjs",
-    "sade": "^1.7.4",
-    "sonos": "^1.14.1"
-  },
-  "devDependencies": {
-    "@rollup/plugin-node-resolve": "^11.2.1",
-    "@rollup/plugin-replace": "^2.4.2"
+    "pixutil": "github:ludlovian/pixutil",
+    "polka": "^0.5.2",
+    "sade": "^1.8.1",
+    "sonos": "github:ludlovian/node-sonos",
+    "sortby": "github:ludlovian/sortby"
   }
 }
