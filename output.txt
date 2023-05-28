@@ -1,0 +1,407 @@
+{
+  "event": "CurrentTrack",
+  "args": [
+    {
+      "id": null,
+      "parentID": null,
+      "title": "Sinfonia in C Major: I. Allegro",
+      "artist": "Antonio Caldara, La Serenissima, Adrian Chandler",
+      "album": "The Italian Job",
+      "albumArtist": "Adrian Chandler",
+      "albumArtURI": "http://192.168.86.29:1400/getaa?u=x-file-cifs%3a%2f%2fdata2.local%2fdata%2fAdrian-Chandler%2fThe-Italian-Job%2ftrack01.flac&v=247",
+      "uri": "x-file-cifs://data2.local/data/Adrian-Chandler/The-Italian-Job/track01.flac",
+      "duration": 331,
+      "queuePosition": 1
+    }
+  ]
+}
+
+---
+
+{
+  "event": "PlayState",
+  "args": [
+    "stopped"
+  ]
+}
+
+---
+
+{
+  "event": "PlaybackStopped",
+  "args": []
+}
+
+---
+
+{
+  "event": "AVTransport",
+  "args": [
+    {
+      "TransportState": "STOPPED",
+      "CurrentPlayMode": "NORMAL",
+      "CurrentCrossfadeMode": "0",
+      "NumberOfTracks": "1",
+      "CurrentTrack": "1",
+      "CurrentSection": "0",
+      "CurrentTrackURI": "x-file-cifs://data2.local/data/Adrian-Chandler/The-Italian-Job/track01.flac",
+      "CurrentTrackDuration": "0:05:31",
+      "CurrentTrackMetaData": "<DIDL-Lite xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:upnp=\"urn:schemas-upnp-org:metadata-1-0/upnp/\" xmlns:r=\"urn:schemas-rinconnetworks-com:metadata-1-0/\" xmlns=\"urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/\"><item id=\"-1\" parentID=\"-1\" restricted=\"true\"><res protocolInfo=\"x-file-cifs:*:audio/flac:*\" duration=\"0:05:31\">x-file-cifs://data2.local/data/Adrian-Chandler/The-Italian-Job/track01.flac</res><r:streamContent></r:streamContent><r:radioShowMd></r:radioShowMd><r:streamInfo>bd:0,sr:0,c:0,l:0,d:0</r:streamInfo><upnp:albumArtURI>/getaa?u=x-file-cifs%3a%2f%2fdata2.local%2fdata%2fAdrian-Chandler%2fThe-Italian-Job%2ftrack01.flac&amp;v=247</upnp:albumArtURI><dc:title>Sinfonia in C Major: I. Allegro</dc:title><upnp:class>object.item.audioItem.musicTrack</upnp:class><dc:creator>Antonio Caldara, La Serenissima, Adrian Chandler</dc:creator><upnp:album>The Italian Job</upnp:album><upnp:originalTrackNumber>1</upnp:originalTrackNumber><r:albumArtist>Adrian Chandler</r:albumArtist></item></DIDL-Lite>",
+      "r:NextTrackURI": "",
+      "r:NextTrackMetaData": "",
+      "r:EnqueuedTransportURI": "x-file-cifs://data2.local/data/Adrian-Chandler/The-Italian-Job/track01.flac",
+      "r:EnqueuedTransportURIMetaData": "<DIDL-Lite xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:upnp=\"urn:schemas-upnp-org:metadata-1-0/upnp/\" xmlns:r=\"urn:schemas-rinconnetworks-com:metadata-1-0/\" xmlns=\"urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/\"><item id=\"S://data2.local/data/Adrian-Chandler/The-Italian-Job/track01.flac\" parentID=\"A:ALBUMARTIST/Adrian%20Chandler/The%20Italian%20Job\" restricted=\"true\"><dc:title>Sinfonia in C Major: I. Allegro</dc:title><upnp:class>object.item.audioItem.musicTrack</upnp:class><upnp:album>The Italian Job</upnp:album><dc:creator>Antonio Caldara, La Serenissima, Adrian Chandler</dc:creator><upnp:albumArtURI>/getaa?u=x-file-cifs%3a%2f%2fdata2.local%2fdata%2fAdrian-Chandler%2fThe-Italian-Job%2ftrack01.flac&amp;v=247</upnp:albumArtURI><r:albumArtist>Adrian Chandler</r:albumArtist><r:description>The Italian Job</r:description><desc id=\"cdudn\" nameSpace=\"urn:schemas-rinconnetworks-com:metadata-1-0/\">RINCON_AssociatedZPUDN</desc></item></DIDL-Lite>",
+      "PlaybackStorageMedium": "NETWORK",
+      "AVTransportURI": "x-rincon-queue:RINCON_F0F6C1D195FA01400#0",
+      "AVTransportURIMetaData": "",
+      "NextAVTransportURI": "",
+      "NextAVTransportURIMetaData": "",
+      "CurrentTransportActions": "Set, Stop, Pause, Play, X_DLNA_SeekTime, X_DLNA_SeekTrackNr",
+      "r:CurrentValidPlayModes": "SHUFFLE,REPEAT,REPEATONE,CROSSFADE",
+      "r:DirectControlClientID": "",
+      "r:DirectControlIsSuspended": "0",
+      "r:DirectControlAccountID": "",
+      "TransportStatus": "OK",
+      "r:SleepTimerGeneration": "0",
+      "r:AlarmRunning": "0",
+      "r:SnoozeRunning": "0",
+      "r:RestartPending": "0",
+      "TransportPlaySpeed": "NOT_IMPLEMENTED",
+      "CurrentMediaDuration": "NOT_IMPLEMENTED",
+      "RecordStorageMedium": "NOT_IMPLEMENTED",
+      "PossiblePlaybackStorageMedia": "NONE, NETWORK",
+      "PossibleRecordStorageMedia": "NOT_IMPLEMENTED",
+      "RecordMediumWriteStatus": "NOT_IMPLEMENTED",
+      "CurrentRecordQualityMode": "NOT_IMPLEMENTED",
+      "PossibleRecordQualityModes": "NOT_IMPLEMENTED",
+      "CurrentTrackMetaDataParsed": {
+        "id": null,
+        "parentID": null,
+        "title": "Sinfonia in C Major: I. Allegro",
+        "artist": "Antonio Caldara, La Serenissima, Adrian Chandler",
+        "album": "The Italian Job",
+        "albumArtist": "Adrian Chandler",
+        "albumArtURI": "http://192.168.86.29:1400/getaa?u=x-file-cifs%3a%2f%2fdata2.local%2fdata%2fAdrian-Chandler%2fThe-Italian-Job%2ftrack01.flac&v=247",
+        "uri": "x-file-cifs://data2.local/data/Adrian-Chandler/The-Italian-Job/track01.flac",
+        "duration": 331,
+        "queuePosition": 1
+      }
+    }
+  ]
+}
+
+---
+
+{
+  "event": "QueueChanged",
+  "args": [
+    [
+      {
+        "val": "0",
+        "UpdateID": {
+          "val": "5"
+        },
+        "Curated": {
+          "val": "0"
+        },
+        "QueueOwnerID": {
+          "val": ""
+        }
+      },
+      {
+        "val": "1",
+        "UpdateID": {
+          "val": "14"
+        },
+        "Curated": {
+          "val": "0"
+        },
+        "QueueOwnerID": {
+          "val": ""
+        }
+      }
+    ]
+  ]
+}
+
+---
+
+{
+  "event": "Volume",
+  "args": [
+    26
+  ]
+}
+
+---
+
+{
+  "event": "Muted",
+  "args": [
+    false
+  ]
+}
+
+---
+
+{
+  "event": "RenderingControl",
+  "args": [
+    {
+      "val": "0",
+      "Volume": [
+        {
+          "channel": "Master",
+          "val": "26"
+        },
+        {
+          "channel": "LF",
+          "val": "100"
+        },
+        {
+          "channel": "RF",
+          "val": "100"
+        }
+      ],
+      "Mute": [
+        {
+          "channel": "Master",
+          "val": "0"
+        },
+        {
+          "channel": "LF",
+          "val": "0"
+        },
+        {
+          "channel": "RF",
+          "val": "0"
+        }
+      ],
+      "Bass": {
+        "val": "0"
+      },
+      "Treble": {
+        "val": "0"
+      },
+      "Loudness": {
+        "channel": "Master",
+        "val": "1"
+      },
+      "OutputFixed": {
+        "val": "0"
+      },
+      "SpeakerSize": {
+        "val": "5"
+      },
+      "SubGain": {
+        "val": "0"
+      },
+      "SubCrossover": {
+        "val": "0"
+      },
+      "SubPolarity": {
+        "val": "0"
+      },
+      "SubEnabled": {
+        "val": "1"
+      },
+      "SonarEnabled": {
+        "val": "0"
+      },
+      "SonarCalibrationAvailable": {
+        "val": "0"
+      },
+      "PresetNameList": {
+        "val": "FactoryDefaults"
+      }
+    }
+  ]
+}
+
+---
+
+{
+  "event": "GroupRenderingControl",
+  "args": [
+    [
+      {
+        "GroupVolume": "26"
+      },
+      {
+        "GroupMute": "0"
+      },
+      {
+        "GroupVolumeChangeable": "1"
+      }
+    ]
+  ]
+}
+
+---
+
+{
+  "event": "PlayState",
+  "args": [
+    "playing"
+  ]
+}
+
+---
+
+{
+  "event": "AVTransport",
+  "args": [
+    {
+      "TransportState": "PLAYING",
+      "CurrentPlayMode": "NORMAL",
+      "CurrentCrossfadeMode": "0",
+      "NumberOfTracks": "1",
+      "CurrentTrack": "1",
+      "CurrentSection": "0",
+      "CurrentTrackURI": "x-rincon:RINCON_5CAAFD9D4B4001400",
+      "CurrentTrackDuration": "",
+      "CurrentTrackMetaData": "",
+      "r:NextTrackURI": "",
+      "r:NextTrackMetaData": "",
+      "r:EnqueuedTransportURI": "",
+      "r:EnqueuedTransportURIMetaData": "",
+      "PlaybackStorageMedium": "NETWORK",
+      "AVTransportURI": "x-rincon:RINCON_5CAAFD9D4B4001400",
+      "AVTransportURIMetaData": "",
+      "CurrentTransportActions": "Stop, Play",
+      "r:CurrentValidPlayModes": "CROSSFADE",
+      "r:DirectControlClientID": "",
+      "r:DirectControlIsSuspended": "0",
+      "r:DirectControlAccountID": ""
+    }
+  ]
+}
+
+---
+
+{
+  "event": "QueueChanged",
+  "args": [
+    {
+      "val": "1",
+      "UpdateID": {
+        "val": "15"
+      }
+    }
+  ]
+}
+
+---
+
+{
+  "event": "CurrentTrack",
+  "args": [
+    {
+      "id": null,
+      "parentID": null,
+      "title": "Sinfonia in C Major: I. Allegro",
+      "artist": "Antonio Caldara, La Serenissima, Adrian Chandler",
+      "album": "The Italian Job",
+      "albumArtist": "Adrian Chandler",
+      "albumArtURI": "http://192.168.86.29:1400/getaa?u=x-file-cifs%3a%2f%2fdata2.local%2fdata%2fAdrian-Chandler%2fThe-Italian-Job%2ftrack01.flac&v=247",
+      "uri": "x-file-cifs://data2.local/data/Adrian-Chandler/The-Italian-Job/track01.flac",
+      "duration": 331,
+      "queuePosition": 1
+    }
+  ]
+}
+
+---
+
+{
+  "event": "PlayState",
+  "args": [
+    "stopped"
+  ]
+}
+
+---
+
+{
+  "event": "PlaybackStopped",
+  "args": []
+}
+
+---
+
+{
+  "event": "AVTransport",
+  "args": [
+    {
+      "TransportState": "STOPPED",
+      "CurrentPlayMode": "NORMAL",
+      "CurrentCrossfadeMode": "0",
+      "NumberOfTracks": "1",
+      "CurrentTrack": "1",
+      "CurrentSection": "0",
+      "CurrentTrackURI": "x-file-cifs://data2.local/data/Adrian-Chandler/The-Italian-Job/track01.flac",
+      "CurrentTrackDuration": "0:05:31",
+      "CurrentTrackMetaData": "<DIDL-Lite xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:upnp=\"urn:schemas-upnp-org:metadata-1-0/upnp/\" xmlns:r=\"urn:schemas-rinconnetworks-com:metadata-1-0/\" xmlns=\"urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/\"><item id=\"-1\" parentID=\"-1\" restricted=\"true\"><res protocolInfo=\"x-file-cifs:*:audio/flac:*\" duration=\"0:05:31\">x-file-cifs://data2.local/data/Adrian-Chandler/The-Italian-Job/track01.flac</res><r:streamContent></r:streamContent><r:radioShowMd></r:radioShowMd><r:streamInfo>bd:0,sr:0,c:0,l:0,d:0</r:streamInfo><upnp:albumArtURI>/getaa?u=x-file-cifs%3a%2f%2fdata2.local%2fdata%2fAdrian-Chandler%2fThe-Italian-Job%2ftrack01.flac&amp;v=247</upnp:albumArtURI><dc:title>Sinfonia in C Major: I. Allegro</dc:title><upnp:class>object.item.audioItem.musicTrack</upnp:class><dc:creator>Antonio Caldara, La Serenissima, Adrian Chandler</dc:creator><upnp:album>The Italian Job</upnp:album><upnp:originalTrackNumber>1</upnp:originalTrackNumber><r:albumArtist>Adrian Chandler</r:albumArtist></item></DIDL-Lite>",
+      "r:NextTrackURI": "",
+      "r:NextTrackMetaData": "",
+      "r:EnqueuedTransportURI": "x-file-cifs://data2.local/data/Adrian-Chandler/The-Italian-Job/track01.flac",
+      "r:EnqueuedTransportURIMetaData": "<DIDL-Lite xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:upnp=\"urn:schemas-upnp-org:metadata-1-0/upnp/\" xmlns:r=\"urn:schemas-rinconnetworks-com:metadata-1-0/\" xmlns=\"urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/\"><item id=\"S://data2.local/data/Adrian-Chandler/The-Italian-Job/track01.flac\" parentID=\"A:ALBUMARTIST/Adrian%20Chandler/The%20Italian%20Job\" restricted=\"true\"><dc:title>Sinfonia in C Major: I. Allegro</dc:title><upnp:class>object.item.audioItem.musicTrack</upnp:class><upnp:album>The Italian Job</upnp:album><dc:creator>Antonio Caldara, La Serenissima, Adrian Chandler</dc:creator><upnp:albumArtURI>/getaa?u=x-file-cifs%3a%2f%2fdata2.local%2fdata%2fAdrian-Chandler%2fThe-Italian-Job%2ftrack01.flac&amp;v=247</upnp:albumArtURI><r:albumArtist>Adrian Chandler</r:albumArtist><r:description>The Italian Job</r:description><desc id=\"cdudn\" nameSpace=\"urn:schemas-rinconnetworks-com:metadata-1-0/\">RINCON_AssociatedZPUDN</desc></item></DIDL-Lite>",
+      "PlaybackStorageMedium": "NETWORK",
+      "AVTransportURI": "x-rincon-queue:RINCON_F0F6C1D195FA01400#0",
+      "AVTransportURIMetaData": "",
+      "CurrentTransportActions": "Set, Stop, Pause, Play, X_DLNA_SeekTime, X_DLNA_SeekTrackNr",
+      "r:CurrentValidPlayModes": "SHUFFLE,REPEAT,REPEATONE,CROSSFADE",
+      "r:DirectControlClientID": "",
+      "r:DirectControlIsSuspended": "0",
+      "r:DirectControlAccountID": "",
+      "CurrentTrackMetaDataParsed": {
+        "id": null,
+        "parentID": null,
+        "title": "Sinfonia in C Major: I. Allegro",
+        "artist": "Antonio Caldara, La Serenissima, Adrian Chandler",
+        "album": "The Italian Job",
+        "albumArtist": "Adrian Chandler",
+        "albumArtURI": "http://192.168.86.29:1400/getaa?u=x-file-cifs%3a%2f%2fdata2.local%2fdata%2fAdrian-Chandler%2fThe-Italian-Job%2ftrack01.flac&v=247",
+        "uri": "x-file-cifs://data2.local/data/Adrian-Chandler/The-Italian-Job/track01.flac",
+        "duration": 331,
+        "queuePosition": 1
+      }
+    }
+  ]
+}
+
+---
+
+{
+  "event": "GroupRenderingControl",
+  "args": [
+    [
+      {
+        "GroupVolume": "26"
+      },
+      {
+        "GroupMute": "0"
+      },
+      {
+        "GroupVolumeChangeable": "1"
+      }
+    ]
+  ]
+}
+
+---
+
+{
+  "event": "QueueChanged",
+  "args": [
+    {
+      "val": "1",
+      "UpdateID": {
+        "val": "16"
+      }
+    }
+  ]
+}
+
+---
+
