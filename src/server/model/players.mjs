@@ -38,7 +38,7 @@ class Players {
   }
 
   async restart () {
-    await this.unsubscribeAll()
+    sonosReset()
     this.players = []
     await this.start()
   }
