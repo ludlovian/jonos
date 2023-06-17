@@ -19,7 +19,7 @@ dependencies:
     version: github.com/ludlovian/bouncer/619bd4db5ec4ab8c62f58390a2e4ac4701a15b0a
   debug:
     specifier: github:ludlovian/debug
-    version: github.com/ludlovian/debug/a1202b0bcf19ab131381c765fd00113452c93479
+    version: github.com/ludlovian/debug/095992ea28bc99350a088c902a2e13b65e5d0227
   httpie:
     specifier: ^1.1.2
     version: 1.1.2
@@ -646,10 +646,10 @@ packages:
       timer: github.com/ludlovian/timer/474b3e85bddedb81ae3d0f1911a51b070f1b752e
     dev: false
 
-  github.com/ludlovian/debug/a1202b0bcf19ab131381c765fd00113452c93479:
-    resolution: {tarball: https://codeload.github.com/ludlovian/debug/tar.gz/a1202b0bcf19ab131381c765fd00113452c93479}
+  github.com/ludlovian/debug/095992ea28bc99350a088c902a2e13b65e5d0227:
+    resolution: {tarball: https://codeload.github.com/ludlovian/debug/tar.gz/095992ea28bc99350a088c902a2e13b65e5d0227}
     name: debug
-    version: 0.0.4
+    version: 0.0.5
     peerDependencies:
       supports-color: '*'
     peerDependenciesMeta:

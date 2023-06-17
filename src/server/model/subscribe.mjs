@@ -8,13 +8,26 @@ import Bouncer from 'bouncer'
 import Timer from 'timer'
 
 import players from './players.mjs'
-import { sonosLastListenerDelay, statusThrottle } from '../config.mjs'
+import {
+  sonosLastListenerDelay,
+  statusThrottle,
+  sonosResetPeriod
+} from '../config.mjs'
 
 const serial = new Serial()
 const debug = Debug('jonos:model')
 
 let listenerCount = 0
 const tmCleanup = new Timer()
+const tmReset = new Timer()
+
+tmReset.set({
+  every: sonosResetPeriod,
+  fn: () => {
+    if (listenerCount) return
+    players.restart()
+  }
+})
 
 async function addListener () {
   debug('listener added')

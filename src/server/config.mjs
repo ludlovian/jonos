@@ -17,6 +17,9 @@ export const sonosSubscriptionRenewal = parseMS('20m')
 // How soon after the last listener should we shut down notifications
 export const sonosLastListenerDelay = parseMS(isDev ? '5s' : '30s')
 
+// After how ofen should we reset the listeners
+export const sonosResetPeriod = parseMS('12h')
+
 // Throttle time for updates to clients
 export const statusThrottle = 200
 
