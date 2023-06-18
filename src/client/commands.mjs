@@ -1,6 +1,6 @@
 import { presets, notifies } from './config.mjs'
 import model from './model.mjs'
-import { once } from './signal-extra.mjs'
+import { until } from './signal-extra.mjs'
 
 export async function applyPreset (name) {
   const config = presets[name]
@@ -8,7 +8,7 @@ export async function applyPreset (name) {
   const l = model.byName[leader]
   if (!l.isLeader) {
     await call('/api/leader/' + leader, { leader })
-    await once(() => l.isLeader)
+    await until(() => l.isLeader)
   }
 
   const old = new Set(model.groups[leader])

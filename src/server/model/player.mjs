@@ -2,7 +2,7 @@ import { effect, batch } from '@preact/signals-core'
 import Debug from 'debug'
 
 import { notificationTimeout } from '../config.mjs'
-import { addSignals, once } from './signal-extra.mjs'
+import { addSignals, until } from './signal-extra.mjs'
 import {
   getDeviceDescription,
   getMediaInfo,
@@ -82,28 +82,28 @@ export default class Player {
     })
   }
 
-  setVolume (vol) {
+  async setVolume (vol) {
     this.debug('setVolume: %d', vol)
+    await setVolume(this, vol)
     this.volume = vol
-    return setVolume(this, vol)
   }
 
-  setMute (mute) {
+  async setMute (mute) {
     this.debug('setMute: %o', mute)
+    await setMute(this, mute)
     this.mute = mute
-    return setMute(this, mute)
   }
 
-  setLeader (name) {
+  async setLeader (name) {
     this.debug('setLeader: %s', name)
     if (this.leader.name === name) return
     if (this.name === name) {
+      await startOwnGroup(this)
       this.leaderUuid = ''
-      return startOwnGroup(this)
     } else {
       const leader = this._players.byName[name]
+      await joinGroup(this, leader.uuid)
       this.leaderUuid = leader.uuid
-      return joinGroup(this, leader.uuid)
     }
   }
 
@@ -184,7 +184,7 @@ export default class Player {
 
     if (this.isPlaying) {
       await this.pause()
-      if (!(await once(() => !this.isPlaying, 500))) {
+      if (!(await until(() => !this.isPlaying, 500))) {
         this.debug('Could not stop')
         return false
       }
@@ -192,12 +192,12 @@ export default class Player {
 
     await this.playURI(uri)
 
-    if (!(await once(() => this.isPlaying), notificationTimeout)) {
+    if (!(await until(() => this.isPlaying), notificationTimeout)) {
       this.debug('Could not start')
       return false
     }
 
-    if (!(await once(() => !this.isPlaying), notificationTimeout)) {
+    if (!(await until(() => !this.isPlaying), notificationTimeout)) {
       this.debug('Did not finish')
       return false
     }
