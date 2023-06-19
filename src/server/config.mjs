@@ -6,7 +6,7 @@ import { parse as parseMS } from '@lukeed/ms'
 export const isDev = process.env.NODE_ENV !== 'production'
 
 // Where are the client files
-export const clientPath = isDev ? './src/client' : './dist/public'
+export const clientPath = './dist/public'
 
 // How long should we ask for a notify stream to stay active
 export const sonosSubscriptionTimeout = 'Second-1800'
@@ -19,6 +19,12 @@ export const sonosLastListenerDelay = parseMS(isDev ? '5s' : '30s')
 
 // After how ofen should we reset the listeners
 export const sonosResetPeriod = parseMS('12h')
+
+// How many times to try a call
+export const sonosCallAttempts = 3
+
+// How long to wait to see if a call has worked
+export const sonosCallDelay = parseMS('5s')
 
 // Throttle time for updates to clients
 export const statusThrottle = 200

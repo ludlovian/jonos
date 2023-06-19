@@ -55,28 +55,46 @@ export function play ({ address }) {
   return callSOAP(address, SRV.AVT, 'Play', { InstanceID: 0, Speed: '1' })
 }
 
-export function joinGroup (p, uuid) {
-  return setAVTransportURI(p, { mediaURI: `x-rincon:${uuid}` })
+export function joinGroup (p, uuid, verify) {
+  return setAVTransportURI(p, { mediaURI: `x-rincon:${uuid}` }, { verify })
 }
 
-export function startOwnGroup ({ address }) {
-  return callSOAP(address, SRV.AVT, 'BecomeCoordinatorOfStandaloneGroup', {
-    InstanceID: 0
-  })
+export function startOwnGroup ({ address }, verify) {
+  return callSOAP(
+    address,
+    SRV.AVT,
+    'BecomeCoordinatorOfStandaloneGroup',
+    {
+      InstanceID: 0
+    },
+    { verify }
+  )
 }
 
-export function setVolume ({ address }, vol) {
-  return callSOAP(address, SRV.RC, 'SetVolume', {
-    InstanceID: 0,
-    Channel: 'Master',
-    DesiredVolume: vol.toFixed(0)
-  })
+export function setVolume ({ address }, vol, verify) {
+  return callSOAP(
+    address,
+    SRV.RC,
+    'SetVolume',
+    {
+      InstanceID: 0,
+      Channel: 'Master',
+      DesiredVolume: vol.toFixed(0)
+    },
+    { verify }
+  )
 }
 
-export function setMute ({ address }, mute) {
-  return callSOAP(address, SRV.RC, 'SetMute', {
-    InstanceID: 0,
-    Channel: 'Master',
-    DesiredMute: mute ? '1' : '0'
-  })
+export function setMute ({ address }, mute, verify) {
+  return callSOAP(
+    address,
+    SRV.RC,
+    'SetMute',
+    {
+      InstanceID: 0,
+      Channel: 'Master',
+      DesiredMute: mute ? '1' : '0'
+    },
+    { verify }
+  )
 }

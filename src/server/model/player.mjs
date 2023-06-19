@@ -4,6 +4,7 @@ import Debug from 'debug'
 import { notificationTimeout } from '../config.mjs'
 import { addSignals, until } from './signal-extra.mjs'
 import {
+  subscribe as sonosSubscribe,
   getDeviceDescription,
   getMediaInfo,
   getPositionInfo,
@@ -63,6 +64,10 @@ export default class Player {
     }
   }
 
+  _ensureSubscribed () {
+    return sonosSubscribe(this)
+  }
+
   async getDescription () {
     if (this.model) return
     const data = await getDeviceDescription(this)
@@ -84,26 +89,25 @@ export default class Player {
 
   async setVolume (vol) {
     this.debug('setVolume: %d', vol)
-    await setVolume(this, vol)
-    this.volume = vol
+    await this._ensureSubscribed()
+    await setVolume(this, vol, () => this.volume === vol)
   }
 
   async setMute (mute) {
     this.debug('setMute: %o', mute)
-    await setMute(this, mute)
-    this.mute = mute
+    await this._ensureSubscribed()
+    await setMute(this, mute, () => this.mute === mute)
   }
 
   async setLeader (name) {
     this.debug('setLeader: %s', name)
     if (this.leader.name === name) return
+    await this._ensureSubscribed()
     if (this.name === name) {
-      await startOwnGroup(this)
-      this.leaderUuid = ''
+      await startOwnGroup(this, () => this.leaderUuid === '')
     } else {
       const leader = this._players.byName[name]
-      await joinGroup(this, leader.uuid)
-      this.leaderUuid = leader.uuid
+      await joinGroup(this, leader.uuid, () => this.leaderUuid === leader.uuid)
     }
   }
 
