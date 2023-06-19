@@ -41,35 +41,26 @@ function Group ({ leaderName, memberNames }) {
   const leader = model.byName[leaderName]
   const playing = leader.isPlaying
   const title = playing ? leader.trackTitle : ''
-  const items = memberNames.map(name =>
-    h(Player, { name, playing, title: name === leaderName ? title : '' })
-  )
+  const items = memberNames.map(name => h(Player, { name, playing }))
   return html`
+    <p><em>${title}</em></p>
     ${items}
     <hr />
   `
 }
 
-function Player ({ name, playing, title }) {
+function Player ({ name, playing }) {
   const player = model.byName[name]
   const { fullName, volume } = player
-  const a1 = { class: 'mx-1' }
-  const a2 = {
-    class: ['badge', 'bg-' + (playing ? 'success' : 'secondary'), 'mx-1'].join(
-      ' '
-    )
-  }
-  const a3 = { class: 'mx-3' }
+  const volClass = 'badge bg-' + (playing ? 'success' : 'secondary')
   return html`
     <div class="row">
-      <span class="text-secondary">
-        <span ...${a1}>${fullName}</span>
-        <span ...${a2}>${volume}</span>
-        ${title &&
-          html`
-            <span ...${a3}>${title}</span>
-          `}
-      </span>
+      <div class="col-4 col-sm-3 col-lg-2">
+        ${fullName}
+      </div>
+      <div class="col col-1">
+        <span class="${volClass}">${volume}</span>
+      </div>
     </div>
   `
 }
