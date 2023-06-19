@@ -11,6 +11,7 @@ import {
   unsubscribeAll as sonosUnsubscribeAll,
   reset as sonosReset
 } from '../sonos/index.mjs'
+import { isDev } from '../config.mjs'
 
 const fromEntries = Object.fromEntries.bind(Object)
 
@@ -95,4 +96,6 @@ class Players {
   }
 }
 
-export default Players.instance
+const players = Players.instance
+if (isDev) global.players = players
+export default players

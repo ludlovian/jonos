@@ -7,5 +7,4 @@ function main () {
   render(h(App), document.body)
 }
 
-// const App = () => h('h1', {}, 'Hi there')
 main()

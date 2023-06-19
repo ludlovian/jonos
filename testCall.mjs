@@ -12,7 +12,7 @@ async function main () {
   if (action === 'getDescription') {
     result = await getDescription(ip)
   } else {
-    result = await callSOAP(ip, { service, path }, action, parms, false)
+    result = await callSOAP(ip, { service, path }, action, parms, { parse: false })
   }
   console.log(result)
 }

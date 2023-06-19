@@ -11,8 +11,13 @@ const { fromEntries, entries } = Object
 class Model {
   constructor () {
     addSignals(this, {
+      // from server
       players: [],
+
+      // local
       error: undefined,
+
+      //derived
       byName: () => fromEntries(this.players.map(p => [p.name, p])),
       state: () => fromEntries(this.players.map(p => [p.name, p.state])),
       isLoading: () => this.players.length === 0,
