@@ -17,7 +17,7 @@ class Model {
       // local
       error: undefined,
 
-      //derived
+      // derived
       byName: () => fromEntries(this.players.map(p => [p.name, p])),
       state: () => fromEntries(this.players.map(p => [p.name, p.state])),
       isLoading: () => this.players.length === 0,
