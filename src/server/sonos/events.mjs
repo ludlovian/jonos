@@ -30,6 +30,11 @@ class SubscriptionManager {
   }
 
   reset () {
+    for (const subs of Object.values(this.subscriptions)) {
+      for (const sub of Object.values(subs)) {
+        sub.tm.cancel()
+      }
+    }
     this.subscriptions = {}
   }
 
