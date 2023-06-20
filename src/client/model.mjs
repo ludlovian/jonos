@@ -120,18 +120,11 @@ class Player {
   }
 
   _trackTitle () {
-    let t = ''
-    if (!this.trackMetadata) return t
+    if (!this.trackMetadata) return ''
     const p = Parsley.from(this.trackMetadata, { safe: true })
-    if (!p) return t
-    let e = p.find('r:streamContent')
-    if (!e) return t
-    t = e.text
-    if (t) return t
-    e = p.find('dc:title')
-    if (!e) return t
-    t = e.text
-    return t != null ? t : ''
+    return p?.find('r:streamContent')?.text ??
+      p?.find('dc:title')?.text ??
+      ''
   }
 
   _onData (data) {
