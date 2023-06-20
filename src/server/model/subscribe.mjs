@@ -1,5 +1,5 @@
 import { effect } from '@preact/signals-core'
-import Debug from 'debug'
+import Debug from '@ludlovian/debug'
 
 import equal from 'pixutil/equal'
 import clone from 'pixutil/clone'

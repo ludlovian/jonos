@@ -1,5 +1,5 @@
 import polka from 'polka'
-import Debug from 'debug'
+import Debug from '@ludlovian/debug'
 
 import { staticFiles, parseBody, log, wrap, getPlayer } from './wares.mjs'
 import { serverPort, clientPath } from './config.mjs'

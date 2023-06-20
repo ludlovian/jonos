@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@ludlovian/debug':
+    specifier: github:ludlovian/debug
+    version: github.com/ludlovian/debug/52c340a997e7be86a5c1d6e3747c3e79f8caa994
   '@lukeed/ms':
     specifier: ^2.0.1
     version: 2.0.1
@@ -17,9 +20,6 @@ dependencies:
   bouncer:
     specifier: github:ludlovian/bouncer
     version: github.com/ludlovian/bouncer/619bd4db5ec4ab8c62f58390a2e4ac4701a15b0a
-  debug:
-    specifier: github:ludlovian/debug
-    version: github.com/ludlovian/debug/095992ea28bc99350a088c902a2e13b65e5d0227
   httpie:
     specifier: ^1.1.2
     version: 1.1.2
@@ -778,15 +778,10 @@ packages:
       timer: github.com/ludlovian/timer/474b3e85bddedb81ae3d0f1911a51b070f1b752e
     dev: false
 
-  github.com/ludlovian/debug/095992ea28bc99350a088c902a2e13b65e5d0227:
-    resolution: {tarball: https://codeload.github.com/ludlovian/debug/tar.gz/095992ea28bc99350a088c902a2e13b65e5d0227}
-    name: debug
-    version: 0.0.5
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
+  github.com/ludlovian/debug/52c340a997e7be86a5c1d6e3747c3e79f8caa994:
+    resolution: {tarball: https://codeload.github.com/ludlovian/debug/tar.gz/52c340a997e7be86a5c1d6e3747c3e79f8caa994}
+    name: '@ludlovian/debug'
+    version: 0.1.0
     dev: false
 
   github.com/ludlovian/parsley/aa86e544bbdef5dd8ad54bcb7dbb04fbbd27401c:

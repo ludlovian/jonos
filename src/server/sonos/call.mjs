@@ -1,5 +1,5 @@
 import { get, post } from 'httpie'
-import Debug from 'debug'
+import Debug from '@ludlovian/debug'
 import Parsley from 'parsley'
 import createSerial from 'pixutil/serial'
 

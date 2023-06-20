@@ -1,4 +1,4 @@
-import Debug from 'debug'
+import Debug from '@ludlovian/debug'
 
 import send from '@polka/send-type'
 

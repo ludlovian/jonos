@@ -1,5 +1,5 @@
 import { send } from 'httpie'
-import Debug from 'debug'
+import Debug from '@ludlovian/debug'
 
 import Timer from 'timer'
 

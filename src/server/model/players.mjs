@@ -1,5 +1,5 @@
 import { batch } from '@preact/signals-core'
-import Debug from 'debug'
+import Debug from '@ludlovian/debug'
 
 import sortBy from 'sortby'
 

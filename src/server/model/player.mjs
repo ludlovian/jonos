@@ -1,5 +1,5 @@
 import { effect, batch } from '@preact/signals-core'
-import Debug from 'debug'
+import Debug from '@ludlovian/debug'
 
 import { notificationTimeout } from '../config.mjs'
 import { addSignals, until } from './signal-extra.mjs'
