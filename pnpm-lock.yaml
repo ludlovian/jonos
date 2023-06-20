@@ -4,7 +4,7 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-dependencies:
+devDependencies:
   '@ludlovian/debug':
     specifier: github:ludlovian/debug
     version: github.com/ludlovian/debug/52c340a997e7be86a5c1d6e3747c3e79f8caa994
@@ -14,12 +14,30 @@ dependencies:
   '@polka/send-type':
     specifier: ^0.5.2
     version: 0.5.2
+  '@preact/signals':
+    specifier: ^1.1.3
+    version: 1.1.3(preact@10.15.1)
   '@preact/signals-core':
     specifier: ^1.3.0
     version: 1.3.0
+  '@rollup/plugin-commonjs':
+    specifier: ^25.0.1
+    version: 25.0.1(rollup@3.25.1)
+  '@rollup/plugin-node-resolve':
+    specifier: ^15.1.0
+    version: 15.1.0(rollup@3.25.1)
+  '@rollup/plugin-run':
+    specifier: ^3.0.1
+    version: 3.0.1(rollup@3.25.1)
+  '@rollup/plugin-terser':
+    specifier: ^0.4.3
+    version: 0.4.3(rollup@3.25.1)
   bouncer:
     specifier: github:ludlovian/bouncer
     version: github.com/ludlovian/bouncer/619bd4db5ec4ab8c62f58390a2e4ac4701a15b0a
+  htm:
+    specifier: ^3.1.1
+    version: 3.1.1
   httpie:
     specifier: ^1.1.2
     version: 1.1.2
@@ -32,6 +50,18 @@ dependencies:
   polka:
     specifier: ^0.5.2
     version: 0.5.2
+  preact:
+    specifier: ^10.15.1
+    version: 10.15.1
+  rollup:
+    specifier: ^3.25.1
+    version: 3.25.1
+  rollup-plugin-copy:
+    specifier: ^3.4.0
+    version: 3.4.0
+  rollup-plugin-gzip:
+    specifier: ^3.1.0
+    version: 3.1.0(rollup@3.25.1)
   sirv:
     specifier: ^2.0.3
     version: 2.0.3
@@ -45,44 +75,12 @@ dependencies:
     specifier: ^1.3.0
     version: 1.3.0
 
-devDependencies:
-  '@preact/signals':
-    specifier: ^1.1.3
-    version: 1.1.3(preact@10.15.1)
-  '@rollup/plugin-commonjs':
-    specifier: ^25.0.1
-    version: 25.0.1(rollup@3.25.1)
-  '@rollup/plugin-node-resolve':
-    specifier: ^15.1.0
-    version: 15.1.0(rollup@3.25.1)
-  '@rollup/plugin-run':
-    specifier: ^3.0.1
-    version: 3.0.1(rollup@3.25.1)
-  '@rollup/plugin-terser':
-    specifier: ^0.4.3
-    version: 0.4.3(rollup@3.25.1)
-  htm:
-    specifier: ^3.1.1
-    version: 3.1.1
-  preact:
-    specifier: ^10.15.1
-    version: 10.15.1
-  rollup:
-    specifier: ^3.25.1
-    version: 3.25.1
-  rollup-plugin-copy:
-    specifier: ^3.4.0
-    version: 3.4.0
-  rollup-plugin-gzip:
-    specifier: ^3.1.0
-    version: 3.1.0(rollup@3.25.1)
-
 packages:
 
   /@arr/every@1.0.1:
     resolution: {integrity: sha512-UQFQ6SgyJ6LX42W8rHCs8KVc0JS0tzVL9ct4XYedJukskYVWTo49tNiMEK9C2HTyarbNiT/RVIRSY82vH+6sTg==}
     engines: {node: '>=4'}
-    dev: false
+    dev: true
 
   /@jridgewell/gen-mapping@0.3.3:
     resolution: {integrity: sha512-HLhSWOLRi875zjjMG/r+Nv0oCW8umGb0BgEhyX3dDX3egwZtB8PqLnjz3yedt8R5StBrzcg4aBpnh8UA9D1BoQ==}
@@ -128,7 +126,7 @@ packages:
   /@lukeed/ms@2.0.1:
     resolution: {integrity: sha512-Xs/4RZltsAL7pkvaNStUQt7netTkyxrS0K+RILcVr3TRMS/ToOg4I6uNfhB9SlGsnWBym4U+EaXq0f0cEMNkHA==}
     engines: {node: '>=8'}
-    dev: false
+    dev: true
 
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -153,18 +151,19 @@ packages:
 
   /@polka/send-type@0.5.2:
     resolution: {integrity: sha512-jGXalKihnhGQmMQ+xxfxrRfI2cWs38TIZuwgYpnbQDD4r9TkOiU3ocjAS+6CqqMNQNAu9Ul2iHU5YFRDODak2w==}
-    dev: false
+    dev: true
 
   /@polka/url@0.5.0:
     resolution: {integrity: sha512-oZLYFEAzUKyi3SKnXvj32ZCEGH6RDnao7COuCVhDydMS9NrCSVXhM79VaKyP5+Zc33m0QXEd2DN3UkU7OsHcfw==}
-    dev: false
+    dev: true
 
   /@polka/url@1.0.0-next.21:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
-    dev: false
+    dev: true
 
   /@preact/signals-core@1.3.0:
     resolution: {integrity: sha512-M+M3ZOtd1dtV/uasyk4SZu1vbfEJ4NeENv0F7F12nijZYedB5wSgbtZcuACyssnTznhF4ctUyrR0dZHuHfyWKA==}
+    dev: true
 
   /@preact/signals@1.1.3(preact@10.15.1):
     resolution: {integrity: sha512-N09DuAVvc90bBZVRwD+aFhtGyHAmJLhS3IFoawO/bYJRcil4k83nBOchpCEoS0s5+BXBpahgp0Mjf+IOqP57Og==}
@@ -473,7 +472,7 @@ packages:
   /httpie@1.1.2:
     resolution: {integrity: sha512-VQ82oXG95oY1fQw/XecHuvcFBA+lZQ9Vwj1RfLcO8a7HpDd4cc2ukwpJt+TUlFaLUAzZErylxWu6wclJ1rUhUQ==}
     engines: {node: '>=8'}
-    dev: false
+    dev: true
 
   /ignore@5.2.4:
     resolution: {integrity: sha512-MAb38BcSbH0eHNBxn7ql2NH/kX33OkB3lZ1BNdh7ENeRChHTYsTvWrMubiIAMNS2llXEEgZ1MUOBtXChP3kaFQ==}
@@ -554,7 +553,7 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       '@arr/every': 1.0.1
-    dev: false
+    dev: true
 
   /merge2@1.4.1:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
@@ -585,7 +584,7 @@ packages:
   /mrmime@1.0.1:
     resolution: {integrity: sha512-hzzEagAgDyoU1Q6yg5uI+AorQgdvMCur3FcKf7NhMKWsaYg+RnbTyHRa/9IlLF9rf455MOCtcqqrQQ83pPP7Uw==}
     engines: {node: '>=10'}
-    dev: false
+    dev: true
 
   /once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
@@ -617,7 +616,7 @@ packages:
     dependencies:
       '@polka/url': 0.5.0
       trouter: 2.0.1
-    dev: false
+    dev: true
 
   /preact@10.15.1:
     resolution: {integrity: sha512-qs2ansoQEwzNiV5eAcRT1p1EC/dmEzaATVDJNiB3g2sRDWdA7b7MurXdJjB2+/WQktGWZwxvDrnuRFbWuIr64g==}
@@ -698,7 +697,7 @@ packages:
       '@polka/url': 1.0.0-next.21
       mrmime: 1.0.1
       totalist: 3.0.1
-    dev: false
+    dev: true
 
   /slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
@@ -740,7 +739,7 @@ packages:
   /tinydate@1.3.0:
     resolution: {integrity: sha512-7cR8rLy2QhYHpsBDBVYnnWXm8uRTr38RoZakFSW7Bs7PzfMPNZthuMLkwqZv7MTu8lhQ91cOFYS5a7iFj2oR3w==}
     engines: {node: '>=4'}
-    dev: false
+    dev: true
 
   /to-regex-range@5.0.1:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
@@ -752,14 +751,14 @@ packages:
   /totalist@3.0.1:
     resolution: {integrity: sha512-sf4i37nQ2LBx4m3wB74y+ubopq6W/dIzXg0FDGjsYnZHVa1Da8FH853wlL2gtUhg+xJXjfk3kUZS3BRoQeoQBQ==}
     engines: {node: '>=6'}
-    dev: false
+    dev: true
 
   /trouter@2.0.1:
     resolution: {integrity: sha512-kr8SKKw94OI+xTGOkfsvwZQ8mWoikZDd2n8XZHjJVZUARZT+4/VV6cacRS6CLsH9bNm+HFIPU1Zx4CnNnb4qlQ==}
     engines: {node: '>=6'}
     dependencies:
       matchit: 1.1.0
-    dev: false
+    dev: true
 
   /universalify@0.1.2:
     resolution: {integrity: sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==}
@@ -776,34 +775,34 @@ packages:
     version: 1.1.1
     dependencies:
       timer: github.com/ludlovian/timer/474b3e85bddedb81ae3d0f1911a51b070f1b752e
-    dev: false
+    dev: true
 
   github.com/ludlovian/debug/52c340a997e7be86a5c1d6e3747c3e79f8caa994:
     resolution: {tarball: https://codeload.github.com/ludlovian/debug/tar.gz/52c340a997e7be86a5c1d6e3747c3e79f8caa994}
     name: '@ludlovian/debug'
     version: 0.1.0
-    dev: false
+    dev: true
 
   github.com/ludlovian/parsley/aa86e544bbdef5dd8ad54bcb7dbb04fbbd27401c:
     resolution: {tarball: https://codeload.github.com/ludlovian/parsley/tar.gz/aa86e544bbdef5dd8ad54bcb7dbb04fbbd27401c}
     name: parsley
     version: 0.5.1
-    dev: false
+    dev: true
 
   github.com/ludlovian/pixutil/af44ea08a361af0064695097cd1fa9caa9e07e53:
     resolution: {tarball: https://codeload.github.com/ludlovian/pixutil/tar.gz/af44ea08a361af0064695097cd1fa9caa9e07e53}
     name: pixutil
     version: 1.7.2
-    dev: false
+    dev: true
 
   github.com/ludlovian/sortby/fbe088a79770376e4bdaa7868b53f10863ea5ca5:
     resolution: {tarball: https://codeload.github.com/ludlovian/sortby/tar.gz/fbe088a79770376e4bdaa7868b53f10863ea5ca5}
     name: sortby
     version: 1.0.1
-    dev: false
+    dev: true
 
   github.com/ludlovian/timer/474b3e85bddedb81ae3d0f1911a51b070f1b752e:
     resolution: {tarball: https://codeload.github.com/ludlovian/timer/tar.gz/474b3e85bddedb81ae3d0f1911a51b070f1b752e}
     name: timer
     version: 1.2.0
-    dev: false
+    dev: true
