@@ -7,4 +7,8 @@ User=alan
 WorkingDirectory=/home/alan/dev/jonos
 Environment=NODE_ENV=production
 Environment=DEBUG=jonos:*
-ExecStart=/usr/local/bin/npm run start:prod
+Environment=DEBUG_HIDE_DATE=1
+ExecStart=/usr/local/bin/npm start
+
+[Install]
+WantedBy=multi-user.target
