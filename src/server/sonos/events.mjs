@@ -18,28 +18,24 @@ class SubscriptionManager {
     ['ZoneGroupTopology', 'ZoneGroupTopology', true]
   ]
 
-  subscriptions = {}
+  subscriptions = new Map()
   debug = Debug('jonos:sonos')
-
-  static get instance () {
-    return (this._instance = this._instance || new SubscriptionManager())
-  }
 
   get address () {
     return `http://${this.serverIP}:${this.port}`
   }
 
   reset () {
-    for (const subs of Object.values(this.subscriptions)) {
-      for (const sub of Object.values(subs)) {
+    for (const subs of this.subscriptions.values()) {
+      for (const sub of subs.values()) {
         sub.tm.cancel()
       }
     }
-    this.subscriptions = {}
+    this.subscriptions.clear()
   }
 
   async unsubscribeAll () {
-    for (const name of Object.keys(this.subscriptions)) {
+    for (const name of this.subscriptions.keys()) {
       await this.unsubscribe({ name })
     }
   }
@@ -49,8 +45,7 @@ class SubscriptionManager {
       return res.writeHead(404).end()
     }
     const { name, service } = req.params
-    const subs = this.subscriptions[name] || {}
-    const sub = subs[service]
+    const sub = this.subscriptions.get(name)?.get(service)
     if (!sub) return res.writeHead(404).end()
 
     if (req.body) {
@@ -63,38 +58,33 @@ class SubscriptionManager {
   }
 
   async subscribe (player) {
-    if (this.subscriptions[player.name]) return
-
-    const subs = (this.subscriptions[player.name] = {})
+    const { name, keystone } = player
+    if (this.subscriptions.has(name)) return
+    const subs = new Map()
+    this.subscriptions.set(name, subs)
 
     for (const srv of this.services) {
       const [service, path, global] = srv
-      if (global && !player.keystone) continue
+      if (global && !keystone) continue
 
-      const sub = new Subscription({
-        debug: this.debug,
-        player,
-        service,
-        path
-      })
-      subs[service] = sub
-
+      const sub = new Subscription({ player, service, path })
+      subs.set(service, sub)
       await sub.start()
     }
   }
 
   async unsubscribe ({ name }) {
-    const subs = this.subscriptions[name]
-    if (!subs) return
-    this.subscriptions[name] = undefined
+    if (!this.subscriptions.has(name)) return
 
-    for (const sub of Object.values(subs)) {
+    for (const sub of this.subscriptions.get(name).values()) {
       await sub.stop()
     }
+    this.subscriptions.delete(name)
   }
 }
 
 class Subscription {
+  debug = Debug('jonos:sonos')
   sid = null
   tm = new Timer()
 
@@ -147,18 +137,8 @@ class Subscription {
   }
 }
 
-const manager = SubscriptionManager.instance
-
+const manager = new SubscriptionManager()
 export const handleEvent = manager.handleEvent.bind(manager)
-
-export function unsubscribeAll () {
-  return manager.unsubscribeAll()
-}
-
-export function subscribe (player) {
-  return manager.subscribe(player)
-}
-
-export function reset () {
-  return manager.reset()
-}
+export const unsubscribeAll = manager.unsubscribeAll.bind(manager)
+export const subscribe = manager.subscribe.bind(manager)
+export const reset = manager.reset.bind(manager)
