@@ -122,9 +122,7 @@ class Player {
   _trackTitle () {
     if (!this.trackMetadata) return ''
     const p = Parsley.from(this.trackMetadata, { safe: true })
-    return p?.find('r:streamContent')?.text ??
-      p?.find('dc:title')?.text ??
-      ''
+    return p?.find('r:streamContent')?.text ?? p?.find('dc:title')?.text ?? ''
   }
 
   _onData (data) {
