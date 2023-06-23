@@ -52,7 +52,7 @@ function Group ({ leaderName, memberNames }) {
 function Player ({ name, playing }) {
   const player = model.byName[name]
   const { fullName, volume } = player
-  const volClass = 'badge bg-' + (playing ? 'success' : 'secondary')
+  const volClass = `badge bg-${playing && !player.mute ? 'success' : 'secondary'}`
   return html`
     <div class="row">
       <div class="col-4 col-sm-3 col-lg-2">
