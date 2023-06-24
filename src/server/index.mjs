@@ -29,7 +29,7 @@ class Server {
     p.use(staticFiles(clientPath))
 
       // sonos notifications
-      .use('/notify', parseBody())
+      .use('/notify', parseBody(), getPlayer)
       .all('/notify/:name/:service', handleEvent)
 
       // API

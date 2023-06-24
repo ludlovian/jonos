@@ -1,7 +1,14 @@
-import { get, post } from 'httpie'
+// This file has all the communication with sonos players
+//
+// There are three types:
+// - SOAP calls
+// - XML description
+// - Event subscription
+
+import { get, post, send } from 'httpie'
 import Debug from '@ludlovian/debug'
 import Parsley from 'parsley'
-import createSerial from 'pixutil/serial'
+import Serial from 'pixutil/serial'
 
 import { until } from '../model/signal-extra.mjs'
 import { parseResponse, parseDescription } from './parse.mjs'
@@ -12,13 +19,20 @@ const debug = Debug('jonos:sonos')
 const debugError = Debug('jonos:error*')
 
 const XML_PI = '<?xml version="1.0" encoding="utf-8"?>'
-const serialByAddr = {}
+
+// The main SOAP function
+//
+// If a (reactive) verify function is given in the options this will wait
+// util the call is verified (e.g. we have received a notification), and
+// will retry if this times out. This seems only to be needed if the Sonos
+// has been deep asleep.
 
 export async function callSOAP (addr, srv, action, params = {}, opts = {}) {
   debug('call %s %s %o', addr, action, params)
   const { parse = true, verify } = opts
   const call = prepareCall(addr, srv, action, params)
-  const { serial, url, headers, body } = call
+  const { url, headers, body } = call
+  const serial = getSerial(addr)
 
   for (let i = 0; i < sonosCallAttempts; i++) {
     const res = await serial.exec(() => post(url, { headers, body }))
@@ -36,6 +50,55 @@ export async function callSOAP (addr, srv, action, params = {}, opts = {}) {
   debugError('call %s %s %o failed after several tries', addr, action, params)
 }
 
+// The function to read the players XML description
+//
+
+export async function getDescription (addr) {
+  debug('getDescription %s', addr)
+  const url = `http://${addr}:1400/xml/device_description.xml`
+  const serial = getSerial(addr)
+
+  const res = await serial.exec(() => get(url))
+
+  const parsed = parseDescription(res.data)
+  if (!parsed) {
+    debugError('not parsed')
+    debugError(res.data.replaceAll('<', '\n<').replaceAll('&lt;', '\n  &lt;'))
+  }
+  return parsed
+}
+
+// The function to subscribe to a player & service
+//
+
+export async function subscribe (addr, path, headers) {
+  const serial = getSerial(addr)
+  const url = `http://${addr}:1400/${path}/Event`
+  const res = await serial.exec(() => send('SUBSCRIBE', url, { headers }))
+  return res.headers.sid
+}
+
+export async function unsubscribe (addr, path, headers) {
+  const serial = getSerial(addr)
+  const url = `http://${addr}:1400/${path}/Event`
+  await serial.exec(() => send('UNSUBSCRIBE', url, { headers }))
+}
+
+// Utility functions to prepare the calls
+//
+
+// All communication with a particular sonos is serialised to stop
+// confusing them!
+
+const serialByAddr = new Map()
+
+function getSerial (addr) {
+  if (!serialByAddr.has(addr)) {
+    serialByAddr.set(addr, new Serial())
+  }
+  return serialByAddr.get(addr)
+}
+
 function prepareCall (addr, srv, action, params) {
   const { service, path } = srv
   const url = `http://${addr}:1400/${path}/Control`
@@ -46,23 +109,8 @@ function prepareCall (addr, srv, action, params) {
   const actionElement = makeAction(service, action, params)
   const wrappedAction = addEnvelope(actionElement)
   const body = XML_PI + wrappedAction.xml()
-  const serial = serialByAddr[addr] || (serialByAddr[addr] = createSerial())
 
-  return { serial, url, headers, body }
-}
-
-export async function getDescription (addr) {
-  debug('getDescription %s', addr)
-  const url = `http://${addr}:1400/xml/device_description.xml`
-
-  const res = await get(url)
-
-  const parsed = parseDescription(res.data)
-  if (!parsed) {
-    debugError('not parsed')
-    debugError(res.data.replaceAll('<', '\n<').replaceAll('&lt;', '\n  &lt;'))
-  }
-  return parsed
+  return { url, headers, body }
 }
 
 function addEnvelope (elem) {

@@ -3,7 +3,7 @@ import sirv from 'sirv'
 import send from '@polka/send-type'
 
 import { isDev } from './config.mjs'
-import { players } from './model/index.mjs'
+import model from './model/index.mjs'
 
 const writeToConsole = Debug('jonos*')
 
@@ -64,8 +64,8 @@ export function wrap (handler) {
 }
 
 export function getPlayer (req, res, next) {
-  if (!('name' in req.params)) return next()
-  const player = players.byName[req.params.name]
+  if (req?.params?.name == null) return next()
+  const player = model.players.byName[req.params.name]
   if (!player) return send(res, 404, 'Unknown player')
   req.player = player
   next()

@@ -1,8 +1,8 @@
 import Debug from '@ludlovian/debug'
-
 import send from '@polka/send-type'
+import { serialize } from 'pixutil/json'
 
-import { listen, players } from './model/index.mjs'
+import model from './model/index.mjs'
 import { log } from './wares.mjs'
 
 const debug = Debug('jonos:server')
@@ -17,11 +17,11 @@ export async function statusUpdates (req, res) {
   })
   log.writeLine(req, res)
 
-  const stopListen = listen(sendState)
+  const stopListen = model.listen(sendState)
   req.on('close', stop)
 
   function sendState (state) {
-    const data = JSON.stringify(state)
+    const data = JSON.stringify(serialize(state))
     res.write(`data: ${data}\n\n`)
   }
 
@@ -33,7 +33,7 @@ export async function statusUpdates (req, res) {
 
 export async function status (req, res) {
   debug('getStatus')
-  send(res, 200, players.state)
+  send(res, 200, serialize(model.state))
 }
 
 export async function setVolume (req, res) {
@@ -57,9 +57,9 @@ export async function setLeader (req, res) {
   debug('setLeader')
   const { leader: name } = req.json
   const { player } = req
-  const leader = players.byName[name]
+  const leader = model.players.byName[name]
   // a player can only follow themselves or an existing leader
-  const isValid = leader && (leader.isLeader || leader.name === player.name)
+  const isValid = leader?.isLeader || leader?.name === player.name
   if (!isValid) return send(res, 400, 'Invalid leader')
   await player.setLeader(leader.name)
   return send(res, 200)

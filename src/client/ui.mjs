@@ -11,10 +11,13 @@ export function App () {
   if (model.isLoading) return h('h1', {}, 'Loading...')
   return html`
     <div class="container">
-      <h3>Sonos status</h3>
+      <p class="text">
+        <span class="h3">Sonos Status</span>
+        <small class="text mx-2">version ${model.version}</small>
+      </p>
       <${Groups} />
       <${PresetButton} preset="standard" />
-      <${NotifyButton} notify="${model.isTest ? 'test' : 'downstairs'}" />
+      <${NotifyButton} notify="${model.isDev ? 'test' : 'downstairs'}" />
     </div>
   `
 }
@@ -52,7 +55,9 @@ function Group ({ leaderName, memberNames }) {
 function Player ({ name, playing }) {
   const player = model.byName[name]
   const { fullName, volume } = player
-  const volClass = `badge bg-${playing && !player.mute ? 'success' : 'secondary'}`
+  const volClass = `badge bg-${
+    playing && !player.mute ? 'success' : 'secondary'
+  }`
   return html`
     <div class="row">
       <div class="col-4 col-sm-3 col-lg-2">

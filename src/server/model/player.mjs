@@ -31,6 +31,7 @@ export default class Player {
       fullName: '',
       uuid: '',
       model: '',
+
       // variable
       leaderUuid: '',
       volume: undefined,
@@ -38,12 +39,15 @@ export default class Player {
       playState: undefined,
       trackURI: '',
       trackMetadata: '',
+      subscription: null,
+
       // derived
       state: this._state.bind(this),
       isLeader: () => !this.leaderUuid,
       leader: () =>
         this.isLeader ? this : this._players.byUuid[this.leaderUuid],
-      isPlaying: () => this.isLeader && isPlaying(this.playState)
+      isPlaying: () => this.isLeader && isPlaying(this.playState),
+      isSubscribed: () => !!this.subscription
     })
 
     effect(() => {
@@ -64,14 +68,27 @@ export default class Player {
     }
   }
 
-  _ensureSubscribed () {
-    return sonosSubscribe(this)
+  //
+  // Subscription to Sonos notification events
+  //
+
+  async subscribe () {
+    if (this.isSubscribed) return null
+    this.subscription = sonosSubscribe(this)
+    await this.subscription.start()
   }
 
-  async getDescription () {
-    if (this.model) return
-    const data = await getDeviceDescription(this)
-    this.onData(data)
+  async unsubscribe () {
+    if (!this.isSubscribed) return null
+    const sub = this.subscription
+    this.subscription = null
+    await sub.stop()
+  }
+
+  reset () {
+    if (!this.isSubscribed) return null
+    this.subscription = null
+    this.subscription.reset()
   }
 
   onData (data) {
@@ -87,22 +104,36 @@ export default class Player {
     })
   }
 
+  //
+  // Basic XML description
+  //
+
+  async getDescription () {
+    if (this.model) return
+    const data = await getDeviceDescription(this)
+    this.onData(data)
+  }
+
+  //
+  // SOAP-based commands
+  //
+
   async setVolume (vol) {
     this.debug('setVolume: %d', vol)
-    await this._ensureSubscribed()
+    await this.subscribe()
     await setVolume(this, vol, () => this.volume === vol)
   }
 
   async setMute (mute) {
     this.debug('setMute: %o', mute)
-    await this._ensureSubscribed()
+    await this.subscribe()
     await setMute(this, mute, () => this.mute === mute)
   }
 
   async setLeader (name) {
     this.debug('setLeader: %s', name)
     if (this.leader.name === name) return
-    await this._ensureSubscribed()
+    await this.subscribe()
     if (this.name === name) {
       await startOwnGroup(this, () => this.leaderUuid === '')
     } else {

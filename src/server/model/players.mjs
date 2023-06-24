@@ -5,17 +5,11 @@ import sortBy from 'sortby'
 
 import { addSignals } from './signal-extra.mjs'
 import Player from './player.mjs'
-import {
-  getZoneGroupState,
-  subscribe as sonosSubscribe,
-  unsubscribeAll as sonosUnsubscribeAll,
-  reset as sonosReset
-} from '../sonos/index.mjs'
-import { isDev } from '../config.mjs'
+import { getZoneGroupState } from '../sonos/index.mjs'
 
 const fromEntries = Object.fromEntries.bind(Object)
 
-class Players {
+export default class Players {
   keystone = '192.168.86.210'
 
   static get instance () {
@@ -26,11 +20,15 @@ class Players {
 
   constructor () {
     addSignals(this, {
+      // core
       players: [],
+
+      // derived
       names: () => this.players.map(p => p.name).sort(),
       byName: () => fromEntries(this.players.map(p => [p.name, p])),
       byUuid: () => fromEntries(this.players.map(p => [p.uuid, p])),
-      state: () => Object.fromEntries(this.players.map(p => [p.name, p.state]))
+      state: () => Object.fromEntries(this.players.map(p => [p.name, p.state])),
+      isSubscribed: () => this.players.every(p => p.isSubscribed)
     })
   }
 
@@ -38,8 +36,18 @@ class Players {
     await this.reloadFromKeystone()
   }
 
-  async restart () {
-    sonosReset()
+  async subscribe () {
+    if (this.isSubscribed) return null
+    await Promise.all(this.players.map(p => p.subscribe()))
+  }
+
+  async unsubscribe () {
+    await Promise.all(this.players.map(p => p.unsubscribe()))
+  }
+
+  async reset () {
+    this.debug('Resetting all players')
+    this.players.forEach(p => p.reset())
     this.players = []
     await this.start()
   }
@@ -57,18 +65,16 @@ class Players {
         // A Sonos player has disappeared (probably the Roam)
         // Rather than trying to cope gracefully, we simply reset
         // the subscriptions and start from scratch
-        this.debug('Resetting all players')
-        sonosReset()
-        this.players = []
+        return this.reset()
       }
 
       for (const p of playerDetails) {
         let player = this.byName[p.name]
         if (!player) {
           player = new Player(this)
+          Object.assign(player, p)
           this.players = [...this.players, player].sort(sortBy('name'))
           this.debug('Player %s added', p.name)
-          Object.assign(player, p)
           proms.push(player.getDescription())
         }
         Object.assign(player, p)
@@ -84,18 +90,4 @@ class Players {
       this.setZones(data.zones)
     }
   }
-
-  async subscribeAll () {
-    for (const player of this.players) {
-      await sonosSubscribe(player)
-    }
-  }
-
-  async unsubscribeAll () {
-    await sonosUnsubscribeAll()
-  }
 }
-
-const players = Players.instance
-if (isDev) global.players = players
-export default players

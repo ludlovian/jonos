@@ -1,17 +1,20 @@
 import { batch } from '@preact/signals'
-
+import { deserialize } from 'pixutil/json'
 import Parsley from 'parsley'
 import sortBy from 'sortby'
 
 import { addSignals } from './signal-extra.mjs'
 
 window.Parsley = Parsley
-const { fromEntries, entries } = Object
+const { fromEntries, entries, assign } = Object
 
 class Model {
   constructor () {
     addSignals(this, {
       // from server
+      version: '',
+      started: '',
+      isDev: false,
       players: [],
 
       // local
@@ -29,43 +32,27 @@ class Model {
               l.name,
               this.players.filter(p => p.follows(l)).map(p => p.name)
             ])
-        ),
-      query: () => this._query(window.location.search.slice(1)),
-      isTest: () => this.query.test != null
+        )
     })
-  }
-
-  _query (qs) {
-    return fromEntries(
-      qs
-        .split('&')
-        .filter(Boolean)
-        .map(kv => {
-          const [k, v] = kv.split('=')
-          return [k, val(v)]
-        })
-    )
-
-    function val (x) {
-      if (x === undefined) return true
-      if (!x) return ''
-      x = decodeURIComponent(x)
-      if (x === 'true') return true
-      if (x === 'false') return false
-      return +x * 0 === 0 ? +x : x
-    }
   }
 
   _onData (update) {
     batch(() => {
-      for (const [name, data] of entries(update)) {
-        let player = this.byName[name]
-        if (!player) {
-          player = new Player()
-          player.name = name
-          this.players = [...this.players, player].sort(sortBy('name'))
+      if ('server' in update) {
+        assign(this, update.server)
+      }
+
+      if ('players' in update) {
+        for (const [name, data] of entries(update.players)) {
+          const player = this.byName[name]
+          if (!player) {
+            const player = new Player()
+            assign(player, data)
+            this.players = [...this.players, player].sort(sortBy('name'))
+          } else {
+            assign(player, data)
+          }
         }
-        player._onData(data)
       }
     })
   }
@@ -75,25 +62,9 @@ class Model {
   }
 
   _subscribe (url) {
-    const es = new window.EventSource(url)
-    es.onmessage = ({ data }) => this._onData(JSON.parse(data))
-    if (this.query.stop) {
-      setTimeout(() => es.close(), 5000)
-    }
-  }
-
-  _writeToLocalStorage () {
-    window.localStorage.setItem('players', JSON.stringify(this.state))
-  }
-
-  _loadFromLocalStorage () {
-    const data = window.localStorage.getItem('players')
-    if (!data) return
-    this._onData(JSON.parse(data))
-  }
-
-  static get instance () {
-    return (this._instance = this._instance || new Model())
+    this.source = new window.EventSource(url)
+    this.source.onmessage = ({ data }) =>
+      this._onData(deserialize(JSON.parse(data)))
   }
 }
 
@@ -109,10 +80,6 @@ class Player {
       trackURI: '',
       trackMetadata: '',
       trackTitle: () => this._trackTitle(),
-      state: () => {
-        const { name, fullName, leader, volume, mute, playState } = this
-        return { name, fullName, leader, volume, mute, playState }
-      },
       isLeader: () => this.leader === this.name,
       isPlaying: () =>
         this.isLeader && ['PLAYING', 'TRANSITIONING'].includes(this.playState)
@@ -125,19 +92,11 @@ class Player {
     return p?.find('r:streamContent')?.text ?? p?.find('dc:title')?.text ?? ''
   }
 
-  _onData (data) {
-    batch(() => {
-      for (const [k, v] of entries(data)) {
-        if (k in this) this[k] = v
-      }
-    })
-  }
-
   follows (other) {
     return this.leader === other.name
   }
 }
 
-const model = Model.instance
+const model = new Model()
 window.model = model
 export default model
