@@ -7,7 +7,7 @@ settings:
 dependencies:
   '@ludlovian/signal-extra':
     specifier: github:ludlovian/signal-extra
-    version: github.com/ludlovian/signal-extra/e724842666042d427114fee66581cdeefdca7c47
+    version: github.com/ludlovian/signal-extra/04ac4cb8f19c620bed79e746c789265a26ab16cb
 
 devDependencies:
   '@ludlovian/debug':
@@ -26,17 +26,17 @@ devDependencies:
     specifier: ^1.3.0
     version: 1.3.0
   '@rollup/plugin-commonjs':
-    specifier: ^25.0.1
-    version: 25.0.1(rollup@3.25.1)
+    specifier: ^25.0.2
+    version: 25.0.2(rollup@3.25.2)
   '@rollup/plugin-node-resolve':
     specifier: ^15.1.0
-    version: 15.1.0(rollup@3.25.1)
+    version: 15.1.0(rollup@3.25.2)
   '@rollup/plugin-run':
     specifier: ^3.0.1
-    version: 3.0.1(rollup@3.25.1)
+    version: 3.0.1(rollup@3.25.2)
   '@rollup/plugin-terser':
     specifier: ^0.4.3
-    version: 0.4.3(rollup@3.25.1)
+    version: 0.4.3(rollup@3.25.2)
   bouncer:
     specifier: github:ludlovian/bouncer
     version: github.com/ludlovian/bouncer/619bd4db5ec4ab8c62f58390a2e4ac4701a15b0a
@@ -59,14 +59,14 @@ devDependencies:
     specifier: ^10.15.1
     version: 10.15.1
   rollup:
-    specifier: ^3.25.1
-    version: 3.25.1
+    specifier: ^3.25.2
+    version: 3.25.2
   rollup-plugin-copy:
     specifier: ^3.4.0
     version: 3.4.0
   rollup-plugin-gzip:
     specifier: ^3.1.0
-    version: 3.1.0(rollup@3.25.1)
+    version: 3.1.0(rollup@3.25.2)
   sirv:
     specifier: ^2.0.3
     version: 2.0.3
@@ -178,8 +178,8 @@ packages:
       preact: 10.15.1
     dev: true
 
-  /@rollup/plugin-commonjs@25.0.1(rollup@3.25.1):
-    resolution: {integrity: sha512-2DJ4kv4b1xfTJopWhu61ANdNRHvzQZ2fpaIrlgaP2jOfUv1wDJ0Ucqy8AZlbFmn/iUjiwKoqki9j55Y6L8kyNQ==}
+  /@rollup/plugin-commonjs@25.0.2(rollup@3.25.2):
+    resolution: {integrity: sha512-NGTwaJxIO0klMs+WSFFtBP7b9TdTJ3K76HZkewT8/+yHzMiUGVQgaPtLQxNVYIgT5F7lxkEyVID+yS3K7bhCow==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       rollup: ^2.68.0||^3.0.0
@@ -187,16 +187,16 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.2(rollup@3.25.1)
+      '@rollup/pluginutils': 5.0.2(rollup@3.25.2)
       commondir: 1.0.1
       estree-walker: 2.0.2
       glob: 8.1.0
       is-reference: 1.2.1
       magic-string: 0.27.0
-      rollup: 3.25.1
+      rollup: 3.25.2
     dev: true
 
-  /@rollup/plugin-node-resolve@15.1.0(rollup@3.25.1):
+  /@rollup/plugin-node-resolve@15.1.0(rollup@3.25.2):
     resolution: {integrity: sha512-xeZHCgsiZ9pzYVgAo9580eCGqwh/XCEUM9q6iQfGNocjgkufHAqC3exA+45URvhiYV8sBF9RlBai650eNs7AsA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -205,16 +205,16 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.2(rollup@3.25.1)
+      '@rollup/pluginutils': 5.0.2(rollup@3.25.2)
       '@types/resolve': 1.20.2
       deepmerge: 4.3.1
       is-builtin-module: 3.2.1
       is-module: 1.0.0
       resolve: 1.22.2
-      rollup: 3.25.1
+      rollup: 3.25.2
     dev: true
 
-  /@rollup/plugin-run@3.0.1(rollup@3.25.1):
+  /@rollup/plugin-run@3.0.1(rollup@3.25.2):
     resolution: {integrity: sha512-wbYR1Ahz8ohYnlyXzpBTwhGWfs+OO/uZMjgpDGr8AgnL/XfoTbO7BuNYY8ncR/j/1dhCJo+NDuTRkIeCxE434Q==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -224,10 +224,10 @@ packages:
         optional: true
     dependencies:
       '@types/node': 14.18.30
-      rollup: 3.25.1
+      rollup: 3.25.2
     dev: true
 
-  /@rollup/plugin-terser@0.4.3(rollup@3.25.1):
+  /@rollup/plugin-terser@0.4.3(rollup@3.25.2):
     resolution: {integrity: sha512-EF0oejTMtkyhrkwCdg0HJ0IpkcaVg1MMSf2olHb2Jp+1mnLM04OhjpJWGma4HobiDTF0WCyViWuvadyE9ch2XA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -236,13 +236,13 @@ packages:
       rollup:
         optional: true
     dependencies:
-      rollup: 3.25.1
+      rollup: 3.25.2
       serialize-javascript: 6.0.1
       smob: 1.4.0
-      terser: 5.18.0
+      terser: 5.18.1
     dev: true
 
-  /@rollup/pluginutils@5.0.2(rollup@3.25.1):
+  /@rollup/pluginutils@5.0.2(rollup@3.25.2):
     resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -254,7 +254,7 @@ packages:
       '@types/estree': 1.0.1
       estree-walker: 2.0.2
       picomatch: 2.3.1
-      rollup: 3.25.1
+      rollup: 3.25.2
     dev: true
 
   /@types/estree@1.0.1:
@@ -681,17 +681,17 @@ packages:
       is-plain-object: 3.0.1
     dev: true
 
-  /rollup-plugin-gzip@3.1.0(rollup@3.25.1):
+  /rollup-plugin-gzip@3.1.0(rollup@3.25.2):
     resolution: {integrity: sha512-PFS9s6/w6dCra6/Z8PGD+ug3aaaqKLDCbr5y1Ek71Wd4rQSmMnOqCIIMgwbYxZ9A/gjP3pCN6rA4pAG47jxF0w==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       rollup: '>=2.0.0'
     dependencies:
-      rollup: 3.25.1
+      rollup: 3.25.2
     dev: true
 
-  /rollup@3.25.1:
-    resolution: {integrity: sha512-tywOR+rwIt5m2ZAWSe5AIJcTat8vGlnPFAv15ycCrw33t6iFsXZ6mzHVFh2psSjxQPmI+xgzMZZizUAukBI4aQ==}
+  /rollup@3.25.2:
+    resolution: {integrity: sha512-VLnkxZMDr3jpxgtmS8pQZ0UvhslmF4ADq/9w4erkctbgjCqLW9oa89fJuXEs4ZmgyoF7Dm8rMDKSS5b5u2hHUg==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
@@ -756,8 +756,8 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /terser@5.18.0:
-    resolution: {integrity: sha512-pdL757Ig5a0I+owA42l6tIuEycRuM7FPY4n62h44mRLRfnOxJkkOHd6i89dOpwZlpF6JXBwaAHF6yWzFrt+QyA==}
+  /terser@5.18.1:
+    resolution: {integrity: sha512-j1n0Ao919h/Ai5r43VAnfV/7azUYW43GPxK7qSATzrsERfW7+y2QW9Cp9ufnRF5CQUWbnLSo7UJokSWCqg4tsQ==}
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
@@ -844,10 +844,10 @@ packages:
     name: pixutil
     version: 1.7.2
 
-  github.com/ludlovian/signal-extra/e724842666042d427114fee66581cdeefdca7c47:
-    resolution: {tarball: https://codeload.github.com/ludlovian/signal-extra/tar.gz/e724842666042d427114fee66581cdeefdca7c47}
+  github.com/ludlovian/signal-extra/04ac4cb8f19c620bed79e746c789265a26ab16cb:
+    resolution: {tarball: https://codeload.github.com/ludlovian/signal-extra/tar.gz/04ac4cb8f19c620bed79e746c789265a26ab16cb}
     name: '@ludlovian/signal-extra'
-    version: 0.1.1
+    version: 0.1.2
     dependencies:
       '@ludlovian/diff-object': github.com/ludlovian/diff-object/06f54ee0e806f46119b995482e316c525319529e
       '@preact/signals-core': 1.3.0
