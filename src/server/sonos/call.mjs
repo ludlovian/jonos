@@ -9,8 +9,8 @@ import { get, post, send } from 'httpie'
 import Debug from '@ludlovian/debug'
 import Parsley from 'parsley'
 import Serial from 'pixutil/serial'
+import until from '@ludlovian/signal-extra/until'
 
-import { until } from '../model/signal-extra.mjs'
 import { parseResponse, parseDescription } from './parse.mjs'
 import { sonosCallAttempts, sonosCallDelay } from '../config.mjs'
 

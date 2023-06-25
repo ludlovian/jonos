@@ -2,10 +2,8 @@ import { batch } from '@preact/signals'
 import { deserialize } from 'pixutil/json'
 import Parsley from 'parsley'
 import sortBy from 'sortby'
+import addSignals from '@ludlovian/signal-extra/add-signals'
 
-import { addSignals } from './signal-extra.mjs'
-
-window.Parsley = Parsley
 const { fromEntries, entries, assign } = Object
 
 class Model {

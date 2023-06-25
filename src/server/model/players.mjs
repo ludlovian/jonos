@@ -1,9 +1,8 @@
 import { batch } from '@preact/signals-core'
 import Debug from '@ludlovian/debug'
-
 import sortBy from 'sortby'
+import addSignals from '@ludlovian/signal-extra/add-signals'
 
-import { addSignals } from './signal-extra.mjs'
 import Player from './player.mjs'
 import { getZoneGroupState } from '../sonos/index.mjs'
 

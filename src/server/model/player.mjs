@@ -1,8 +1,9 @@
 import { effect, batch } from '@preact/signals-core'
 import Debug from '@ludlovian/debug'
+import addSignals from '@ludlovian/signal-extra/add-signals'
+import until from '@ludlovian/signal-extra/until'
 
 import { notificationTimeout } from '../config.mjs'
-import { addSignals, until } from './signal-extra.mjs'
 import {
   subscribe as sonosSubscribe,
   getDeviceDescription,

@@ -1,6 +1,7 @@
+import until from '@ludlovian/signal-extra/until'
+
 import { presets, notifies } from './config.mjs'
 import model from './model.mjs'
-import { until } from './signal-extra.mjs'
 
 export async function applyPreset (name) {
   const config = presets[name]

@@ -1,11 +1,16 @@
 import { effect } from '@preact/signals-core'
 import Debug from '@ludlovian/debug'
 import Timer from 'timer'
+import addSignals from '@ludlovian/signal-extra/add-signals'
+import subscribe from '@ludlovian/signal-extra/subscribe'
 
 import Players from './players.mjs'
-import subscribe from './subscribe.mjs'
-import { addSignals } from './signal-extra.mjs'
-import { sonosLastListenerDelay, sonosResetPeriod, isDev } from '../config.mjs'
+import {
+  sonosLastListenerDelay,
+  sonosResetPeriod,
+  statusThrottle,
+  isDev
+} from '../config.mjs'
 
 class Model {
   debug = Debug('jonos:model')
@@ -78,7 +83,9 @@ class Model {
   listen (callback) {
     this.debug('listener added')
     this.listeners++
-    const unsub = subscribe(() => this.state, callback)
+    const unsub = subscribe(() => this.state, callback, {
+      debounce: statusThrottle
+    })
 
     return () => {
       this.debug('listener removed')
