@@ -17,6 +17,7 @@ export function App () {
       </p>
       <${Groups} />
       <${PresetButton} preset="standard" />
+      <hr />
       <${NotifyButton} notify="${model.isDev ? 'test' : 'Come Downstairs'}" />
       <${NotifyButton} notify="Feed Me" />
     </div>
