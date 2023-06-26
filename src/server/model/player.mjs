@@ -152,10 +152,15 @@ export default class Player {
     }
 
     if (this.isLeader) {
+      const { trackNum, trackURI, trackPos } = await getPositionInfo(this)
+      const { mediaURI, mediaMetadata = '' } = await getMediaInfo(this)
       Object.assign(ret, {
         playState: this.playState,
-        ...(await getPositionInfo(this)),
-        ...(await getMediaInfo(this))
+        trackNum,
+        trackURI,
+        trackPos,
+        mediaURI,
+        mediaMetadata
       })
     }
     this.debug('getState %o', ret)
@@ -174,7 +179,6 @@ export default class Player {
       playState,
       trackNum,
       trackURI,
-      // trackMetadata = '',
       trackPos,
       mediaURI,
       mediaMetadata = ''
@@ -185,12 +189,13 @@ export default class Player {
       await seekTrack(this, trackNum)
     }
 
-    if (!isPlaying(playState)) return
     if (trackURI.startsWith('x-file')) {
       await seekPos(this, trackPos)
     }
 
-    await this.play()
+    if (isPlaying(playState)) {
+      await this.play()
+    }
   }
 
   async pause () {
