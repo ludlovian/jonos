@@ -68,16 +68,15 @@ export default class Players {
       }
 
       for (const p of playerDetails) {
-        let player = this.byName[p.name]
-        if (!player) {
-          player = new Player(this)
-          Object.assign(player, p)
+        if (p.address === this.keystone) p.keystone = true
+        if (p.name in this.byName) {
+          Object.assign(this.byName[p.name], p)
+        } else {
+          const player = Object.assign(new Player(this), p)
           this.players = [...this.players, player].sort(sortBy('name'))
           this.debug('Player %s added', p.name)
           proms.push(player.getDescription())
         }
-        Object.assign(player, p)
-        if (p.address === this.keystone) player.keystone = true
       }
     })
     return Promise.all(proms)

@@ -17,7 +17,8 @@ export function App () {
       </p>
       <${Groups} />
       <${PresetButton} preset="standard" />
-      <${NotifyButton} notify="${model.isDev ? 'test' : 'downstairs'}" />
+      <${NotifyButton} notify="${model.isDev ? 'test' : 'Come Downstairs'}" />
+      <${NotifyButton} notify="Feed Me" />
     </div>
   `
 }
@@ -43,12 +44,33 @@ function Group ({ leaderName, memberNames }) {
   memberNames = [...new Set([leaderName, ...memberNames])]
   const leader = model.byName[leaderName]
   const playing = leader.isPlaying
-  const title = playing ? leader.trackTitle : ''
   const items = memberNames.map(name => h(Player, { name, playing }))
   return html`
-    <p><em>${title}</em></p>
+    ${playing && h(TrackDetails, { trackDetails: leader.trackDetails })}
     ${items}
     <hr />
+  `
+}
+
+function TrackDetails ({ trackDetails }) {
+  const [who, what, title] = trackDetails
+  const lines = [
+    who &&
+      html`
+        <div class="fw-bold">${who}</div>
+      `,
+    what &&
+      html`
+        <div>${what}</div>
+      `,
+    title &&
+      html`
+        <div class="fst-italic">${title}</div>
+      `
+  ].filter(Boolean)
+
+  return html`
+    <div class="row pb-2">${lines}</div>
   `
 }
 

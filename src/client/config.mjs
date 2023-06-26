@@ -16,13 +16,21 @@ export const notifies = {
   test: {
     leader: 'roam',
     uri:
-      'https://media-readersludlow.s3-eu-west-1.amazonaws.com/public/come-downstairs.mp3',
-    volume: 25
+      'https://media-readersludlow.s3.eu-west-1.amazonaws.com/public/feed-me-now.mp3',
+    volume: 25,
+    resume: true
   },
-  downstairs: {
+  'Come Downstairs': {
     leader: 'bedroom',
     uri:
       'https://media-readersludlow.s3-eu-west-1.amazonaws.com/public/come-downstairs.mp3',
     volume: 50
+  },
+  'Feed Me': {
+    leader: 'bedroom',
+    uri:
+      'https://media-readersludlow.s3.eu-west-1.amazonaws.com/public/feed-me-now.mp3',
+    volume: 50,
+    resume: true
   }
 }

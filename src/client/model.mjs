@@ -1,6 +1,5 @@
 import { batch } from '@preact/signals'
 import { deserialize } from 'pixutil/json'
-import Parsley from 'parsley'
 import sortBy from 'sortby'
 import addSignals from '@ludlovian/signal-extra/add-signals'
 
@@ -75,19 +74,11 @@ class Player {
       volume: 0,
       mute: false,
       playState: '',
-      trackURI: '',
-      trackMetadata: '',
-      trackTitle: () => this._trackTitle(),
+      trackDetails: [],
       isLeader: () => this.leader === this.name,
       isPlaying: () =>
         this.isLeader && ['PLAYING', 'TRANSITIONING'].includes(this.playState)
     })
-  }
-
-  _trackTitle () {
-    if (!this.trackMetadata) return ''
-    const p = Parsley.from(this.trackMetadata, { safe: true })
-    return p?.find('r:streamContent')?.text ?? p?.find('dc:title')?.text ?? ''
   }
 
   follows (other) {

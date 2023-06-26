@@ -41,7 +41,9 @@ export async function playNotify (name) {
   const { leader, volume, uri } = config
   const members = model.groups[leader]
   const oldVols = members.map(n => model.byName[n].volume)
+  let resume = false
   if (model.byName[leader].isPlaying) {
+    if (config.resume) resume = true
     await call('/api/pause/' + leader, {})
   }
 
@@ -56,6 +58,10 @@ export async function playNotify (name) {
       call('/api/volume/' + name, { volume: oldVols[ix] })
     )
   )
+
+  if (resume) {
+    await call('/api/play/' + leader)
+  }
 }
 
 async function call (url, data) {

@@ -3,6 +3,7 @@ import Debug from '@ludlovian/debug'
 import addSignals from '@ludlovian/signal-extra/add-signals'
 import until from '@ludlovian/signal-extra/until'
 
+import { getTrackDetails } from './track.mjs'
 import { notificationTimeout } from '../config.mjs'
 import {
   subscribe as sonosSubscribe,
@@ -43,6 +44,7 @@ export default class Player {
       subscription: null,
 
       // derived
+      trackDetails: () => getTrackDetails(this.trackURI, this.trackMetadata),
       state: this._state.bind(this),
       isLeader: () => !this.leaderUuid,
       leader: () =>
@@ -62,8 +64,7 @@ export default class Player {
       fullName: this.fullName,
       leader: this.leader.name,
       playState: this.isLeader ? this.playState : '',
-      trackURI: this.isLeader ? this.trackURI : '',
-      trackMetadata: this.isLeader ? this.trackMetadata : '',
+      trackDetails: this.isLeader ? this.trackDetails : [],
       volume: this.volume,
       mute: this.mute
     }
