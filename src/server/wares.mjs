@@ -11,7 +11,7 @@ export const staticFiles = path =>
   sirv(path, {
     dev: isDev,
     gzip: !isDev,
-    etag: !isDev
+    etag: true
   })
 
 export function parseBody (opts = {}) {
