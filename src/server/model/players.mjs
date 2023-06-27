@@ -27,7 +27,16 @@ export default class Players {
       byName: () => fromEntries(this.players.map(p => [p.name, p])),
       byUuid: () => fromEntries(this.players.map(p => [p.uuid, p])),
       state: () => Object.fromEntries(this.players.map(p => [p.name, p.state])),
-      isSubscribed: () => this.players.every(p => p.isSubscribed)
+      isSubscribed: () => this.players.every(p => p.isSubscribed),
+      groups: () =>
+        fromEntries(
+          this.players
+            .filter(p => p.isLeader)
+            .map(l => [
+              l.name,
+              this.players.filter(p => p.leader === l).map(p => p.name)
+            ])
+        )
     })
   }
 
@@ -75,7 +84,7 @@ export default class Players {
           const player = Object.assign(new Player(this), p)
           this.players = [...this.players, player].sort(sortBy('name'))
           this.debug('Player %s added', p.name)
-          proms.push(player.getDescription())
+          proms.push(player.update())
         }
       }
     })

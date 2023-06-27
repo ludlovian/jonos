@@ -36,7 +36,7 @@
     "pixutil": "github:ludlovian/pixutil",
     "polka": "^0.5.2",
     "preact": "^10.15.1",
-    "rollup": "^3.25.2",
+    "rollup": "^3.25.3",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-gzip": "^3.1.0",
     "sirv": "^2.0.3",

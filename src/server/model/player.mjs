@@ -10,6 +10,9 @@ import {
   getDeviceDescription,
   getMediaInfo,
   getPositionInfo,
+  getTransportInfo,
+  getVolume,
+  getMute,
   setAVTransportURI,
   seekTrack,
   seekPos,
@@ -75,16 +78,24 @@ export default class Player {
   //
 
   async subscribe () {
+    // subscribe will always succeed - if it errors
+    // it simply removes the subscription
     if (this.isSubscribed) return null
     this.subscription = sonosSubscribe(this)
-    await this.subscription.start()
+    await this.subscription.start().catch(err => {
+      console.error(err)
+      this.subscription = null
+    })
   }
 
   async unsubscribe () {
+    // unsubscribe will always succeed
     if (!this.isSubscribed) return null
     const sub = this.subscription
     this.subscription = null
-    await sub.stop()
+    await sub.stop().catch(err => {
+      console.log(err)
+    })
   }
 
   reset () {
@@ -97,7 +108,7 @@ export default class Player {
     if (!data) return
     batch(() => {
       for (const [k, v] of Object.entries(data)) {
-        if (k in this) {
+        if (k in this && this[k] !== v) {
           this.debug('Updated %s', k)
           this[k] = v
         }
@@ -109,6 +120,16 @@ export default class Player {
   //
   // Basic XML description
   //
+
+  async update () {
+    this.onData({
+      ...((await getDeviceDescription(this)) ?? {}),
+      ...((await getPositionInfo(this)) ?? {}),
+      ...((await getTransportInfo(this)) ?? {}),
+      ...((await getVolume(this)) ?? {}),
+      ...((await getMute(this)) ?? {})
+    })
+  }
 
   async getDescription () {
     if (this.model) return

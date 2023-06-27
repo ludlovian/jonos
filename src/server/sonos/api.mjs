@@ -22,6 +22,10 @@ export function getPositionInfo ({ address }) {
   return callSOAP(address, SRV.AVT, 'GetPositionInfo', { InstanceID: 0 })
 }
 
+export function getTransportInfo ({ address }) {
+  return callSOAP(address, SRV.AVT, 'GetTransportInfo', { InstanceID: 0 })
+}
+
 export function setAVTransportURI ({ address }, media) {
   const { mediaURI, mediaMetadata = '' } = media
   return callSOAP(address, SRV.AVT, 'SetAVTransportURI', {
@@ -69,6 +73,20 @@ export function startOwnGroup ({ address }, verify) {
     },
     { verify }
   )
+}
+
+export function getVolume ({ address }) {
+  return callSOAP(address, SRV.RC, 'GetVolume', {
+    InstanceID: 0,
+    Channel: 'Master'
+  })
+}
+
+export function getMute ({ address }) {
+  return callSOAP(address, SRV.RC, 'GetMute', {
+    InstanceID: 0,
+    Channel: 'Master'
+  })
 }
 
 export function setVolume ({ address }, vol, verify) {

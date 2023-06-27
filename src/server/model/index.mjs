@@ -1,12 +1,12 @@
-import { effect } from '@preact/signals-core'
 import Debug from '@ludlovian/debug'
 import Timer from 'timer'
+import Bouncer from 'bouncer'
 import addSignals from '@ludlovian/signal-extra/add-signals'
 import subscribe from '@ludlovian/signal-extra/subscribe'
 
 import Players from './players.mjs'
 import {
-  sonosLastListenerDelay,
+  sonosNotificationDelay,
   sonosResetPeriod,
   statusThrottle,
   isDev
@@ -34,46 +34,42 @@ class Model {
       })
     })
 
+    this.unsubscriber = new Bouncer()
     this.tmReset = new Timer()
   }
 
-  _monitorSubscriptions () {
-    if (this.listeners > 0 && !this.players.$isSubscribed.peek()) {
-      this.debug('Subscribing to all')
-
-      // TODO need to wrap this async for errors
-      this.players.subscribe()
-    } else if (this.listeners === 0 && this.players.$isSubscribed.peek()) {
-      this.debug('No listeners. Waiting a bit')
-
-      const tm = new Timer({
-        after: sonosLastListenerDelay,
-        fn: () => {
-          this.debug('Unsubscribing whilst idle')
-
-          // TODO need to wrap this async for errors
-          this.players.unsubscribe()
-        }
-      })
-      return () => tm.cancel()
-    }
+  touch () {
+    this.unsubscriber.fire()
+    if (!this.players.isSubscribed) return this.players.subscribe()
   }
 
   async start () {
     await this.players.start()
+
+    this.unsubscriber.set({
+      after: sonosNotificationDelay,
+      fn: () => {
+        if (this.listeners) return this.touch()
+        this.debug('Unsubscribing')
+        this.players.unsubscribe()
+      }
+    })
+
     this.tmReset.set({
       every: sonosResetPeriod,
       fn: () => {
-        this.debug('Resetting all players')
-        this.reset()
+        if (!this.unsubscriber.active) {
+          this.debug('Resetting all players')
+          this.reset()
+        }
       }
     })
-    effect(() => this._monitorSubscriptions())
   }
 
   stop () {
-    this.players.unsubscribe()
+    this.unsubscriber.stop()
     this.tmReset.cancel()
+    this.players.unsubscribe()
   }
 
   reset () {
@@ -82,6 +78,7 @@ class Model {
 
   listen (callback) {
     this.debug('listener added')
+    this.touch()
     this.listeners++
     const unsub = subscribe(() => this.state, callback, {
       debounce: statusThrottle
@@ -90,6 +87,7 @@ class Model {
     return () => {
       this.debug('listener removed')
       unsub()
+      this.touch()
       this.listeners--
     }
   }

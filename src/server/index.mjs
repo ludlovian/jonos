@@ -1,19 +1,27 @@
 import polka from 'polka'
 import Debug from '@ludlovian/debug'
 
-import { staticFiles, parseBody, log, wrap, getPlayer } from './wares.mjs'
+import {
+  staticFiles,
+  parseBody,
+  log,
+  wrap,
+  getPlayer,
+  touchModel
+} from './wares.mjs'
 import { serverPort, clientPath } from './config.mjs'
 import { handleEvent } from './sonos/index.mjs'
 import {
-  statusUpdates as apiStatusUpdates,
-  status as apiStatus,
-  setVolume as apiSetVolume,
-  setMute as apiSetMute,
-  setLeader as apiSetLeader,
-  playNotify as apiPlayNotify,
-  pause as apiPause,
-  play as apiPlay
-} from './handlers.mjs'
+  apiStatus,
+  apiStatusUpdates,
+  apiPlayerVolume,
+  apiPlayerMute,
+  apiPlayerLeader,
+  apiPlayerPlay,
+  apiPlayerPause,
+  apiCommandPreset,
+  apiCommandNotify
+} from './api/index.mjs'
 
 class Server {
   static get instance () {
@@ -33,15 +41,22 @@ class Server {
       .all('/notify/:name/:service', handleEvent)
 
       // API
-      .use('/api', log, parseBody({ json: true }), getPlayer)
+      .use('/api', touchModel, log, parseBody({ json: true }), getPlayer)
+
+      // Status
       .get('/api/status/updates', wrap(apiStatusUpdates))
       .get('/api/status', wrap(apiStatus))
-      .post('/api/volume/:name', wrap(apiSetVolume))
-      .post('/api/mute/:name', wrap(apiSetMute))
-      .post('/api/leader/:name', wrap(apiSetLeader))
-      .post('/api/notify/:name', wrap(apiPlayNotify))
-      .post('/api/pause/:name', wrap(apiPause))
-      .post('/api/play/:name', wrap(apiPlay))
+
+      // Player
+      .post('/api/player/:name/volume', wrap(apiPlayerVolume))
+      .post('/api/player/:name/mute', wrap(apiPlayerMute))
+      .post('/api/player/:name/leader', wrap(apiPlayerLeader))
+      .post('/api/player/:name/pause', wrap(apiPlayerPause))
+      .post('/api/player/:name/play', wrap(apiPlayerPlay))
+
+      // Commands
+      .post('/api/command/preset/:preset', wrap(apiCommandPreset))
+      .post('/api/command/notify/:notify', wrap(apiCommandNotify))
 
     // start listening
     return new Promise((resolve, reject) => {

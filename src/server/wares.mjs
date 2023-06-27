@@ -14,6 +14,11 @@ export const staticFiles = path =>
     etag: true
   })
 
+export async function touchModel (req, res, next) {
+  await model.touch()
+  next()
+}
+
 export function parseBody (opts = {}) {
   const { json = false, methods = ['POST', 'NOTIFY'] } = opts
   return async (req, res, next) => {
