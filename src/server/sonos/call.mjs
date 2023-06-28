@@ -27,12 +27,24 @@ const XML_PI = '<?xml version="1.0" encoding="utf-8"?>'
 // will retry if this times out. This seems only to be needed if the Sonos
 // has been deep asleep.
 
-export async function callSOAP (addr, srv, action, params = {}, opts = {}) {
-  debug('call %s %s %o', addr, action, params)
-  const { parse = true, verify } = opts
-  const call = prepareCall(addr, srv, action, params)
-  const { url, headers, body } = call
-  const serial = getSerial(addr)
+export async function callSOAP ({
+  address,
+  service,
+  path,
+  action,
+  params = {},
+  parse = true,
+  verify
+}) {
+  debug('call %s %s %o', address, action, params)
+  const { url, headers, body } = prepareCall({
+    address,
+    service,
+    path,
+    action,
+    params
+  })
+  const serial = getSerial(address)
 
   for (let i = 0; i < sonosCallAttempts; i++) {
     const res = await serial.exec(() => post(url, { headers, body }))
@@ -47,7 +59,12 @@ export async function callSOAP (addr, srv, action, params = {}, opts = {}) {
     if (await until(verify, sonosCallDelay)) return parsed
   }
 
-  debugError('call %s %s %o failed after several tries', addr, action, params)
+  debugError(
+    'call %s %s %o failed after several tries',
+    address,
+    action,
+    params
+  )
 }
 
 // The function to read the players XML description
@@ -99,9 +116,8 @@ function getSerial (addr) {
   return serialByAddr.get(addr)
 }
 
-function prepareCall (addr, srv, action, params) {
-  const { service, path } = srv
-  const url = `http://${addr}:1400/${path}/Control`
+function prepareCall ({ address, service, path, action, params }) {
+  const url = `http://${address}:1400/${path}/Control`
   const headers = {
     soapaction: `"urn:schemas-upnp-org:service:${service}:1#${action}"`,
     'Content-Type': 'text/xml; charset="utf-8"'
