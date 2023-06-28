@@ -23,10 +23,9 @@ export default class Players {
       players: [],
 
       // derived
-      names: () => this.players.map(p => p.name).sort(),
       byName: () => fromEntries(this.players.map(p => [p.name, p])),
       byUuid: () => fromEntries(this.players.map(p => [p.uuid, p])),
-      state: () => Object.fromEntries(this.players.map(p => [p.name, p.state])),
+      state: () => fromEntries(this.players.map(p => [p.name, p.state])),
       isSubscribed: () => this.players.every(p => p.isSubscribed),
       groups: () =>
         fromEntries(
@@ -79,9 +78,9 @@ export default class Players {
       for (const p of playerDetails) {
         if (p.address === this.keystone) p.keystone = true
         if (p.name in this.byName) {
-          Object.assign(this.byName[p.name], p)
+          this.byName[p.name].onData(p)
         } else {
-          const player = Object.assign(new Player(this), p)
+          const player = new Player(this, p)
           this.players = [...this.players, player].sort(sortBy('name'))
           this.debug('Player %s added', p.name)
           proms.push(player.update())

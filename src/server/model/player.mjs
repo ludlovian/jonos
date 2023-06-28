@@ -1,4 +1,4 @@
-import { effect, batch } from '@preact/signals-core'
+import { batch } from '@preact/signals-core'
 import Debug from '@ludlovian/debug'
 import addSignals from '@ludlovian/signal-extra/add-signals'
 import until from '@ludlovian/signal-extra/until'
@@ -25,7 +25,7 @@ import {
 } from '../sonos/index.mjs'
 
 export default class Player {
-  constructor (players) {
+  constructor (players, data) {
     this._players = players
 
     addSignals(this, {
@@ -48,29 +48,23 @@ export default class Player {
 
       // derived
       trackDetails: () => getTrackDetails(this.trackURI, this.trackMetadata),
-      state: this._state.bind(this),
-      isLeader: () => !this.leaderUuid,
-      leader: () =>
-        this.isLeader ? this : this._players.byUuid[this.leaderUuid],
+      leader: () => this._players.byUuid[this.leaderUuid] ?? this,
+      isLeader: () => this.leader === this,
       isPlaying: () => this.isLeader && isPlaying(this.playState),
-      isSubscribed: () => !!this.subscription
+      isSubscribed: () => !!this.subscription,
+      state: () => ({
+        name: this.name,
+        fullName: this.fullName,
+        leader: this.leader.name,
+        playState: this.isLeader ? this.playState : '',
+        trackDetails: this.isLeader ? this.trackDetails : [],
+        volume: this.volume,
+        mute: this.mute
+      })
     })
 
-    effect(() => {
-      this.debug = Debug(`jonos:player:${this.name}`)
-    })
-  }
-
-  _state () {
-    return {
-      name: this.name,
-      fullName: this.fullName,
-      leader: this.leader.name,
-      playState: this.isLeader ? this.playState : '',
-      trackDetails: this.isLeader ? this.trackDetails : [],
-      volume: this.volume,
-      mute: this.mute
-    }
+    Object.assign(this, data)
+    this.debug = Debug(`jonos:player:${this.name}`)
   }
 
   //
