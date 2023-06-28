@@ -25,6 +25,7 @@ export function App () {
       </p>
       <${Groups} />
       <${PresetButton} preset="standard" label="Standard" />
+      <${PresetButton} preset="guests" label="Guests" />
       <hr />
       ${model.isDev &&
         html`

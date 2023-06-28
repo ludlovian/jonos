@@ -9,6 +9,18 @@ export const presets = {
       ['office', 12],
       ['diningroom', 12]
     ]
+  },
+  guests: {
+    leader: 'bedroom',
+    members: [
+      ['bedroom', 50],
+      ['bookroom', 15],
+      ['diningroom', 10],
+      ['kitchen', 50],
+      ['office', 50],
+      ['parlour', 12],
+      ['roam', 50]
+    ]
   }
 }
 
