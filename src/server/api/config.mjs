@@ -10,6 +10,16 @@ export const presets = {
       ['diningroom', 12]
     ]
   },
+  zoom: {
+    leader: 'bedroom',
+    members: [
+      ['bedroom', 25],
+      ['bookroom', 25],
+      ['kitchen', 25],
+      ['office', 12],
+      ['diningroom', 12]
+    ]
+  },
   guests: {
     leader: 'bedroom',
     members: [
