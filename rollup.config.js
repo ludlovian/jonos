@@ -37,13 +37,14 @@ export default [
       copy({
         targets: [
           { src: 'src/client/*.html', dest: 'dist/public' },
-          { src: 'src/client/bootstrap.min.*', dest: 'dist/public' }
+          { src: 'src/client/bootstrap.min.css*', dest: 'dist/public' },
+          { src: 'src/client/bootstrap.bundle.min.js*', dest: 'dist/public' }
         ]
       }),
       !dev && gzip({
         additionalFiles: [
           'dist/public/bootstrap.min.css',
-          'dist/public/bootstrap.min.js'
+          'dist/public/bootstrap.bundle.min.js'
         ]
       })
     ]

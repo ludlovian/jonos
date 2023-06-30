@@ -1,6 +1,7 @@
 import { h } from 'preact'
 import htm from 'htm'
-import { useState, useCallback } from 'preact/hooks'
+import { useCallback } from 'preact/hooks'
+import { useSignal } from '@preact/signals'
 import model from './model.mjs'
 import { post } from './commands.mjs'
 
@@ -17,6 +18,19 @@ export function App () {
       <h1>Loading...</h1>
     `
   }
+
+  const presetButtons = [
+    ['Standard', 'standard'],
+    ['Zoom', 'zoom'],
+    ['Guests', 'guests']
+  ]
+
+  const notifyButtons = [
+    ['Come Downstairs', 'downstairs'],
+    ['Feed Me', 'feedme'],
+    model.isDev && ['Test', 'test']
+  ].filter(Boolean)
+
   return html`
     <div class="container">
       <p class="text">
@@ -24,16 +38,17 @@ export function App () {
         <small class="text mx-2">version ${model.version}</small>
       </p>
       <${Groups} />
-      <${PresetButton} preset="standard" label="Standard" />
-      <${PresetButton} preset="zoom" label="Zoom" />
-      <${PresetButton} preset="guests" label="Guests" />
+      <${MultiButton}
+        prefix="Preset"
+        buttons=${presetButtons}
+        url="/api/command/preset/"
+      />
       <hr />
-      ${model.isDev &&
-        html`
-          <${NotifyButton} notify="test" label="Test" />
-        `}
-      <${NotifyButton} notify="downstairs" label="Come Downstairs" />
-      <${NotifyButton} notify="feedme" label="Feed Me" />
+      <${MultiButton}
+        prefix="Notify"
+        buttons=${notifyButtons}
+        url="/api/command/notify/"
+      />
     </div>
   `
 }
@@ -115,48 +130,62 @@ function Player ({ name, playing }) {
   `
 }
 
-function PresetButton ({ preset, label }) {
-  return html`
-    <${Button}
-      label=${`Preset - ${label}`}
-      url=${`/api/command/preset/${preset}`}
-    />
-  `
-}
-
-function NotifyButton ({ notify, label }) {
-  return html`
-    <${Button}
-      label=${`Notify - ${label}`}
-      url=${`/api/command/notify/${notify}`}
-    />
-  `
-}
-
-function Button ({ label, url }) {
-  const [busy, setBusy] = useState(false)
+function MultiButton ({ prefix, buttons, url: urlPrefix }) {
+  const $current = useSignal(0)
+  const $busy = useSignal(false)
+  const [text] = buttons[$current.value]
   const onclick = useCallback(async () => {
-    setBusy(true)
-    await post(url)
-    setBusy(false)
-  }, [url])
+    const [, url] = buttons[$current.value]
+    $busy.value = true
+    await post(urlPrefix + url)
+    $busy.value = false
+  }, [])
 
   return html`
     <div class="row my-2">
       <div class="col">
-        <button
-          class="btn btn-primary"
-          type="submit"
-          onclick=${onclick}
-          disabled=${busy}
-        >
-          ${busy &&
-            html`
-              <span class="spinner-border spinner-border-sm" />
-            `}
-          ${label}
-        </button>
+        <div class="btn-group">
+          <button
+            class="btn btn-primary"
+            type="submit"
+            onclick=${onclick}
+            disabled=${$busy.value}
+          >
+            ${$busy.value &&
+              html`
+                <span class="spinner-border spinner-border-sm" />
+              `}
+            ${prefix} - ${text}
+          </button>
+          <button
+            class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <span class="visually-hidden">Toggle Dropdown</span>
+          </button>
+          <ul class="dropdown-menu">
+            ${buttons.map(
+              ([text], index) => html`
+                <${MultiButtonChoice}
+                  text=${text}
+                  index=${index}
+                  $current=${$current}
+                />
+              `
+            )}
+          </ul>
+        </div>
       </div>
     </div>
+  `
+}
+
+function MultiButtonChoice ({ text, index, $current }) {
+  const onclick = useCallback(() => ($current.value = index), [$current, index])
+  return html`
+    <li>
+      <a class="dropdown-item" onclick=${onclick}>${text}</a>
+    </li>
   `
 }
