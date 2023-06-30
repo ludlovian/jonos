@@ -17,11 +17,8 @@ export const sonosSubscriptionRenewal = parseMS('20m')
 // How long after the last activity should we shut down notifications
 export const sonosNotificationDelay = parseMS(isDev ? '10s' : '15m')
 
-// How soon after the last listener should we shut down notifications
-export const sonosLastListenerDelay = parseMS(isDev ? '5s' : '30s')
-
 // After how ofen should we reset the listeners
-export const sonosResetPeriod = parseMS('12h')
+export const sonosResetPeriod = parseMS('13h')
 
 // How many times to try a call
 export const sonosCallAttempts = 3

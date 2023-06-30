@@ -57,6 +57,7 @@ export async function callSOAP ({
     }
     if (!verify) return parsed
     if (await until(verify, sonosCallDelay)) return parsed
+    debug('Retrying call %s %s %o', address, action, params)
   }
 
   debugError(
