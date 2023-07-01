@@ -1,4 +1,7 @@
-import { html, useSignal } from './util.mjs'
+/** @jsx h */
+import { h } from 'preact'
+import { useSignal } from '@preact/signals'
+
 import { post } from '../commands.mjs'
 
 export function Button ({ prefix = '', label, cmd }) {
@@ -9,18 +12,15 @@ export function Button ({ prefix = '', label, cmd }) {
     $busy.value = false
   }
 
-  return html`
+  return (
     <button
-      class="btn btn-primary"
-      type="submit"
-      onclick=${onclick}
-      disabled=${$busy.value}
+      class='btn btn-primary'
+      type='submit'
+      onclick={onclick}
+      disabled={$busy.value}
     >
-      ${$busy.value &&
-        html`
-          <span class="spinner-border spinner-border-sm" />
-        `}
-      ${prefix + label}
+      {$busy.value && <span class='spinner-border spinner-border-sm' />}
+      {prefix + label}
     </button>
-  `
+  )
 }

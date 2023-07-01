@@ -1,10 +1,10 @@
-import { html } from './util.mjs'
+/** @jsx h */
+import { h } from 'preact'
+
 import { Group } from './Group.mjs'
 
 export function Groups ({ groups }) {
-  return groups.map(
-    ([leader, members]) => html`
-      <${Group} ...${{ leader, members }} />
-    `
-  )
+  return groups.map(([leader, members]) => (
+    <Group leader={leader} key={leader.name} members={members} />
+  ))
 }

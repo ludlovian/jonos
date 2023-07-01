@@ -1,5 +1,7 @@
+/** @jsx h */
+import { h, Fragment } from 'preact'
 import sortBy from 'sortby'
-import { html } from './util.mjs'
+
 import { Player } from './Player.mjs'
 import { NowPlaying } from './NowPlaying.mjs'
 
@@ -8,13 +10,13 @@ export function Group ({ leader, members }) {
   members = members.sort(sortBy(p => p.fullName))
   members = [...new Set([leader, ...members])]
 
-  return html`
-    <${NowPlaying} player=${leader} />
-    ${members.map(
-      member => html`
-        <${Player} player=${member} />
-      `
-    )}
-    <hr />
-  `
+  return (
+    <Fragment>
+      <NowPlaying player={leader} />
+      {members.map(member => (
+        <Player player={member} key={member.name} />
+      ))}
+      <hr />
+    </Fragment>
+  )
 }
