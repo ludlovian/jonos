@@ -55,7 +55,7 @@ export default class Player {
       state: () => ({
         name: this.name,
         fullName: this.fullName,
-        leader: this.leader.name,
+        leaderName: this.leader.name,
         playState: this.isLeader ? this.playState : '',
         trackDetails: this.isLeader ? this.trackDetails : [],
         volume: this.volume,

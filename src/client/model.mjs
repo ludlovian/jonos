@@ -21,15 +21,12 @@ class Model {
       byName: () => fromEntries(this.players.map(p => [p.name, p])),
       state: () => fromEntries(this.players.map(p => [p.name, p.state])),
       isLoading: () => this.players.length === 0,
+      leaders: () => this.players.filter(p => p.isLeader),
       groups: () =>
-        fromEntries(
-          this.players
-            .filter(p => p.isLeader)
-            .map(l => [
-              l.name,
-              this.players.filter(p => p.follows(l)).map(p => p.name)
-            ])
-        )
+        this.leaders.map(leader => [
+          leader,
+          this.players.filter(p => p.follows(leader))
+        ])
     })
   }
 
@@ -43,11 +40,10 @@ class Model {
         for (const [name, data] of entries(update.players)) {
           const player = this.byName[name]
           if (!player) {
-            const player = new Player()
-            assign(player, data)
+            const player = new Player(this, data)
             this.players = [...this.players, player].sort(sortBy('name'))
           } else {
-            assign(player, data)
+            player._onData(data)
           }
         }
       }
@@ -66,23 +62,37 @@ class Model {
 }
 
 class Player {
-  constructor () {
+  constructor (players, data = {}) {
+    this.players = players
+
     addSignals(this, {
+      // core data
       name: '',
       fullName: '',
-      leader: '',
+      leaderName: '',
       volume: 0,
       mute: false,
       playState: '',
       trackDetails: [],
-      isLeader: () => this.leader === this.name,
+
+      // derived
+      leader: () => this.players.byName[this.leaderName] || this,
+      isLeader: () => this.leader === this,
       isPlaying: () =>
         this.isLeader && ['PLAYING', 'TRANSITIONING'].includes(this.playState)
     })
+
+    this._onData(data)
+  }
+
+  _onData (data) {
+    for (const [key, val] of entries(data)) {
+      if (key in this) this[key] = val
+    }
   }
 
   follows (other) {
-    return this.leader === other.name
+    return this.leader === other
   }
 }
 
