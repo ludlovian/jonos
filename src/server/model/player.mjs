@@ -2,6 +2,7 @@ import { batch } from '@preact/signals-core'
 import Debug from '@ludlovian/debug'
 import addSignals from '@ludlovian/signal-extra/add-signals'
 import until from '@ludlovian/signal-extra/until'
+import Timer from 'timer'
 
 import { getTrackDetails } from './track.mjs'
 import { notificationTimeout } from '../config.mjs'
@@ -239,10 +240,16 @@ export default class Player {
 
     const state = await this.getState()
 
+    const tm = new Timer({
+      every: 1e3,
+      fn: () => getTransportInfo(this).then(data => this.onData(data))
+    })
+
     if (this.isPlaying) {
       await this.pause()
       if (!(await until(() => !this.isPlaying, 500))) {
         this.debug('Could not stop')
+        tm.cancel()
         return false
       }
     }
@@ -251,13 +258,17 @@ export default class Player {
 
     if (!(await until(() => this.isPlaying), notificationTimeout)) {
       this.debug('Could not start')
+      tm.cancel()
       return false
     }
 
     if (!(await until(() => !this.isPlaying), notificationTimeout)) {
       this.debug('Did not finish')
+      tm.cancel()
       return false
     }
+
+    tm.cancel()
 
     await this.restoreState(state)
 
