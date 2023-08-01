@@ -52,11 +52,11 @@ export default class Players {
     await Promise.all(this.players.map(p => p.unsubscribe()))
   }
 
-  async reset () {
+  reset () {
     this.debug('Resetting all players')
     this.players.forEach(p => p.reset())
     this.players = []
-    await this.start()
+    this.start() // run async
   }
 
   async reloadFromKeystone () {
