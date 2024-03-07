@@ -6,7 +6,8 @@ export const presets = {
       ['parlour', 25],
       ['bookroom', 25],
       ['kitchen', 25],
-      ['office', 12],
+      ['study', 12],
+      ['archive', 12],
       ['diningroom', 12]
     ]
   },
@@ -17,6 +18,7 @@ export const presets = {
       ['bookroom', 25],
       ['kitchen', 25],
       ['office', 12],
+      ['archive', 12],
       ['diningroom', 12]
     ]
   },
@@ -27,16 +29,16 @@ export const presets = {
       ['bookroom', 15],
       ['diningroom', 10],
       ['kitchen', 50],
-      ['office', 50],
+      ['archive', 50],
       ['parlour', 12],
-      ['roam', 50]
+      ['study', 15]
     ]
   }
 }
 
 export const notifies = {
   test: {
-    leader: 'roam',
+    leader: 'study',
     uri:
       'https://media-readersludlow.s3.eu-west-1.amazonaws.com/public/feed-me-now.mp3',
     volume: 25,
