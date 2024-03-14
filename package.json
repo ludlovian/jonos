@@ -2,7 +2,7 @@
   "name": "jonos",
   "private": true,
   "type": "module",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "description": "Control of my sonos installation",
   "scripts": {
     "clean": "rm -rf dist/",
