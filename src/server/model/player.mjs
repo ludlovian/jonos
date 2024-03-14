@@ -200,6 +200,8 @@ export default class Player {
       mediaMetadata = ''
     } = state
 
+    if (!mediaURI) return
+
     await setAVTransportURI(this, { mediaURI, mediaMetadata })
     if (parseInt(trackNum) > 1) {
       await seekTrack(this, trackNum)
