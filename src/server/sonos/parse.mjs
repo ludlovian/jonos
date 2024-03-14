@@ -86,7 +86,7 @@ export function parseEvent (service, xml) {
       trackMetadata: p.find('CurrentTrackMetaData', { blank: true }).attr.val
     }
     if (ret.trackMetadata) ret.trackMetadata = ret.trackMetadata.trim()
-    return clean(ret)
+    return cleanOrNull(ret)
   } else if (service === 'RenderingControl') {
     const ret = {
       volume: p.find(master('Volume'), { blank: true }).attr.val,
@@ -94,7 +94,7 @@ export function parseEvent (service, xml) {
     }
     if (ret.volume != null) ret.volume = parseInt(ret.volume)
     if (ret.mute != null) ret.mute = ret.mute === '1'
-    return clean(ret)
+    return cleanOrNull(ret)
   }
 
   function master (type) {
@@ -131,6 +131,10 @@ function parseZoneGroupState (p) {
 }
 
 function clean (obj) {
+  return cleanOrNull(obj) ?? {}
+}
+
+function cleanOrNull (obj) {
   const entries = Object.entries(obj).filter(([k, v]) => v != null)
   return entries.length ? Object.fromEntries(entries) : null
 }
