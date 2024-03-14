@@ -95,8 +95,8 @@ export default class Player {
 
   reset () {
     if (!this.isSubscribed) return null
-    this.subscription = null
     this.subscription.reset()
+    this.subscription = null
   }
 
   onData (data) {
