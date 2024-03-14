@@ -12,14 +12,16 @@ export async function apiCommandPreset (req, res) {
   }
 
   const old = new Set(players.groups[leader.name])
-  await Promise.all(
-    preset.members.map(async ([name, volume]) => {
-      const player = players.byName[name]
-      old.delete(name)
-      if (player.volume !== volume) await player.setVolume(volume)
-      if (player.leader !== leader) await player.setLeader(leader.name)
-    })
-  )
+
+  for (const [name, volume] of preset.members) {
+    const player = players.byName[name]
+    old.delete(name)
+    if (player.volume !== volume) await player.setVolume(volume)
+    if (player.leader !== leader) {
+      if (!player.isLeader) await player.setLeader(player.name)
+      await player.setLeader(leader.name)
+    }
+  }
 
   await Promise.all(
     [...old].map(async name => {
