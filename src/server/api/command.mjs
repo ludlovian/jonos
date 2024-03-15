@@ -1,34 +1,56 @@
 import send from '@polka/send-type'
-import { presets, notifies } from './config.mjs'
+import { presets, notifies } from './commandDefs.mjs'
 import model from '../model/index.mjs'
 
 export async function apiCommandPreset (req, res) {
   const preset = presets[req.params.preset]
   if (!preset) return send(res, 404)
   const { players } = model
+
+  // First we sort out the new leader
+  // If they are not a leader, then we must:
+  // - find out what they are playing
+  // - stop playback
+  // - make them a leader
+  // - start playback
   const leader = players.byName[preset.leader]
+  const volumes = Object.fromEntries(preset.members)
+  const members = preset.members.map(([name]) => name)
+
   if (!leader.isLeader) {
+    const oldLeader = leader.leader
+    const state = await oldLeader.getState()
     await leader.setLeader(leader.name)
+    if (oldLeader.isPlaying) await oldLeader.pause()
+    await leader.restoreState({
+      ...state,
+      leader: leader.name,
+      volume: volumes[leader.name]
+    })
   }
 
-  const old = new Set(players.groups[leader.name])
+  // Now we remove any members who should not be in this group
+  const toRemove = new Set(players.groups[leader.name])
+  for (const name of members) {
+    toRemove.delete(name)
+  }
 
-  for (const [name, volume] of preset.members) {
+  for (const name of toRemove) {
     const player = players.byName[name]
-    old.delete(name)
+    await player.setLeader(player.name)
+  }
+
+  // Finally we add members to the group who are missing
+  for (const name of members) {
+    const player = players.byName[name]
+    const volume = volumes[name]
+
     if (player.volume !== volume) await player.setVolume(volume)
     if (player.leader !== leader) {
       if (!player.isLeader) await player.setLeader(player.name)
       await player.setLeader(leader.name)
     }
   }
-
-  await Promise.all(
-    [...old].map(async name => {
-      const player = players.byName[name]
-      await player.setLeader(player.name)
-    })
-  )
 
   send(res, 200)
 }

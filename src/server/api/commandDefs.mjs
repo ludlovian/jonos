@@ -1,37 +1,46 @@
 export const presets = {
   standard: {
-    leader: 'bedroom',
+    leader: 'bookroom',
     members: [
+      ['bookroom', 25],
       ['bedroom', 25],
       ['parlour', 25],
-      ['bookroom', 25],
       ['kitchen', 25],
       ['study', 12],
       ['archive', 12],
       ['diningroom', 12]
     ]
   },
-  zoom: {
-    leader: 'bedroom',
+  south: {
+    leader: 'bookroom',
     members: [
-      ['bedroom', 25],
       ['bookroom', 25],
+      ['bedroom', 25],
+      ['parlour', 25],
       ['kitchen', 25],
-      ['office', 12],
+      ['archive', 12]
+    ]
+  },
+  zoom: {
+    leader: 'bookroom',
+    members: [
+      ['bookroom', 25],
+      ['bedroom', 25],
+      ['kitchen', 25],
       ['archive', 12],
       ['diningroom', 12]
     ]
   },
   guests: {
-    leader: 'bedroom',
+    leader: 'bookroom',
     members: [
-      ['bedroom', 50],
       ['bookroom', 15],
+      ['bedroom', 50],
       ['diningroom', 10],
       ['kitchen', 50],
       ['archive', 50],
       ['parlour', 12],
-      ['study', 15]
+      ['study', 10]
     ]
   }
 }
@@ -45,13 +54,13 @@ export const notifies = {
     resume: true
   },
   downstairs: {
-    leader: 'bedroom',
+    leader: 'bookroom',
     uri:
       'https://media-readersludlow.s3-eu-west-1.amazonaws.com/public/come-downstairs.mp3',
     volume: 50
   },
   feedme: {
-    leader: 'bedroom',
+    leader: 'bookroom',
     uri:
       'https://media-readersludlow.s3.eu-west-1.amazonaws.com/public/feed-me-now.mp3',
     volume: 50,

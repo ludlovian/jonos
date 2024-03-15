@@ -31,6 +31,7 @@ function PresetButtons () {
   return (
     <MultiButton label='Preset: '>
       <Button label='Standard' cmd='preset/standard' />
+      <Button label='South' cmd='preset/south' />
       <Button label='Zoom' cmd='preset/zoom' />
       <Button label='Guests' cmd='preset/guests' />
     </MultiButton>
