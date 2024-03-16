@@ -35,7 +35,9 @@ export default class Players {
               l.name,
               this.players.filter(p => p.leader === l).map(p => p.name)
             ])
-        )
+        ),
+      active: () =>
+        Object.keys(this.groups).filter(name => this.byName[name].isPlaying)
     })
   }
 

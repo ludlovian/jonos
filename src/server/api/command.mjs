@@ -2,63 +2,72 @@ import send from '@polka/send-type'
 import { presets, notifies } from './commandDefs.mjs'
 import model from '../model/index.mjs'
 
+const { fromEntries } = Object
+const { players } = model
+
 export async function apiCommandPreset (req, res) {
   const preset = presets[req.params.preset]
   if (!preset) return send(res, 404)
-  const { players } = model
 
-  // First we sort out the new leader
-  // If they are not a leader, then we must:
-  // - find out what they are playing
-  // - stop playback
-  // - make them a leader
-  // - start playback
   const leader = players.byName[preset.leader]
-  const volumes = Object.fromEntries(preset.members)
-  const members = preset.members.map(([name]) => name)
+  const members = new Set(preset.members.map(([name]) => name))
 
-  if (!leader.isLeader) {
-    const oldLeader = leader.leader
-    const state = await oldLeader.getState()
-    await leader.setLeader(leader.name)
-    if (oldLeader.isPlaying) await oldLeader.pause()
-    await leader.restoreState({
-      ...state,
-      leader: leader.name,
-      volume: volumes[leader.name]
-    })
-  }
-
-  // Now we remove any members who should not be in this group
-  const toRemove = new Set(players.groups[leader.name])
-  for (const name of members) {
-    toRemove.delete(name)
-  }
-
-  for (const name of toRemove) {
-    const player = players.byName[name]
-    await player.setLeader(player.name)
-  }
-
-  // Finally we add members to the group who are missing
-  for (const name of members) {
-    const player = players.byName[name]
-    const volume = volumes[name]
-
-    if (player.volume !== volume) await player.setVolume(volume)
-    if (player.leader !== leader) {
-      if (!player.isLeader) await player.setLeader(player.name)
-      await player.setLeader(leader.name)
-    }
-  }
-
+  await setVolumes(fromEntries(preset.members))
+  await ensurePlayerIsLeader(leader)
+  await transferMusicTo(leader)
+  await removeUnwantedPlayers(leader, members)
+  await addMissingPlayers(leader, members)
   send(res, 200)
+}
+
+function setVolumes (volumes) {
+  return Promise.all(
+    Object.entries(volumes).map(async ([name, volume]) => {
+      const player = players.byName[name]
+      if (player.volume !== volume) await player.setVolume(volume)
+    })
+  )
+}
+
+async function ensurePlayerIsLeader (player) {
+  if (player.isLeader) return
+  await player.setLeader(player.name)
+}
+
+async function transferMusicTo (leader) {
+  if (leader.isPlaying || !players.active.length) return undefined
+  const current = players.byName[players.active[0]]
+  const state = await current.getState()
+  await current.pause()
+  await leader.restoreState({
+    ...state,
+    leader: leader.name,
+    volume: leader.volume
+  })
+}
+
+function removeUnwantedPlayers (leader, members) {
+  return Promise.all(
+    players.groups[leader.name]
+      .filter(name => !members.has(name))
+      .map(name => players.byName[name])
+      .map(player => player.setLeader(player.name))
+  )
+}
+
+function addMissingPlayers (leader, members) {
+  const currentMembers = new Set(players.groups[leader.name])
+  return Promise.all(
+    [...members]
+      .filter(name => !currentMembers.has(name))
+      .map(name => players.byName[name])
+      .map(player => player.setLeader(leader.name))
+  )
 }
 
 export async function apiCommandNotify (req, res) {
   const notify = notifies[req.params.notify]
   if (!notify) return send(res, 404)
-  const { players } = model
   const leader = players.byName[notify.leader].leader
   const members = players.groups[leader.name].map(n => players.byName[n])
   const oldVols = members.map(p => p.volume)
