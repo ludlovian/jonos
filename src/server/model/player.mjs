@@ -76,11 +76,14 @@ export default class Player {
     // subscribe will always succeed - if it errors
     // it simply removes the subscription
     if (this.isSubscribed) return null
-    this.subscription = sonosSubscribe(this)
-    await this.subscription.start().catch(err => {
+    try {
+      await this.update()
+      this.subscription = sonosSubscribe(this)
+      await this.subscription.start()
+    } catch (err) {
       console.error(err)
       this.subscription = null
-    })
+    }
   }
 
   async unsubscribe () {
