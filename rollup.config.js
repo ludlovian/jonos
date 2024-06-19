@@ -28,7 +28,7 @@ export default [
   {
     input: 'src/client/main.mjs',
     output: {
-      file: 'dist/public/main.mjs',
+      file: 'dist/public/assets/main.mjs',
       format: 'es',
       sourcemap: dev
     },
@@ -38,15 +38,15 @@ export default [
       !dev && terser(),
       copy({
         targets: [
-          { src: 'src/client/*.html', dest: 'dist/public' },
-          { src: 'src/client/bootstrap.min.css*', dest: 'dist/public' },
-          { src: 'src/client/bootstrap.bundle.min.js*', dest: 'dist/public' }
+          { src: 'src/client/index.html', dest: 'dist/public/' },
+          { src: 'src/client/assets/*', dest: 'dist/public/assets/' }
         ]
       }),
-      !dev && gzip({
+      gzip({
         additionalFiles: [
-          'dist/public/bootstrap.min.css',
-          'dist/public/bootstrap.bundle.min.js'
+          'dist/public/assets/bootstrap.min.css',
+          'dist/public/assets/bootstrap.bundle.min.js',
+          'dist/public/assets/font/bootstrap-icons.min.css'
         ]
       })
     ]

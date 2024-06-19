@@ -1,40 +1,14 @@
 import os from 'node:os'
-import process from 'node:process'
-import { parse as parseMS } from '@lukeed/ms'
 
-// Are we in development or production
-export const isDev = process.env.NODE_ENV !== 'production'
+import configure from '@ludlovian/configure'
 
-// Where are the client files
-export const clientPath = './dist/public'
-
-// How long should we ask for a notify stream to stay active
-export const sonosSubscriptionTimeout = 'Second-1800'
-
-// When should we renew a notify stream
-export const sonosSubscriptionRenewal = parseMS('20m')
-
-// How long after the last activity should we shut down notifications
-export const sonosNotificationDelay = parseMS(isDev ? '10s' : '1m')
-
-// After how ofen should we reset the listeners
-export const sonosResetPeriod = parseMS('13h')
-
-// How many times to try a call
-export const sonosCallAttempts = 3
-
-// How long to wait to see if a call has worked
-export const sonosCallDelay = parseMS('5s')
-
-// Throttle time for updates to clients
-export const statusThrottle = 200
-
-// Notification timeout
-export const notificationTimeout = parseMS('10s')
-
-// Settings for the HTTP server
-export const serverIP = getMyIP()
-export const serverPort = 3500
+export default configure('JONOS_', {
+  isDev: process.env.NODE_ENV !== 'production',
+  serverPort: 3500,
+  clientPath: './dist/public',
+  serverAddress: getMyIP(),
+  statusThrottle: 200
+})
 
 function getMyIP () {
   return Object.values(os.networkInterfaces())

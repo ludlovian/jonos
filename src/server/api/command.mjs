@@ -1,4 +1,4 @@
-import send from '@polka/send-type'
+import send from '@polka/send'
 import { presets, notifies } from './commandDefs.mjs'
 import model from '../model/index.mjs'
 

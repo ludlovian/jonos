@@ -1,11 +1,23 @@
-import Debug from '@ludlovian/debug'
-import send from '@polka/send-type'
-import { serialize } from 'pixutil/json'
+import process from 'node:process'
 
-import model from '../model/index.mjs'
+import Debug from '@ludlovian/debug'
+import send from '@polka/send'
+import { serialize } from '@ludlovian/serialize-json'
+import subscribeSignal from '@ludlovian/subscribe-signal'
+
+import model from '@ludlovian/jonos-model'
+import config from '../config.mjs'
 import { log } from '../wares.mjs'
 
-const debug = Debug('jonos:server')
+const debug = Debug('jonos:api:status')
+
+const system = {
+  isDev: process.env.NODE_ENV !== 'production',
+  started: new Date(),
+  version: process.env.npm_package_version ?? 'dev'
+}
+
+const serializeOpts = { date: true }
 
 export async function apiStatusUpdates (req, res) {
   debug('apiStatusUpdates: started')
@@ -17,11 +29,11 @@ export async function apiStatusUpdates (req, res) {
   })
   log.writeLine(req, res)
 
-  const stopListen = model.listen(sendState)
+  const stopListen = listen(sendState)
   req.on('close', stop)
 
   function sendState (state) {
-    const data = JSON.stringify(serialize(state))
+    const data = JSON.stringify(serialize(state, serializeOpts))
     res.write(`data: ${data}\n\n`)
   }
 
@@ -33,5 +45,38 @@ export async function apiStatusUpdates (req, res) {
 
 export async function apiStatus (req, res) {
   debug('apiStatus')
-  send(res, 200, serialize(model.state))
+  send(res, 200, serialize(getState(), serializeOpts))
+}
+
+function listen (callback) {
+  debug('Listener added')
+  model.listeners++
+  const debounce = config.statusThrottle
+  const unsub = subscribeSignal(getState, callback, { debounce, depth: 2 })
+  return () => {
+    debug('Listener removed')
+    unsub()
+    model.listeners--
+  }
+}
+
+function getState () {
+  const players = getPlayers()
+  return { system, players }
+}
+
+function getPlayers () {
+  const { players } = model.players
+  return Object.fromEntries(players.map(p => [p.name, getPlayerState(p)]))
+}
+
+function getPlayerState (p) {
+  return {
+    fullName: p.fullName,
+    volume: p.volume,
+    mute: p.mute,
+    leaderName: p.isLeader ? '' : p.leader.name,
+    isPlaying: p.isLeader ? p.isPlaying : null,
+    media: p.isLeader ? p.media : null
+  }
 }

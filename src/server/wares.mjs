@@ -1,26 +1,12 @@
 import Debug from '@ludlovian/debug'
-import sirv from 'sirv'
-import send from '@polka/send-type'
+import send from '@polka/send'
 
-import { isDev } from './config.mjs'
-import model from './model/index.mjs'
+import model from '@ludlovian/jonos-model'
 
 const writeToConsole = Debug('jonos*')
 
-export const staticFiles = path =>
-  sirv(path, {
-    dev: isDev,
-    gzip: !isDev,
-    etag: true
-  })
-
-export async function touchModel (req, res, next) {
-  await model.touch()
-  next()
-}
-
 export function parseBody (opts = {}) {
-  const { json = false, methods = ['POST', 'NOTIFY'] } = opts
+  const { json = false, methods = ['POST'] } = opts
   return async (req, res, next) => {
     if (!methods.includes(req.method) || req._bodyParsed) return next()
 
@@ -70,7 +56,7 @@ export function wrap (handler) {
 
 export function getPlayer (req, res, next) {
   if (req?.params?.name == null) return next()
-  const player = model.players.byName[req.params.name]
+  const player = model.players.byName.get(req.params.name)
   if (!player) return send(res, 404, 'Unknown player')
   req.player = player
   next()

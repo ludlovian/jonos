@@ -1,3 +1,6 @@
 export * from './status.mjs'
+export * from './about.mjs'
 export * from './player.mjs'
-export * from './command.mjs'
+export * from './media.mjs'
+export * from './search.mjs'
+// export * from './command.mjs'
