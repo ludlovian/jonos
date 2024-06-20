@@ -13,7 +13,7 @@ export function parseBody (opts = {}) {
     req.setEncoding('utf-8')
     let body = ''
     for await (const chunk of req) body += chunk
-    if (body) req.body = body
+    req.body = body
     req._bodyParsed = true
 
     if (json) {

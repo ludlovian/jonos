@@ -2,13 +2,7 @@
 import { h, Fragment } from 'preact'
 import sortBy from '@ludlovian/sortby'
 
-import {
-  Media,
-  Players,
-  Link,
-  PlayerControl,
-  useModel
-} from '../components/index.mjs'
+import { Media, Players, Link, useModel } from '../components/index.mjs'
 
 export function Home () {
   const model = useModel()
@@ -33,14 +27,10 @@ function GroupSummary ({ player }) {
 
   return (
     <Fragment>
-      <Link href={`/player/${player.name}/queue`}>
-        <Media url={player.mediaUrl} isPlaying={player.isPlaying} />
-      </Link>
-      <PlayerControl player={player} />
-      <Link href={`/player/${player.name}/group`}>
+      <Link href={`/player/${player.name}`}>
+        <Media url={player.mediaUrl} player={player} />
         <Players players={players} />
       </Link>
-      <hr />
     </Fragment>
   )
 }

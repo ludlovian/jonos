@@ -1,7 +1,8 @@
 import 'preact/debug'
 import { h, render } from 'preact'
-import { App } from './app.mjs'
 import { useModel } from './components/index.mjs'
+import { App } from './app.mjs'
+// const App = () => 'The App'
 
 main()
 

@@ -14,6 +14,7 @@ import {
   apiPlayerLeader,
   apiPlayerPlay,
   apiPlayerPause,
+  apiPlayerLoad,
   apiSearch
 } from './api/index.mjs'
 import artwork from './artwork.mjs'
@@ -63,6 +64,7 @@ class Server {
       .post('/api/player/:name/leader', wrap(apiPlayerLeader))
       .post('/api/player/:name/pause', wrap(apiPlayerPause))
       .post('/api/player/:name/play', wrap(apiPlayerPlay))
+      .post('/api/player/:name/load', wrap(apiPlayerLoad))
     /*
       .post('/api/player/:name/mute', wrap(apiPlayerMute))
 

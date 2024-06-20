@@ -1,4 +1,4 @@
-import { batch } from '@preact/signals'
+import { batch, effect } from '@preact/signals'
 import { deserialize } from '@ludlovian/serialize-json'
 import signalbox from '@ludlovian/signalbox'
 
@@ -14,13 +14,14 @@ export default class Model {
 
     signalbox(this, {
       // from server
-      version: '',
-      started: '',
-      isDev: false,
+      about: undefined,
+
+      // the list of players
       players: [],
 
       // the 'now playing' bit for streaming media
       nowPlaying: {},
+
       // cached media to save looking up
       media: {},
 
@@ -32,6 +33,8 @@ export default class Model {
       isLoading: () => this.players.length === 0,
       groups: () => Map.groupBy(this.players, p => p.leader)
     })
+
+    this.#start()
   }
 
   catch (err) {
@@ -41,13 +44,6 @@ export default class Model {
 
   onUpdate (update) {
     batch(() => {
-      if ('system' in update) {
-        const { system } = update
-        for (const key in system) {
-          if (key in this) this[key] = update
-        }
-      }
-
       if ('players' in update) {
         const { players } = update
         for (const [name, data] of entries(players)) {
@@ -91,7 +87,18 @@ export default class Model {
 
   async search (text) {
     if (!text || text.length < 3) return []
-    const url = '/api/search/' + encodeURIComponent(text)
-    return this.fetchData(url)
+    const fetchUrl = '/api/search/' + encodeURIComponent(text)
+    const urls = await this.fetchData(fetchUrl)
+    for (const url of urls) {
+      await this.library.fetchMedia(url)
+    }
+    return urls
+  }
+
+  #start () {
+    effect(() => {
+      if (this.isLoading || this.about) return
+      this.fetchData('/api/about').then(data => (this.about = data))
+    })
   }
 }

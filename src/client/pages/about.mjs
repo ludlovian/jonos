@@ -1,15 +1,11 @@
 /** @jsx h */
 import { h, Fragment } from 'preact'
-import { useModel, useData } from '../components/index.mjs'
+import { useModel } from '../components/index.mjs'
 
-About.Async = function AboutAsync () {
-  const model = useModel()
-  const data = useData(async () => model.fetchData('/api/about'))
-  if (!data) return null
-  return <About {...data} />
-}
-
-export function About ({ system, players }) {
+export function About () {
+  const { about } = useModel()
+  if (!about) return null
+  const { system, players } = about
   return (
     <Fragment>
       <p class='text'>

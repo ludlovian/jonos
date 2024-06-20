@@ -1,28 +1,50 @@
 /** @jsx h */
 import { h, Fragment } from 'preact'
+import clsx from 'clsx/lite'
 
-import { useData, useModel } from './use.mjs'
+import { useModel } from './use.mjs'
 import { Row, Col } from './layout.mjs'
+import { PlayerControl } from './player.mjs'
 
 // displays the current media
 // with an image and the track/title etc
 //
 // If supplied, also shows the tracks (details)
 //
+// Mandatory props
+// url      - url of the media to show
+//
+// Optional props:
+//
+// player       - the player, from which we infer
+//                - an indicator of whether playing
+//                - play controls (see showControls)
+//
+// showControls - show the play/pause controls for the given player
+//
+// details      - for albums only, this is the list of tracks
+//                (also highlights the current track if player given)
+//
+//
 
-export function Media ({ url, isPlaying, hilite, details }) {
+export function Media ({ url, player, showControls, details }) {
   const { library } = useModel()
-  const item = url && useData(() => library.fetchMedia(url))
-  if (url && !item) return null // still loading
+  const item = url && library.media[url]
+  if (url && !item) return null // shouldnt happen now
 
   return (
     <Row class='row pb-2'>
       <Col.Art class='position-relative'>
         {url ? <MediaArt url={url} /> : ' '}
-        {isPlaying && <IsPlaying />}
+        {player && player.isPlaying && <IsPlaying />}
       </Col.Art>
       <Col class='mb-3'>
-        <MediaSummary item={item} details={details} hilite={hilite} />
+        <MediaSummary
+          item={item}
+          details={details}
+          hilite={player && details && player.mediaUrl}
+        />
+        {player && showControls && <PlayerControl player={player} />}
       </Col>
     </Row>
   )
@@ -35,9 +57,15 @@ function MediaArt ({ url }) {
 }
 
 function IsPlaying () {
-  return (
-    <span class='position-absolute top-0 start-100 translate-middle p-2 bg-success border border-light rounded-circle' />
+  const cls = clsx(
+    // position
+    'position-absolute top-0 start-100 translate-middle',
+    // padding
+    'p-2',
+    // green dot
+    'bg-success border border-light rounded-circle'
   )
+  return <span class={cls} />
 }
 
 function MediaSummary ({ item, details, hilite }) {

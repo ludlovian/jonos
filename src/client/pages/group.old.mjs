@@ -18,7 +18,7 @@ export function Group ({ player: leader }) {
   return (
     <Fragment>
       <GroupTitle leader={leader} />
-      <Media url={leader.mediaUrl} isPlaying={leader.isPlaying} />
+      <Media url={leader.mediaUrl} player={leader} />
       <Players players={players} editable />
       <hr />
       <GroupCommands leader={leader} />

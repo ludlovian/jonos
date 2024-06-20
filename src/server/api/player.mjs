@@ -3,6 +3,23 @@ import send from '@polka/send'
 // import Debug from '@ludlovian/debug'
 // const debug = Debug('jonos:api:player')
 
+// Send the current player queue.
+// The is an object with the following
+//
+//  - items   - an array of the URLs in being played
+//              this might be an empty array if nothing is loaded
+//
+// and optionally
+//
+//  - index     - the zero based index into the items array for the
+//                currently playing track
+//  - pos       - the milliseconds position into the track (at the point
+//                of the call)
+//  - playMode  - the current playmode, also broken down into:
+//  - repeat
+//  - shuffle
+//  - one
+
 export async function apiPlayerQueue (req, res) {
   const { player } = req
   if (!player.isLeader) {
@@ -50,6 +67,13 @@ export async function apiPlayerPause (req, res) {
 
 export async function apiPlayerPlay (req, res) {
   await req.player.play()
+  return send(res, 200)
+}
+
+export async function apiPlayerLoad (req, res) {
+  const { player } = req
+  const { urls, opts } = req.json
+  await player.loadMedia(urls, opts)
   return send(res, 200)
 }
 
