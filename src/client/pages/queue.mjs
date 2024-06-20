@@ -1,24 +1,19 @@
 /** @jsx h */
 import { h, Fragment } from 'preact'
-import { useSignal } from '@preact/signals'
-import sortBy from '@ludlovian/sortby'
 
-import { useData } from './util.mjs'
-import { useModel } from '../model/index.mjs'
-import { Media, Row, Col, Choice, Players } from '../components/index.mjs'
+import { Media, Row, Col, useData } from '../components/index.mjs'
 
-export function Queue ({ leader: leaderName }) {
-  const queue = useData()
-  if (!queue) return null
-  const { items } = queue
+Queue.Async = function QueueAsync ({ player }) {
+  const data = useData(() => player.getQueue(), [player])
+  if (!data) return null
+  return <Queue player={player} {...data} />
+}
 
-  const model = useModel()
-  const leader = model.byName[leaderName]
-
+export function Queue ({ player, items }) {
   return (
     <Fragment>
-      <QueueTitle player={leader} />
-      <StructuredQueue queue={items} url={leader.mediaUrl} />
+      <QueueTitle player={player} />
+      <StructuredQueue queue={items} url={player.mediaUrl} />
       <hr />
     </Fragment>
   )

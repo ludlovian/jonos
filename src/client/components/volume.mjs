@@ -43,7 +43,7 @@ export function Volume (props) {
       <Col>
         <VolumeSlider
           volume={$volume.value}
-          oninput={!disabled && oninput}
+          oninput={!disabled ? oninput : undefined}
           disabled={disabled}
         />
       </Col>

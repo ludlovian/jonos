@@ -1,55 +1,83 @@
 /** @jsx h */
 import { h, Fragment } from 'preact'
+import { useSignal } from '@preact/signals'
 import sortBy from '@ludlovian/sortby'
 
-import { useModel } from '../model/index.mjs'
 import { Media, Row, Col, Choice, Players } from '../components/index.mjs'
 
-export function Group ({ leader: leaderName }) {
-  const model = useModel()
-  const leader = model.byName[leaderName]
+export function Group ({ player: leader }) {
+  if (!leader.isLeader) {
+    leader.model.catch(new Error(`Not a leader: ${leader.name}`))
+    return null
+  }
 
   let players = [...leader.followers]
   players = players.sort(sortBy('fullName'))
   players = [...new Set([leader, ...players])]
 
-  const followers = players.slice(1)
-  const others = model.players
-    .filter(p => p.leader !== leader)
-    .sort(sortBy('fullName'))
+  return (
+    <Fragment>
+      <GroupTitle leader={leader} />
+      <Media url={leader.mediaUrl} isPlaying={leader.isPlaying} />
+      <Players players={players} editable />
+      <hr />
+      <GroupCommands leader={leader} />
+    </Fragment>
+  )
+}
 
-  const commands = [
-    ...followers.map(p => [`Remove: ${p.fullName}`, () => p.setLeader(p.name)]),
-    ...others.map(p => [`Add: ${p.fullName}`, () => p.setLeader(leaderName)])
-  ]
-
-  const heading = (
+function GroupTitle ({ leader }) {
+  return (
     <Row class='pb-3'>
       <Col>
         <h4>{leader.fullName}</h4>
       </Col>
     </Row>
   )
+}
 
-  const choice = (
+function GroupCommands ({ leader }) {
+  const $isAdd = useSignal(false)
+
+  const followers = leader.followers
+    .filter(p => p !== leader)
+    .sort(sortBy('fullName'))
+
+  const others = leader.model.players
+    .filter(p => p.leader !== leader)
+    .sort(sortBy('fullName'))
+
+  const commands = [
+    ...followers.map(p => [
+      `Remove: ${p.fullName}`,
+      () => p.setLeader(p.name),
+      false // remove
+    ]),
+    ...others.map(p => [
+      `Add: ${p.fullName}`,
+      () => p.setLeader(leader.name),
+      true // add
+    ])
+  ]
+
+  return (
     <Row>
       <Col.Command>
-        <Choice label='Group'>
-          {commands.map(([label, onclick], ix) => (
-            <Choice.Option key={ix} label={label} onclick={onclick} />
+        <Choice
+          label={$isAdd.value ? 'Add to Group' : 'Remove from Group'}
+          icon={$isAdd.value ? 'bi-plus-circle' : 'bi-dash-circle'}
+          $current={$isAdd}
+        >
+          {commands.map(([label, onclick, value]) => (
+            <Choice.Option
+              key={label}
+              label={label}
+              value={value}
+              onclick={onclick}
+            />
           ))}
         </Choice>
       </Col.Command>
     </Row>
-  )
-
-  return (
-    <Fragment>
-      {heading}
-      <Media url={leader.mediaUrl} isPlaying={leader.isPlaying} />
-      <Players players={players} editable />
-      <hr />
-      {choice}
-    </Fragment>
   )
 }

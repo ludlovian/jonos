@@ -14,13 +14,13 @@ export function PlayerControl ({ player }) {
             icon='bi-play-fill'
             label='Play'
             onclick={() => player.play()}
-            enabled={player.isLeader && player.mediaUrl && !player.isPlaying}
+            disabled={!player.isLeader || !player.mediaUrl || player.isPlaying}
           />
           <Button
             icon='bi-pause-fill'
             label='Pause'
             onclick={() => player.pause()}
-            enabled={player.isLeader && player.isPlaying}
+            disabled={!player.isLeader || !player.isPlaying}
           />
         </div>
       </Col>
@@ -42,7 +42,7 @@ export function PlayerVolume ({ player, editable }) {
     <Volume
       label={player.fullName}
       volume={player.volume}
-      oninput={editable && oninput}
+      oninput={editable ? oninput : undefined}
       disabled={disabled}
     />
   )

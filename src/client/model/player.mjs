@@ -48,16 +48,16 @@ export default class Player {
     }
   }
 
-  async getPlaylist () {
-    if (!this.isLeader) return null
+  async getQueue () {
+    if (!this.isLeader) return {}
     const url = `/api/player/${this.name}/queue`
     const result = await this.model.fetchData(url)
-    const items = result?.items ?? []
-    for (const item of items) {
-      await this.library.fetchMedia(item.url)
+    const items = []
+    for (const url of result?.items ?? []) {
+      items.push(await this.library.fetchMedia(url))
     }
-    result.items = items.map(item => this.library.getMedia(item.url))
-    return result
+
+    return { ...result, items }
   }
 
   setVolume (volume) {

@@ -1,7 +1,7 @@
 /** @jsx h */
 import { h, Fragment } from 'preact'
 
-import { useModel } from '../model/index.mjs'
+import { useData, useModel } from './use.mjs'
 import { Row, Col } from './layout.mjs'
 
 // displays the current media
@@ -9,12 +9,10 @@ import { Row, Col } from './layout.mjs'
 //
 // If supplied, also shows the tracks (details)
 //
-// caches stuff to allow a better response
-// and only the 'now' changes
 
 export function Media ({ url, isPlaying, hilite, details }) {
   const { library } = useModel()
-  const item = url && library.getMedia(url)
+  const item = url && useData(() => library.fetchMedia(url))
   if (url && !item) return null // still loading
 
   return (
@@ -31,7 +29,7 @@ export function Media ({ url, isPlaying, hilite, details }) {
 }
 
 function MediaArt ({ url }) {
-  if (!url) return null
+  if (!url) return <div> </div>
   const imgUrl = `/art/${encodeURIComponent(url)}`
   return <img src={imgUrl} class='img-fluid media-art' />
 }

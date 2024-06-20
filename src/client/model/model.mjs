@@ -4,14 +4,12 @@ import signalbox from '@ludlovian/signalbox'
 
 import Library from './library.mjs'
 import Player from './player.mjs'
-import Router from './router.mjs'
 
 const { fromEntries, entries } = Object
 
 export default class Model {
   constructor () {
     this.library = new Library(this)
-    this.router = new Router(this)
     this.catch = this.catch.bind(this)
 
     signalbox(this, {
