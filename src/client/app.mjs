@@ -21,6 +21,7 @@ export function App () {
         <PlayerSummary href='/player/:name' />
         <Home />
       </Router>
+      <AppFooter />
     </div>
   )
 }
@@ -34,6 +35,18 @@ function AppTitle () {
         </Col.Title>
       </Row.Title>
     </Link>
+  )
+}
+
+function AppFooter () {
+  return (
+    <Row class='mt-5 mb-2 justify-content-center'>
+      <Col class='col-auto'>
+        <div class='text'>
+          <span class='small'>Pixie</span>
+        </div>
+      </Col>
+    </Row>
   )
 }
 

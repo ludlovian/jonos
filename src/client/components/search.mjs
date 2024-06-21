@@ -1,14 +1,12 @@
 /** @jsx h */
 import { h, Fragment } from 'preact'
-import { useState } from 'preact/hooks'
 import { useSignal } from '@preact/signals'
-import Bouncer from '@ludlovian/bouncer'
 
 import config from '../config.mjs'
 import { Row, Col } from './layout.mjs'
 import { Media } from './media.mjs'
 import { Button } from './button.mjs'
-import { useModel } from './use.mjs'
+import { useModel, useBouncer } from './use.mjs'
 
 // Shows a search box and gets search results
 
@@ -21,12 +19,10 @@ import { useModel } from './use.mjs'
 export function Search ({ $results }) {
   const model = useModel()
   const $text = useSignal('')
-  const makeSearchBouncer = () =>
-    new Bouncer({
-      after: config.searchThrottle,
-      fn: async () => ($results.value = await model.search($text.value))
-    })
-  const [sendSearch] = useState(makeSearchBouncer, [])
+  const sendSearch = useBouncer({
+    after: config.searchThrottle,
+    fn: async () => ($results.value = await model.search($text.value))
+  })
 
   const oninput = e => {
     $text.value = e.target.value
@@ -51,11 +47,11 @@ export function Search ({ $results }) {
 }
 
 export function SearchResult ({ url, player }) {
-  const model = useModel()
-  if (!model.library[url]) return null
   return (
     <Fragment>
-      <Media url={url} />
+      <Row class='mt-2'>
+        <Media url={url} />
+      </Row>
       <AddToQueue url={url} player={player} />
     </Fragment>
   )
@@ -63,20 +59,19 @@ export function SearchResult ({ url, player }) {
 
 function AddToQueue ({ url, player }) {
   const item = player.library.media[url]
-  const urls = item.tracks ? item.tracks.map(t => url) : [item.url]
+  const urls = item.tracks ? item.tracks.map(t => t.url) : [item.url]
   const catcher = player.model.catch
-  const play = true
-  const repeat = true
-  const playClick = () => player.load(urls, { play, repeat }).catch(catcher)
-  const addClick = () =>
-    player.load(urls, { play, repeat, add: true }).catch(catcher)
+  const opts = { play: true, repeat: true }
+  const add = true
+  const playClick = () => player.load(urls, opts).catch(catcher)
+  const addClick = () => player.load(urls, { ...opts, add }).catch(catcher)
   return (
-    <Row class='justofy-content-end mb-2'>
+    <Row class='justify-content-end mb-2'>
       <Col class='col-auto'>
-        <Button icon='bi-play-fill' label='Play' onclick={playClick} />
-      </Col>
-      <Col>
-        <Button icon='bi-plus-circle-fill' label='Add' onclick={addClick} />
+        <div class='btn-group' role='group'>
+          <Button icon='bi-play-fill' label='Play' onclick={playClick} />
+          <Button icon='bi-plus-circle-fill' label='Add' onclick={addClick} />
+        </div>
       </Col>
     </Row>
   )

@@ -34,7 +34,7 @@ export default class Model {
       groups: () => Map.groupBy(this.players, p => p.leader)
     })
 
-    this.#start()
+    effect(() => this.#fetchAbout())
   }
 
   catch (err) {
@@ -88,17 +88,16 @@ export default class Model {
   async search (text) {
     if (!text || text.length < 3) return []
     const fetchUrl = '/api/search/' + encodeURIComponent(text)
-    const urls = await this.fetchData(fetchUrl)
+    const { items: urls } = await this.fetchData(fetchUrl)
     for (const url of urls) {
       await this.library.fetchMedia(url)
     }
     return urls
   }
 
-  #start () {
-    effect(() => {
-      if (this.isLoading || this.about) return
-      this.fetchData('/api/about').then(data => (this.about = data))
-    })
+  #fetchAbout () {
+    if (this.error) return
+    if (this.isLoading || this.about) return
+    this.fetchData('/api/about').then(data => (this.about = data))
   }
 }

@@ -8,13 +8,10 @@ const $url = signal(new URL(window.location.href).pathname)
 window.$url = $url
 
 window.addEventListener('popstate', e => ($url.value = e?.state?.url ?? '/'))
-// used to force a refresh
-const $version = signal(0)
 
 export function Router ({ prefix = '', children, ...props }) {
   // refreshes when any of these change
   const url = $url.value
-  const version = $version.value
   prefix = prefix.replace(/\/\*$/, '')
 
   let def
@@ -25,17 +22,17 @@ export function Router ({ prefix = '', children, ...props }) {
     } else {
       const parms = matches(prefix + href, url)
       if (parms) {
-        return cloneElement(child, { ...props, ...parms, _version: version })
+        return cloneElement(child, { ...props, ...parms })
       }
     }
   }
 
-  if (def) return cloneElement(def, { ...props, _version: version })
+  if (def) return cloneElement(def, props)
   return <div>404 not found</div>
 }
 
 export function AsyncRoute ({ fetch, component, ...props }) {
-  // a new signal each render, which changes on route and/or version
+  // a new signal each render, which changes
   const $data = useState(signal(null))[0]
   if ($data.value) {
     return cloneElement(component, { ...props, ...$data.value })
@@ -43,20 +40,11 @@ export function AsyncRoute ({ fetch, component, ...props }) {
   Promise.resolve().then(async () => ($data.value = await fetch(props)))
 }
 
-export function route (url, refresh) {
+export function route (url) {
   batch(() => {
     window.history.pushState({ url }, '', url)
     $url.value = url
-    if (refresh) forceRefresh()
   })
-}
-
-export function forceRefresh () {
-  $version.value++
-}
-
-export function getVersion () {
-  return $version.value
 }
 
 export function matches (pattern, url) {

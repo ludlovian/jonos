@@ -73,6 +73,7 @@ export async function apiPlayerPlay (req, res) {
 export async function apiPlayerLoad (req, res) {
   const { player } = req
   const { urls, opts } = req.json
+
   await player.loadMedia(urls, opts)
   return send(res, 200)
 }

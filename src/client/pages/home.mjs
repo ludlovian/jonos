@@ -31,6 +31,7 @@ function GroupSummary ({ player }) {
         <Media url={player.mediaUrl} player={player} />
         <Players players={players} />
       </Link>
+      <hr />
     </Fragment>
   )
 }

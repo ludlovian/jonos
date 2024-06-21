@@ -1,5 +1,6 @@
 /** @jsx h */
 import { h } from 'preact'
+import { useSignal, useSignalEffect } from '@preact/signals'
 
 import { Row, Col } from './layout.mjs'
 import { Button } from './button.mjs'
@@ -35,14 +36,19 @@ export function Players ({ players, ...rest }) {
 }
 
 export function PlayerVolume ({ player, editable }) {
-  const oninput = volume => player.setVolume(volume)
+  const $volume = useSignal(player.volume)
+  useSignalEffect(() => {
+    const volume = $volume.value
+    if (volume !== player.volume) player.setVolume(volume)
+  })
+
   const disabled = !editable
 
   return (
     <Volume
       label={player.fullName}
       volume={player.volume}
-      oninput={editable ? oninput : undefined}
+      $volume={$volume}
       disabled={disabled}
     />
   )

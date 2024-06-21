@@ -1,14 +1,8 @@
-import { useState } from 'preact/hooks'
-
-import { getVersion } from './router.mjs'
+import { useMemo } from 'preact/hooks'
+import Bouncer from '@ludlovian/bouncer'
 
 export { useModel } from '../model/index.mjs'
 
-export function useData (fn, deps) {
-  deps = Array.isArray(deps) ? [...deps, getVersion()] : deps
-  const [data, setData] = useState(null, deps)
-  if (data !== null) return data
-  Promise.resolve()
-    .then(fn)
-    .then(setData)
+export function useBouncer (props, deps = []) {
+  return useMemo(() => new Bouncer(props), deps)
 }

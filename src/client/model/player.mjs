@@ -1,5 +1,6 @@
 import { effect } from '@preact/signals'
 import signalbox from '@ludlovian/signalbox'
+import { CIFS } from '@ludlovian/jonos-api/constants'
 
 export default class Player {
   #model
@@ -54,6 +55,7 @@ export default class Player {
 
   // Reactive queue gathering
   #monitorQueue () {
+    if (this.model.error) return
     // If we are not playing, or have nothing loaded, then
     // empty out the queue
     if (!this.isLeader || !this.mediaUrl) {
@@ -132,12 +134,16 @@ export default class Player {
     return this.model.postCommand(url, data)
   }
 
-  async load (urls, { add } = {}) {
-    const repeat = true
-    const url = `/api/player(${this.name}/load`
-    const data = { urls, opts: { add, repeat } }
-    await this.model.postCommand(url, data)
-    this.queueUrls = add ? [...this.queueUrls, ...urls] : [...urls]
+  async load (urls, opts = {}) {
+    const commandUrl = `/api/player/${this.name}/load`
+    // reset repeat and add unless all tracks are tracks
+    if (!urls.every(url => url.startsWith(CIFS))) {
+      delete opts.repeat
+      delete opts.add
+    }
+    const data = { urls, opts }
+    await this.model.postCommand(commandUrl, data)
+    this.queueUrls = opts.add ? [...this.queueUrls, ...urls] : [...urls]
   }
 
   play () {

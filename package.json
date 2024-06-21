@@ -22,6 +22,7 @@
     "@ludlovian/configure": "github:ludlovian/configure",
     "@ludlovian/debug": "github:ludlovian/debug",
     "@ludlovian/equal": "github:ludlovian/equal",
+    "@ludlovian/jonos-api": "github:ludlovian/jonos-api",
     "@ludlovian/jonos-model": "github:ludlovian/jonos-model",
     "@ludlovian/serialize-json": "github:ludlovian/serialize-json",
     "@ludlovian/signalbox": "github:ludlovian/signalbox",

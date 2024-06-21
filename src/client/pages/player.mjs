@@ -9,7 +9,10 @@ import {
   Row,
   Col,
   Choice,
-  Players
+  Players,
+  Toggle,
+  Search,
+  SearchResult
 } from '../components/index.mjs'
 
 export function PlayerSummary ({ name }) {
@@ -23,7 +26,6 @@ export function PlayerSummary ({ name }) {
   return (
     <Fragment>
       <PlayerTitle player={player} />
-      <hr />
       <PlayerQueue player={player} />
       <hr />
       <PlayerMembers player={player} />
@@ -35,7 +37,7 @@ export function PlayerSummary ({ name }) {
 
 function PlayerTitle ({ player }) {
   return (
-    <Row class='pb-3'>
+    <Row class='pb-2'>
       <Col>
         <h4>{player.fullName}</h4>
       </Col>
@@ -62,14 +64,16 @@ function PlayerQueue ({ player }) {
 }
 
 function PlayerMembers ({ player }) {
+  const $editable = useSignal(false)
   const players = [
     ...new Set([player, ...[...player.followers].sort(sortBy('fullName'))])
   ]
-  console.log('PlayerMembers.players', players)
 
   return (
     <Fragment>
-      <Players players={players} editable />
+      <Toggle $signal={$editable}>
+        <Players players={players} editable={$editable.value} />
+      </Toggle>
       <GroupCommands player={player} />
     </Fragment>
   )
@@ -81,11 +85,11 @@ function GroupCommands ({ player }) {
   const removes = player.followers
     .filter(p => p !== player)
     .sort(sortBy('fullName'))
-    .map(p => [`Remove ${p.fullName}`, p => p.setLeader(p.name), false])
+    .map(p => [`Remove ${p.fullName}`, () => p.setLeader(p.name), false])
   const adds = player.model.players
     .filter(p => p.leader !== player)
     .sort(sortBy('fullName'))
-    .map(p => [`Add ${p.fullName}`, p => p.setLeader(player.name), true])
+    .map(p => [`Add ${p.fullName}`, () => p.setLeader(player.name), true])
 
   return (
     <Row>
@@ -108,4 +112,16 @@ function GroupCommands ({ player }) {
     </Row>
   )
 }
-const MediaSearch = () => 'MediaSearch'
+
+function MediaSearch ({ player }) {
+  const $results = useSignal([])
+
+  return (
+    <Fragment>
+      <Search $results={$results} />
+      {$results.value.map(url => (
+        <SearchResult key={url} url={url} player={player} />
+      ))}
+    </Fragment>
+  )
+}

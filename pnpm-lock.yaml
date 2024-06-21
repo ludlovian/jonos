@@ -20,9 +20,12 @@ importers:
       '@ludlovian/equal':
         specifier: github:ludlovian/equal
         version: https://codeload.github.com/ludlovian/equal/tar.gz/9af158101cc2b0cee715fb85b0f61a26858f24c5
+      '@ludlovian/jonos-api':
+        specifier: github:ludlovian/jonos-api
+        version: https://codeload.github.com/ludlovian/jonos-api/tar.gz/ac7c8366633dec6d55f2c30c79b1bb05a25b4941
       '@ludlovian/jonos-model':
         specifier: github:ludlovian/jonos-model
-        version: https://codeload.github.com/ludlovian/jonos-model/tar.gz/a796c3fc781f8596b80ae87d256f9df937b34976(@preact/signals-core@1.6.1)
+        version: https://codeload.github.com/ludlovian/jonos-model/tar.gz/751d577f4b6ac1cdd6207ba4baaacb16dc4da6b3(@preact/signals-core@1.6.1)
       '@ludlovian/serialize-json':
         specifier: github:ludlovian/serialize-json
         version: https://codeload.github.com/ludlovian/serialize-json/tar.gz/43c65f07ccd6ad32a7805b958f6cd3bf0afa72fc
@@ -270,13 +273,13 @@ packages:
     resolution: {tarball: https://codeload.github.com/ludlovian/guess/tar.gz/98ce9a84b91c571001c7ce164fad7ab9ce1946a4}
     version: 0.1.0
 
-  '@ludlovian/jonos-api@https://codeload.github.com/ludlovian/jonos-api/tar.gz/51af50374916d2c03a822cecfd5ed35a5a9ec2fd':
-    resolution: {tarball: https://codeload.github.com/ludlovian/jonos-api/tar.gz/51af50374916d2c03a822cecfd5ed35a5a9ec2fd}
-    version: 0.6.5
+  '@ludlovian/jonos-api@https://codeload.github.com/ludlovian/jonos-api/tar.gz/ac7c8366633dec6d55f2c30c79b1bb05a25b4941':
+    resolution: {tarball: https://codeload.github.com/ludlovian/jonos-api/tar.gz/ac7c8366633dec6d55f2c30c79b1bb05a25b4941}
+    version: 0.6.6
 
-  '@ludlovian/jonos-model@https://codeload.github.com/ludlovian/jonos-model/tar.gz/a796c3fc781f8596b80ae87d256f9df937b34976':
-    resolution: {tarball: https://codeload.github.com/ludlovian/jonos-model/tar.gz/a796c3fc781f8596b80ae87d256f9df937b34976}
-    version: 0.6.8
+  '@ludlovian/jonos-model@https://codeload.github.com/ludlovian/jonos-model/tar.gz/751d577f4b6ac1cdd6207ba4baaacb16dc4da6b3':
+    resolution: {tarball: https://codeload.github.com/ludlovian/jonos-model/tar.gz/751d577f4b6ac1cdd6207ba4baaacb16dc4da6b3}
+    version: 0.6.11
     peerDependencies:
       '@preact/signals-core': ^1.6.1
 
@@ -510,8 +513,8 @@ packages:
   '@types/node@14.18.30':
     resolution: {integrity: sha512-8OEyg4oc/CqN5+LbInKNLA8MfbGzbC+k8lVPePXazuwEVrVeQ9gwMDX00HJwWbC7syc1FWRU6Mow0Lm+mibHAQ==}
 
-  '@types/node@20.14.6':
-    resolution: {integrity: sha512-JbA0XIJPL1IiNnU7PFxDXyfAwcwVVrOoqyzzyQTyMeVhBzkJVMSkC1LlVsRQ2lpqiY4n6Bb9oCS6lzDKVQxbZw==}
+  '@types/node@20.14.7':
+    resolution: {integrity: sha512-uTr2m2IbJJucF3KUxgnGOZvYbN0QgkGyWxG6973HCpMYFy2KfcgYuIwkJQMQkt1VbBMlvWRbpshFTLxnxCZjKQ==}
 
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
@@ -639,8 +642,8 @@ packages:
   eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
 
-  electron-to-chromium@1.4.806:
-    resolution: {integrity: sha512-nkoEX2QIB8kwCOtvtgwhXWy2IHVcOLQZu9Qo36uaGB835mdX/h8uLRlosL6QIhLVUnAiicXRW00PwaPZC74Nrg==}
+  electron-to-chromium@1.4.808:
+    resolution: {integrity: sha512-0ItWyhPYnww2VOuCGF4s1LTfbrdAV2ajy/TN+ZTuhR23AHI6rWHCrBXJ/uxoXOvRRqw8qjYVrG81HFI7x/2wdQ==}
 
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -740,8 +743,9 @@ packages:
     resolution: {integrity: sha512-BSLE3HnV2syZ0FK0iMA/yUGplUeMmNz4AW5fnTunbCIqZi4vG3WjJT9FHMy5D69xmAYBHXQhJdALdpwVxV501A==}
     engines: {node: '>=6'}
 
-  is-core-module@2.13.1:
-    resolution: {integrity: sha512-hHrIjvZsftOsvKSn2TRYl63zvxsgE0K+0mYMoH6gD4omR5IWB2KynivBQczo3+wF1cCkjzvptnI9Q0sPU66ilw==}
+  is-core-module@2.14.0:
+    resolution: {integrity: sha512-a5dFJih5ZLYlRtDc0dZWP7RiKr6xIKzmn/oAYCDvdLThadVgyJwlaoQPmRtMSpz+rk0OGAgIu+TcM9HUF0fk1A==}
+    engines: {node: '>= 0.4'}
 
   is-extglob@2.1.1:
     resolution: {integrity: sha512-SbKbANkN603Vi4jEZv49LeVJMn4yGwsbzZworEoyEiutsN3nJYdbO36zfhGJ6QEDpOZIFkDtnq5JRxmvl3jsoQ==}
@@ -1244,7 +1248,7 @@ snapshots:
 
   '@ludlovian/guess@https://codeload.github.com/ludlovian/guess/tar.gz/98ce9a84b91c571001c7ce164fad7ab9ce1946a4': {}
 
-  '@ludlovian/jonos-api@https://codeload.github.com/ludlovian/jonos-api/tar.gz/51af50374916d2c03a822cecfd5ed35a5a9ec2fd':
+  '@ludlovian/jonos-api@https://codeload.github.com/ludlovian/jonos-api/tar.gz/ac7c8366633dec6d55f2c30c79b1bb05a25b4941':
     dependencies:
       '@ludlovian/camel': https://codeload.github.com/ludlovian/camel/tar.gz/8389f121d271c7930e99ad82b0dc5dbe16dfcb03
       '@ludlovian/configure': https://codeload.github.com/ludlovian/configure/tar.gz/3a8bb028d77cfbdb64d22c47a316da8509dad898
@@ -1256,12 +1260,12 @@ snapshots:
       '@ludlovian/timer': https://codeload.github.com/ludlovian/timer/tar.gz/fa5cf51fba00f2715de2b182d1d546d7a8cbe883
       '@lukeed/ms': 2.0.2
 
-  '@ludlovian/jonos-model@https://codeload.github.com/ludlovian/jonos-model/tar.gz/a796c3fc781f8596b80ae87d256f9df937b34976(@preact/signals-core@1.6.1)':
+  '@ludlovian/jonos-model@https://codeload.github.com/ludlovian/jonos-model/tar.gz/751d577f4b6ac1cdd6207ba4baaacb16dc4da6b3(@preact/signals-core@1.6.1)':
     dependencies:
       '@ludlovian/configure': https://codeload.github.com/ludlovian/configure/tar.gz/3a8bb028d77cfbdb64d22c47a316da8509dad898
       '@ludlovian/debug': https://codeload.github.com/ludlovian/debug/tar.gz/52c340a997e7be86a5c1d6e3747c3e79f8caa994
       '@ludlovian/equal': https://codeload.github.com/ludlovian/equal/tar.gz/9af158101cc2b0cee715fb85b0f61a26858f24c5
-      '@ludlovian/jonos-api': https://codeload.github.com/ludlovian/jonos-api/tar.gz/51af50374916d2c03a822cecfd5ed35a5a9ec2fd
+      '@ludlovian/jonos-api': https://codeload.github.com/ludlovian/jonos-api/tar.gz/ac7c8366633dec6d55f2c30c79b1bb05a25b4941
       '@ludlovian/lock': https://codeload.github.com/ludlovian/lock/tar.gz/d1ca32b46e1e59cb8d7736f64a438dabc570555c
       '@ludlovian/parsley': https://codeload.github.com/ludlovian/parsley/tar.gz/f0d2f3be2ea1c9f560113f62a64b876976fbb460
       '@ludlovian/signalbox': https://codeload.github.com/ludlovian/signalbox/tar.gz/0738206db9b9116e24c1d8cb0bb4d0208158d8a6(@preact/signals-core@1.6.1)
@@ -1431,18 +1435,18 @@ snapshots:
 
   '@types/fs-extra@8.1.5':
     dependencies:
-      '@types/node': 20.14.6
+      '@types/node': 20.14.7
 
   '@types/glob@7.2.0':
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 20.14.6
+      '@types/node': 20.14.7
 
   '@types/minimatch@5.1.2': {}
 
   '@types/node@14.18.30': {}
 
-  '@types/node@20.14.6':
+  '@types/node@20.14.7':
     dependencies:
       undici-types: 5.26.5
 
@@ -1493,7 +1497,7 @@ snapshots:
   browserslist@4.23.1:
     dependencies:
       caniuse-lite: 1.0.30001636
-      electron-to-chromium: 1.4.806
+      electron-to-chromium: 1.4.808
       node-releases: 2.0.14
       update-browserslist-db: 1.0.16(browserslist@4.23.1)
 
@@ -1551,7 +1555,7 @@ snapshots:
 
   eastasianwidth@0.2.0: {}
 
-  electron-to-chromium@1.4.806: {}
+  electron-to-chromium@1.4.808: {}
 
   emoji-regex@8.0.0: {}
 
@@ -1655,7 +1659,7 @@ snapshots:
     dependencies:
       builtin-modules: 3.3.0
 
-  is-core-module@2.13.1:
+  is-core-module@2.14.0:
     dependencies:
       hasown: 2.0.2
 
@@ -1768,7 +1772,7 @@ snapshots:
 
   resolve@1.22.8:
     dependencies:
-      is-core-module: 2.13.1
+      is-core-module: 2.14.0
       path-parse: 1.0.7
       supports-preserve-symlinks-flag: 1.0.0
 
