@@ -52,7 +52,7 @@ export default {
       opts: { volume: 50 }
     },
     {
-      name: 'Feed Me',
+      name: 'Feed Us',
       player: 'bookroom',
       url:
         'https://media-readersludlow.s3.eu-west-1.amazonaws.com/public/feed-us-now.mp3',
