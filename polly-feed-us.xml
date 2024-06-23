@@ -1,0 +1,10 @@
+<speak>
+<prosody rate="fast" pitch="high">
+<amazon:effect vocal-tract-length="-10%">
+Hey Daddy.
+Mum says you can feed us both now.
+<emphasis level="strong">Me</emphasis> especially.
+Quickety quick
+</amazon:effect>
+</prosody>
+</speak>
