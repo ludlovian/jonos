@@ -10,7 +10,7 @@ export default async function getArtwork (req, res) {
   const { library } = model
   const url = decodeURIComponent(req.params?.url ?? '')
   if (url) {
-    const file = library.artworkByUrl.get(url)
+    const file = library.locate(url)?.artwork
     if (file) {
       if (await StaticFile.sendFile(file, req, res)) return
     }

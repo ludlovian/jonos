@@ -15,6 +15,8 @@ import {
   apiPlayerPlay,
   apiPlayerPause,
   apiPlayerLoad,
+  apiPlayerPreset,
+  apiPlayerNotifcation,
   apiSearch
 } from './api/index.mjs'
 import artwork from './artwork.mjs'
@@ -65,13 +67,9 @@ class Server {
       .post('/api/player/:name/pause', wrap(apiPlayerPause))
       .post('/api/player/:name/play', wrap(apiPlayerPlay))
       .post('/api/player/:name/load', wrap(apiPlayerLoad))
-    /*
-      .post('/api/player/:name/mute', wrap(apiPlayerMute))
+      .post('/api/player/:name/preset', wrap(apiPlayerPreset))
+      .post('/api/player/:name/notify', wrap(apiPlayerNotifcation))
 
-      // Commands
-      .post('/api/command/preset/:preset', wrap(apiCommandPreset))
-      .post('/api/command/notify/:notify', wrap(apiCommandNotify))
-*/
     // start listening
     return new Promise((resolve, reject) => {
       p.listen(config.serverPort, '0.0.0.0', err => {

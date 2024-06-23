@@ -75,7 +75,7 @@ function getPlayerState (p) {
     fullName: p.fullName,
     volume: p.volume,
     mute: p.mute,
-    leaderName: p.isLeader ? '' : p.leader.name,
+    leaderName: p.leader.name,
     isPlaying: p.isLeader ? p.isPlaying : null,
     media: p.isLeader ? p.media : null
   }

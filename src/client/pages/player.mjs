@@ -72,7 +72,7 @@ function PlayerMembers ({ player }) {
   return (
     <Fragment>
       <Toggle $signal={$editable}>
-        <Players players={players} editable={$editable.value} />
+        <Players players={players} showGroup editable={$editable.value} />
       </Toggle>
       <GroupCommands player={player} />
     </Fragment>
@@ -92,7 +92,7 @@ function GroupCommands ({ player }) {
     .map(p => [`Add ${p.fullName}`, () => p.setLeader(player.name), true])
 
   return (
-    <Row>
+    <Row class='my-2'>
       <Col.Command>
         <Choice
           label={$isAdd.value ? 'Add to Group' : 'Remove from Group'}

@@ -1,6 +1,6 @@
 /** @jsx h */
 import { h } from 'preact'
-import { useSignal } from '@preact/signals'
+import { Signal, useSignal } from '@preact/signals'
 
 import config from '../config.mjs'
 import { Row, Col } from './layout.mjs'
@@ -10,18 +10,14 @@ import { useBouncer } from './use.mjs'
 //
 // Props:
 //  label     - the name of the player/group
-//  volume    - the volume passed into the component
-//  $volume   - a signal to be updated with the volume as changed
+//  $volume   - the signal with the current volume
 //  disabled  - stops input
 
 export function Volume (props) {
-  const { label, volume: inVolume, $volume: $outVolume, disabled } = props
-  const $volume = useSignal(inVolume)
+  const { label, $volume, disabled } = props
+  console.assert($volume instanceof Signal, $volume)
+
   const $volumeDisplay = useSignal(false)
-  const sendUpdate = useBouncer({
-    after: config.volumeThrottle,
-    fn: () => ($outVolume.value = $volume.value)
-  })
   const hideVolume = useBouncer({
     after: config.volumeDisplayDelay,
     fn: () => ($volumeDisplay.value = false)
@@ -30,7 +26,6 @@ export function Volume (props) {
   const oninput = e => {
     $volume.value = +e.target.value
     $volumeDisplay.value = true
-    sendUpdate.fire()
     hideVolume.fire()
   }
 
@@ -44,24 +39,24 @@ export function Volume (props) {
           disabled={disabled}
         />
       </Col>
-      {!disabled && (
-        <Col class='col-1'>
-          {$volumeDisplay.value && (
-            <span class='small align-top'>{$volume}</span>
-          )}
-        </Col>
-      )}
+      <Col class='col-1'>
+        {!disabled && $volumeDisplay.value && (
+          <span class='small align-top'>{$volume}</span>
+        )}
+      </Col>
     </Row>
   )
 }
 
 function VolumeSlider ({ volume, oninput, disabled }) {
+  const onclick = e => e.stopPropagation()
   return (
     <input
       type='range'
       class='volume-slider'
       value={volume}
       oninput={oninput}
+      onclick={onclick}
       disabled={disabled}
     />
   )

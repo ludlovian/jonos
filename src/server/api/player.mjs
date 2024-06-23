@@ -78,21 +78,18 @@ export async function apiPlayerLoad (req, res) {
   return send(res, 200)
 }
 
-/*
-export async function apiPlayerMute (req, res) {
-  debug('apiPlayerMute')
-  const { mute } = req.json
-  if (typeof mute !== 'boolean') return send(res, 400)
-  await req.player.setMute(mute)
+export async function apiPlayerPreset (req, res) {
+  const { player } = req
+  const { volumes } = req.json
+
+  await player.createGroup(volumes)
   return send(res, 200)
 }
 
-export async function apiPlayerNotify (req, res) {
-  debug('apiPlayerNotify')
-  const { uri } = req.json
-  if (typeof uri !== 'string' || !uri.startsWith('http')) return send(res, 400)
-  await req.player.playNotification(uri)
+export async function apiPlayerNotifcation (req, res) {
+  const { player } = req
+  const { url, opts } = req.json
+
+  await player.playNotification(url, opts)
   return send(res, 200)
 }
-
-*/

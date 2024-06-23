@@ -1,9 +1,14 @@
 import { effect } from '@preact/signals'
 import signalbox from '@ludlovian/signalbox'
+import Bouncer from '@ludlovian/bouncer'
 import { CIFS } from '@ludlovian/jonos-api/constants'
+
+import { isValidUrl } from '../valid.mjs'
+import config from '../config.mjs'
 
 export default class Player {
   #model
+  #prev = { volume: undefined }
 
   constructor (model, data = {}) {
     this.#model = model
@@ -12,23 +17,29 @@ export default class Player {
       // core data
       name: '',
       fullName: '',
-      volume: 0,
-      mute: false,
-      leaderName: '',
-      isPlaying: false,
+      volume: undefined,
+      mute: undefined,
+      leaderName: undefined,
+      isPlaying: undefined,
       mediaUrl: undefined,
       queueUrls: undefined,
 
       // derived
-      isLeader: () => this.leaderName === '',
-      leader: () => (this.isLeader ? this : this.model.byName[this.leaderName]),
+      leader: () => this.model.byName[this.leaderName],
+      isLeader: () => this.leader === this,
       followers: () =>
         this.isLeader && this.players.filter(p => p.leader === this),
       queue: () => this.#getQueue()
     })
 
+    this.volumeBouncer = new Bouncer({
+      after: config.volumeThrottle,
+      fn: () => this.#updateVolume()
+    })
+
     this.onUpdate(data)
     effect(() => this.#monitorQueue())
+    effect(() => this.volumeBouncer.fire(this.volume))
   }
 
   get model () {
@@ -46,6 +57,7 @@ export default class Player {
   onUpdate (data) {
     for (const [key, val] of Object.entries(data)) {
       if (key in this) this[key] = val
+      if (key in this.#prev) this.#prev[key] = val
     }
     if (data.media) {
       this.mediaUrl = data.media.url
@@ -56,9 +68,8 @@ export default class Player {
   // Reactive queue gathering
   #monitorQueue () {
     if (this.model.error) return
-    // If we are not playing, or have nothing loaded, then
-    // empty out the queue
-    if (!this.isLeader || !this.mediaUrl) {
+    // The only queues we monitor are those we know about
+    if (!this.isLeader || !isValidUrl(this.mediaUrl)) {
       this.queueUrls = undefined
       return
     }
@@ -83,12 +94,12 @@ export default class Player {
     // fetch the queue, wich pre-fetches the albums if any are
     // tracks
     const url = `/api/player/${this.name}/queue`
-    const { items } = await this.model.fetchData(url)
+    const { items: urls } = await this.model.fetchData(url)
     // pre-fetch everything into the library
-    for (const url of items) {
+    for (const url of urls) {
       await this.library.fetchMedia(url)
     }
-    return items
+    return urls
   }
 
   #getQueue () {
@@ -122,16 +133,21 @@ export default class Player {
     return queue
   }
 
-  setVolume (volume) {
+  #updateVolume () {
+    if (this.model.error) return
+    if (this.volume === this.#prev.volume) return
     const url = `/api/player/${this.name}/volume`
-    const data = { volume }
-    return this.model.postCommand(url, data)
+    const data = { volume: this.volume }
+    this.#prev.volume = this.volume
+    this.model.postCommand(url, data)
   }
 
-  setLeader (leader) {
+  async setLeader (leaderName) {
+    if (leaderName === this.leaderName) return
     const url = `/api/player/${this.name}/leader`
-    const data = { leader }
-    return this.model.postCommand(url, data)
+    const data = { leader: leaderName }
+    await this.model.postCommand(url, data)
+    this.leaderName = leaderName
   }
 
   async load (urls, opts = {}) {
@@ -154,5 +170,17 @@ export default class Player {
   pause () {
     const url = `/api/player/${this.name}/pause`
     return this.model.postCommand(url)
+  }
+
+  preset (volumes) {
+    const url = `/api/player/${this.name}/preset`
+    const data = { volumes }
+    return this.model.postCommand(url, data)
+  }
+
+  notify (url, opts) {
+    const commandUrl = `/api/player/${this.name}/notify`
+    const data = { url, opts }
+    return this.model.postCommand(commandUrl, data)
   }
 }

@@ -24,6 +24,7 @@
     "@ludlovian/equal": "github:ludlovian/equal",
     "@ludlovian/jonos-api": "github:ludlovian/jonos-api",
     "@ludlovian/jonos-model": "github:ludlovian/jonos-model",
+    "@ludlovian/link-signals": "github:ludlovian/link-signals",
     "@ludlovian/serialize-json": "github:ludlovian/serialize-json",
     "@ludlovian/signalbox": "github:ludlovian/signalbox",
     "@ludlovian/sortby": "github:ludlovian/sortby",

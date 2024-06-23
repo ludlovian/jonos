@@ -1,4 +1,5 @@
 import signalbox from '@ludlovian/signalbox'
+import { isValidUrl } from '../valid.mjs'
 
 export default class Library {
   #model
@@ -26,21 +27,27 @@ export default class Library {
   }
 
   // proper async fetch of the media (if we don't have it)
-  fetchMedia (url) {
+  async fetchMedia (url) {
     if (this.media[url]) return this.media[url]
-    const fetchUrl = `/api/media/${encodeURIComponent(url)}`
-    return this.model.fetchData(fetchUrl).then(item => {
-      const data = { [item.url]: item }
+
+    // If nothing else, we will store these
+    const newItem = { url }
+    const newData = { [url]: newItem }
+
+    if (isValidUrl(url)) {
+      const fetchUrl = `/api/media/${encodeURIComponent(url)}`
+      const item = await this.model.fetchData(fetchUrl)
+      Object.assign(newItem, item)
+
       if (item.type === 'album') {
         let index = 0
         for (const track of item.tracks) {
           track.album = item
           track.index = index++
-          data[track.url] = track
+          newData[track.url] = track
         }
       }
-      this.media = { ...this.media, ...data }
-      return this.media[url]
-    })
+    }
+    this.media = { ...this.media, ...newData }
   }
 }
