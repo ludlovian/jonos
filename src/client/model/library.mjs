@@ -31,13 +31,12 @@ export default class Library {
     if (this.media[url]) return this.media[url]
 
     // If nothing else, we will store these
-    const newItem = { url }
-    const newData = { [url]: newItem }
+    const newData = { [url]: { url } }
 
     if (isValidUrl(url)) {
       const fetchUrl = `/api/media/${encodeURIComponent(url)}`
       const item = await this.model.fetchData(fetchUrl)
-      Object.assign(newItem, item)
+      newData[item.url] = item
 
       if (item.type === 'album') {
         let index = 0
@@ -49,5 +48,6 @@ export default class Library {
       }
     }
     this.media = { ...this.media, ...newData }
+    return this.media[url]
   }
 }
