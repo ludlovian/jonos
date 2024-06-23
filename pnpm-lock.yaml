@@ -25,7 +25,7 @@ importers:
         version: https://codeload.github.com/ludlovian/jonos-api/tar.gz/60196b89ec656963d113ade89bdb544fd0ca0632
       '@ludlovian/jonos-model':
         specifier: github:ludlovian/jonos-model
-        version: https://codeload.github.com/ludlovian/jonos-model/tar.gz/16ce21681adbb68dc1b177358953fc052f434757(@preact/signals-core@1.6.1)
+        version: https://codeload.github.com/ludlovian/jonos-model/tar.gz/27faafbd22afc6eb95c73c43cb82baa7f384198d(@preact/signals-core@1.6.1)
       '@ludlovian/link-signals':
         specifier: github:ludlovian/link-signals
         version: https://codeload.github.com/ludlovian/link-signals/tar.gz/ce53caca8a9045b22f4d9cef8515455925167180(@preact/signals-core@1.6.1)
@@ -280,9 +280,9 @@ packages:
     resolution: {tarball: https://codeload.github.com/ludlovian/jonos-api/tar.gz/60196b89ec656963d113ade89bdb544fd0ca0632}
     version: 0.7.2
 
-  '@ludlovian/jonos-model@https://codeload.github.com/ludlovian/jonos-model/tar.gz/16ce21681adbb68dc1b177358953fc052f434757':
-    resolution: {tarball: https://codeload.github.com/ludlovian/jonos-model/tar.gz/16ce21681adbb68dc1b177358953fc052f434757}
-    version: 0.6.16
+  '@ludlovian/jonos-model@https://codeload.github.com/ludlovian/jonos-model/tar.gz/27faafbd22afc6eb95c73c43cb82baa7f384198d':
+    resolution: {tarball: https://codeload.github.com/ludlovian/jonos-model/tar.gz/27faafbd22afc6eb95c73c43cb82baa7f384198d}
+    version: 0.6.17
     peerDependencies:
       '@preact/signals-core': ^1.6.1
 
@@ -1269,7 +1269,7 @@ snapshots:
       '@ludlovian/timer': https://codeload.github.com/ludlovian/timer/tar.gz/fa5cf51fba00f2715de2b182d1d546d7a8cbe883
       '@lukeed/ms': 2.0.2
 
-  '@ludlovian/jonos-model@https://codeload.github.com/ludlovian/jonos-model/tar.gz/16ce21681adbb68dc1b177358953fc052f434757(@preact/signals-core@1.6.1)':
+  '@ludlovian/jonos-model@https://codeload.github.com/ludlovian/jonos-model/tar.gz/27faafbd22afc6eb95c73c43cb82baa7f384198d(@preact/signals-core@1.6.1)':
     dependencies:
       '@ludlovian/configure': https://codeload.github.com/ludlovian/configure/tar.gz/3a8bb028d77cfbdb64d22c47a316da8509dad898
       '@ludlovian/debug': https://codeload.github.com/ludlovian/debug/tar.gz/52c340a997e7be86a5c1d6e3747c3e79f8caa994
