@@ -53,10 +53,11 @@ function PlayerQueue ({ player }) {
       {queue.map((item, ix) => (
         <Media
           key={item}
-          url={item.url}
+          item={item}
           player={player}
           showControls={ix === queue.length - 1}
           details={item.tracks}
+          hilite={player.trackUrl}
         />
       ))}
     </Fragment>
@@ -119,8 +120,8 @@ function MediaSearch ({ player }) {
   return (
     <Fragment>
       <Search $results={$results} />
-      {$results.value.map(url => (
-        <SearchResult key={url} url={url} player={player} />
+      {$results.value.map(item => (
+        <SearchResult key={item.url} item={item} player={player} />
       ))}
     </Fragment>
   )

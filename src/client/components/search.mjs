@@ -46,25 +46,23 @@ export function Search ({ $results }) {
   )
 }
 
-export function SearchResult ({ url, player }) {
+export function SearchResult ({ item, player }) {
   return (
     <Fragment>
       <Row class='mt-2'>
-        <Media url={url} />
+        <Media item={item} />
       </Row>
-      <AddToQueue url={url} player={player} />
+      <AddToQueue url={item.url} player={player} />
     </Fragment>
   )
 }
 
 function AddToQueue ({ url, player }) {
-  const item = player.library.media[url]
-  const urls = item.tracks ? item.tracks.map(t => t.url) : [item.url]
   const catcher = player.model.catch
   const opts = { play: true, repeat: true }
   const add = true
-  const playClick = () => player.load(urls, opts).catch(catcher)
-  const addClick = () => player.load(urls, { ...opts, add }).catch(catcher)
+  const playClick = () => player.load(url, opts).catch(catcher)
+  const addClick = () => player.load(url, { ...opts, add }).catch(catcher)
   return (
     <Row class='justify-content-end mb-2'>
       <Col class='col-auto'>

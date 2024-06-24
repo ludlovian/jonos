@@ -22,10 +22,10 @@ importers:
         version: https://codeload.github.com/ludlovian/equal/tar.gz/9af158101cc2b0cee715fb85b0f61a26858f24c5
       '@ludlovian/jonos-api':
         specifier: github:ludlovian/jonos-api
-        version: https://codeload.github.com/ludlovian/jonos-api/tar.gz/60196b89ec656963d113ade89bdb544fd0ca0632
+        version: https://codeload.github.com/ludlovian/jonos-api/tar.gz/89af6ffeedcb136629ec675806b027bd0eacb809
       '@ludlovian/jonos-model':
         specifier: github:ludlovian/jonos-model
-        version: https://codeload.github.com/ludlovian/jonos-model/tar.gz/27faafbd22afc6eb95c73c43cb82baa7f384198d(@preact/signals-core@1.6.1)
+        version: https://codeload.github.com/ludlovian/jonos-model/tar.gz/b9c58b782d525587077aaf9071e3bf44338d9375(@preact/signals-core@1.6.1)
       '@ludlovian/link-signals':
         specifier: github:ludlovian/link-signals
         version: https://codeload.github.com/ludlovian/link-signals/tar.gz/ce53caca8a9045b22f4d9cef8515455925167180(@preact/signals-core@1.6.1)
@@ -276,13 +276,13 @@ packages:
     resolution: {tarball: https://codeload.github.com/ludlovian/guess/tar.gz/98ce9a84b91c571001c7ce164fad7ab9ce1946a4}
     version: 0.1.0
 
-  '@ludlovian/jonos-api@https://codeload.github.com/ludlovian/jonos-api/tar.gz/60196b89ec656963d113ade89bdb544fd0ca0632':
-    resolution: {tarball: https://codeload.github.com/ludlovian/jonos-api/tar.gz/60196b89ec656963d113ade89bdb544fd0ca0632}
-    version: 0.7.2
+  '@ludlovian/jonos-api@https://codeload.github.com/ludlovian/jonos-api/tar.gz/89af6ffeedcb136629ec675806b027bd0eacb809':
+    resolution: {tarball: https://codeload.github.com/ludlovian/jonos-api/tar.gz/89af6ffeedcb136629ec675806b027bd0eacb809}
+    version: 0.7.3
 
-  '@ludlovian/jonos-model@https://codeload.github.com/ludlovian/jonos-model/tar.gz/27faafbd22afc6eb95c73c43cb82baa7f384198d':
-    resolution: {tarball: https://codeload.github.com/ludlovian/jonos-model/tar.gz/27faafbd22afc6eb95c73c43cb82baa7f384198d}
-    version: 0.6.17
+  '@ludlovian/jonos-model@https://codeload.github.com/ludlovian/jonos-model/tar.gz/b9c58b782d525587077aaf9071e3bf44338d9375':
+    resolution: {tarball: https://codeload.github.com/ludlovian/jonos-model/tar.gz/b9c58b782d525587077aaf9071e3bf44338d9375}
+    version: 0.6.19
     peerDependencies:
       '@preact/signals-core': ^1.6.1
 
@@ -1257,7 +1257,7 @@ snapshots:
 
   '@ludlovian/guess@https://codeload.github.com/ludlovian/guess/tar.gz/98ce9a84b91c571001c7ce164fad7ab9ce1946a4': {}
 
-  '@ludlovian/jonos-api@https://codeload.github.com/ludlovian/jonos-api/tar.gz/60196b89ec656963d113ade89bdb544fd0ca0632':
+  '@ludlovian/jonos-api@https://codeload.github.com/ludlovian/jonos-api/tar.gz/89af6ffeedcb136629ec675806b027bd0eacb809':
     dependencies:
       '@ludlovian/camel': https://codeload.github.com/ludlovian/camel/tar.gz/8389f121d271c7930e99ad82b0dc5dbe16dfcb03
       '@ludlovian/configure': https://codeload.github.com/ludlovian/configure/tar.gz/3a8bb028d77cfbdb64d22c47a316da8509dad898
@@ -1269,12 +1269,12 @@ snapshots:
       '@ludlovian/timer': https://codeload.github.com/ludlovian/timer/tar.gz/fa5cf51fba00f2715de2b182d1d546d7a8cbe883
       '@lukeed/ms': 2.0.2
 
-  '@ludlovian/jonos-model@https://codeload.github.com/ludlovian/jonos-model/tar.gz/27faafbd22afc6eb95c73c43cb82baa7f384198d(@preact/signals-core@1.6.1)':
+  '@ludlovian/jonos-model@https://codeload.github.com/ludlovian/jonos-model/tar.gz/b9c58b782d525587077aaf9071e3bf44338d9375(@preact/signals-core@1.6.1)':
     dependencies:
       '@ludlovian/configure': https://codeload.github.com/ludlovian/configure/tar.gz/3a8bb028d77cfbdb64d22c47a316da8509dad898
       '@ludlovian/debug': https://codeload.github.com/ludlovian/debug/tar.gz/52c340a997e7be86a5c1d6e3747c3e79f8caa994
       '@ludlovian/equal': https://codeload.github.com/ludlovian/equal/tar.gz/9af158101cc2b0cee715fb85b0f61a26858f24c5
-      '@ludlovian/jonos-api': https://codeload.github.com/ludlovian/jonos-api/tar.gz/60196b89ec656963d113ade89bdb544fd0ca0632
+      '@ludlovian/jonos-api': https://codeload.github.com/ludlovian/jonos-api/tar.gz/89af6ffeedcb136629ec675806b027bd0eacb809
       '@ludlovian/lock': https://codeload.github.com/ludlovian/lock/tar.gz/d1ca32b46e1e59cb8d7736f64a438dabc570555c
       '@ludlovian/parsley': https://codeload.github.com/ludlovian/parsley/tar.gz/842e5757154856c9d543fbd1f537c621194b7e1c
       '@ludlovian/signalbox': https://codeload.github.com/ludlovian/signalbox/tar.gz/0738206db9b9116e24c1d8cb0bb4d0208158d8a6(@preact/signals-core@1.6.1)

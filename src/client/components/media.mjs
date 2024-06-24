@@ -2,7 +2,6 @@
 import { h, Fragment } from 'preact'
 import clsx from 'clsx/lite'
 
-import { useModel } from './use.mjs'
 import { Row, Col } from './layout.mjs'
 import { PlayerControl } from './player.mjs'
 
@@ -12,38 +11,32 @@ import { PlayerControl } from './player.mjs'
 // If supplied, also shows the tracks (details)
 //
 // Mandatory props
-// url      - url of the media to show
+// item     - the media item
 //
 // Optional props:
 //
-// player       - the player, from which we infer
+// player       - the player, from which we get
 //                - an indicator of whether playing
 //                - play controls (see showControls)
 //
 // showControls - show the play/pause controls for the given player
 //
-// details      - for albums only, this is the list of tracks
-//                (also highlights the current track if player given)
+// details      - for albums only, the tracks
+// hilite       - the track to highlight as current
 //
 //
 
-export function Media ({ url, player, showControls, details }) {
-  const { library } = useModel()
-  const item = url && library.media[url]
-  if (url && !item) return null // shouldnt happen now
+export function Media (props) {
+  const { item, player, showControls, details, hilite } = props
 
   return (
     <Row class='row pb-2'>
       <Col.Art class='position-relative'>
-        {url ? <MediaArt url={url} /> : ' '}
+        {item?.url ? <MediaArt url={item.url} /> : ' '}
         {player && player.isPlaying && <IsPlaying />}
       </Col.Art>
       <Col class='mb-3'>
-        <MediaSummary
-          item={item}
-          details={details}
-          hilite={player && details && player.mediaUrl}
-        />
+        <MediaSummary item={item} details={details} hilite={hilite} />
         {player && showControls && <PlayerControl player={player} />}
       </Col>
     </Row>
@@ -69,14 +62,14 @@ function IsPlaying () {
 }
 
 function MediaSummary ({ item, details, hilite }) {
-  const [a, b, c] = getSummaryLines(item ?? {})
+  const [a, b, c] = getSummaryLines(item)
 
   return (
     <Fragment>
       <div class='fw-bold'>{a ?? ''}</div>
       <div>{b ?? ''}</div>
       <div class='fst-italic'>{c ?? ''}</div>
-      {details && <MediaDetails details={details} hilite={hilite} />}
+      {details && <MediaDetails details={item.tracks} hilite={hilite} />}
     </Fragment>
   )
 }
@@ -100,15 +93,12 @@ function MediaDetails ({ details, hilite }) {
 }
 
 function getSummaryLines (item) {
-  const model = useModel()
-  const { url, type, album, title, artist } = item
+  const { type, album, artist, title, nowPlaying } = item ?? {}
+
   if (type === 'track') return [album.artist, album.title, title]
   if (type === 'album') return [artist, title, '']
   if (type === 'tv') return ['', 'TV', '']
   if (type === 'web') return ['', 'Web', '']
-  if (type === 'radio') {
-    const now = model.library.nowPlaying[url]
-    return [title, 'Radio', now ?? '']
-  }
+  if (type === 'radio') return [title, 'Radio', nowPlaying ?? '']
   return ['', 'No media loaded', '']
 }

@@ -11,7 +11,7 @@ import { log } from '../wares.mjs'
 
 const debug = Debug('jonos:api:status')
 
-const system = {
+const systemCore = {
   isDev: process.env.NODE_ENV !== 'production',
   started: new Date(),
   version: process.env.npm_package_version ?? 'dev'
@@ -52,7 +52,7 @@ function listen (callback) {
   debug('Listener added')
   model.listeners++
   const debounce = config.statusThrottle
-  const unsub = subscribeSignal(getState, callback, { debounce, depth: 2 })
+  const unsub = subscribeSignal(getState, callback, { debounce, depth: 3 })
   return () => {
     debug('Listener removed')
     unsub()
@@ -61,8 +61,20 @@ function listen (callback) {
 }
 
 function getState () {
+  const system = getSystem()
   const players = getPlayers()
   return { system, players }
+}
+
+function getSystem () {
+  return {
+    ...systemCore,
+    players: model.players.players.map(p => ({
+      name: p.fullName,
+      model: p.model,
+      url: p.url
+    }))
+  }
 }
 
 function getPlayers () {
@@ -77,6 +89,8 @@ function getPlayerState (p) {
     mute: p.mute,
     leaderName: p.leader.name,
     isPlaying: p.isLeader ? p.isPlaying : null,
-    media: p.isLeader ? p.media : null
+    trackUrl: p.isLeader ? p.trackUrl : null,
+    queue: p.queue,
+    media: p.media
   }
 }

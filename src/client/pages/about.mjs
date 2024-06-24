@@ -3,9 +3,9 @@ import { h, Fragment } from 'preact'
 import { useModel } from '../components/index.mjs'
 
 export function About () {
-  const { about } = useModel()
-  if (!about) return null
-  const { system, players } = about
+  const { system } = useModel()
+  if (!system) return null
+  const { players } = system
   return (
     <Fragment>
       <p class='text'>
@@ -15,7 +15,7 @@ export function About () {
           {system.isDev && ' dev'}
         </small>
       </p>
-      <p>Server started: {system.started.toString()}</p>
+      <p>Server started: <small>{system.started.toString()}</small></p>
       <hr />
       <h3>Players</h3>
       <ul>

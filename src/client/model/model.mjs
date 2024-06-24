@@ -1,29 +1,21 @@
-import { batch, effect } from '@preact/signals'
+import { batch } from '@preact/signals'
 import { deserialize } from '@ludlovian/serialize-json'
 import signalbox from '@ludlovian/signalbox'
 
-import Library from './library.mjs'
 import Player from './player.mjs'
 
 const { fromEntries, entries } = Object
 
 export default class Model {
   constructor () {
-    this.library = new Library(this)
     this.catch = this.catch.bind(this)
 
     signalbox(this, {
-      // from server
-      about: undefined,
+      // system related data
+      system: { players: {} },
 
       // the list of players
       players: [],
-
-      // the 'now playing' bit for streaming media
-      nowPlaying: {},
-
-      // cached media to save looking up
-      media: {},
 
       // local
       error: undefined,
@@ -33,8 +25,6 @@ export default class Model {
       isLoading: () => this.players.length === 0,
       groups: () => Map.groupBy(this.players, p => p.leader)
     })
-
-    effect(() => this.#fetchAbout())
   }
 
   catch (err) {
@@ -44,6 +34,14 @@ export default class Model {
 
   onUpdate (update) {
     batch(() => {
+      if ('system' in update) {
+        const { system } = update
+        this.system = {
+          ...this.system,
+          ...system
+        }
+      }
+
       if ('players' in update) {
         const { players } = update
         for (const [name, data] of entries(players)) {
@@ -88,11 +86,8 @@ export default class Model {
   async search (text) {
     if (!text || text.length < 3) return []
     const fetchUrl = '/api/search/' + encodeURIComponent(text)
-    const { items: urls } = await this.fetchData(fetchUrl)
-    for (const url of urls) {
-      await this.library.fetchMedia(url)
-    }
-    return urls
+    const { items } = await this.fetchData(fetchUrl)
+    return items
   }
 
   #fetchAbout () {

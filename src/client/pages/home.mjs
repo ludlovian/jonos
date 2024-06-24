@@ -23,7 +23,7 @@ export function Home () {
   return (
     <Fragment>
       {leaders.map(player => (
-        <GroupSummary key={player.name} player={player} />
+        <GroupSummary key={player} player={player} />
       ))}
       <PresetCommands presets={config.presets} />
       <NotifyCommands notifies={config.notifies} />
@@ -39,7 +39,7 @@ function GroupSummary ({ player }) {
   return (
     <Fragment>
       <Link href={`/player/${player.name}`}>
-        <Media url={player.mediaUrl} player={player} />
+        <Media item={player.media} player={player} />
         <Players players={players} />
       </Link>
       <hr />

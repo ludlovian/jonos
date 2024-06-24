@@ -7,9 +7,6 @@ import config from './config.mjs'
 import {
   apiStatus,
   apiStatusUpdates,
-  apiAbout,
-  apiMedia,
-  apiPlayerQueue,
   apiPlayerVolume,
   apiPlayerLeader,
   apiPlayerPlay,
@@ -51,17 +48,10 @@ class Server {
       .get('/api/status/updates', wrap(apiStatusUpdates))
       .get('/api/status', wrap(apiStatus))
 
-      // About
-      .get('/api/about', wrap(apiAbout))
-
-      // Media
-      .get('/api/media/:url', wrap(apiMedia))
-
       // Search
       .get('/api/search/:search', wrap(apiSearch))
 
       // Player
-      .get('/api/player/:name/queue', wrap(apiPlayerQueue))
       .post('/api/player/:name/volume', wrap(apiPlayerVolume))
       .post('/api/player/:name/leader', wrap(apiPlayerLeader))
       .post('/api/player/:name/pause', wrap(apiPlayerPause))
