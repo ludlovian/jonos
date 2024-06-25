@@ -15,7 +15,9 @@ export function About () {
           {system.isDev && ' dev'}
         </small>
       </p>
-      <p>Server started: <small>{system.started.toString()}</small></p>
+      <p>
+        Server started: <small>{system.started.toString()}</small>
+      </p>
       <hr />
       <h3>Players</h3>
       <ul>
