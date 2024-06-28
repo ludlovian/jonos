@@ -18,6 +18,9 @@ export default [
       format: 'es',
       sourcemap: dev
     },
+    external: [
+      'better-sqlite3'
+    ],
     plugins: [
       commonjs(),
       nodeResolve(),

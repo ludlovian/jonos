@@ -7,7 +7,9 @@ export default configure('JONOS_', {
   serverPort: 3500,
   clientPath: './dist/public',
   serverAddress: getMyIP(),
-  statusThrottle: 200
+  statusThrottle: 200,
+
+  staticCache: '.cache.sqlite'
 })
 
 function getMyIP () {

@@ -47,7 +47,7 @@ export function wrap (handler) {
     try {
       await handler(req, res)
     } catch (err) {
-      writeToConsole(err)
+      console.error(err)
       res.statusCode = err.statusCode || 500
       res.end(err.message)
     }

@@ -1,6 +1,6 @@
 export default {
-  volumeThrottle: 250,
-  volumeDisplayDelay: 2000,
+  volumeThrottle: 1000,
+  volumeDisplayDelay: 3000,
   searchThrottle: 1000,
 
   presets: [

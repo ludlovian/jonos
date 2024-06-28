@@ -1,8 +1,9 @@
 import polka from 'polka'
+import staticFile from '@ludlovian/static'
 import Debug from '@ludlovian/debug'
 
 import { parseBody, log, wrap, getPlayer } from './wares.mjs'
-import StaticFile from './static.mjs'
+
 import config from './config.mjs'
 import {
   apiStatus,
@@ -32,7 +33,7 @@ class Server {
 
     // static files for client
     p.use(
-      StaticFile.serveFiles(config.clientPath, {
+      staticFile.serveFiles(config.clientPath, {
         single: '/',
         except: ['/api', '/art', '/assets', '/js']
       })
