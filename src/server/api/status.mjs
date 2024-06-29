@@ -20,8 +20,6 @@ const systemCore = {
 const serializeOpts = { date: true }
 
 export async function apiStatusUpdates (req, res) {
-  debug('apiStatusUpdates: started')
-
   res.writeHead(200, {
     'Cache-Control': 'no-cache',
     Connection: 'keep-alive',
@@ -38,7 +36,6 @@ export async function apiStatusUpdates (req, res) {
   }
 
   function stop () {
-    debug('apiStatusUpdates: stopped')
     stopListen()
   }
 }
@@ -49,14 +46,14 @@ export async function apiStatus (req, res) {
 }
 
 function listen (callback) {
-  debug('Listener added')
   model.listeners++
+  debug('Listener added: %d', model.listeners)
   const debounce = config.statusThrottle
   const unsub = subscribeSignal(getState, callback, { debounce, depth: 3 })
   return () => {
-    debug('Listener removed')
     unsub()
     model.listeners--
+    debug('Listener removed: %d', model.listeners)
   }
 }
 
