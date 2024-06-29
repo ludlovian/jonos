@@ -1,9 +1,37 @@
+import { readdir } from 'node:fs/promises'
+import { join, resolve } from 'node:path'
 import Debug from '@ludlovian/debug'
 import send from '@polka/send'
-
 import model from '@ludlovian/jonos-model'
+import _staticFile from '@ludlovian/static'
 
 const writeToConsole = Debug('jonos*')
+const debug = Debug('jonos:server')
+
+export function staticFiles (root, except) {
+  return _staticFile.serveFiles(root, {
+    single: '/index.html',
+    filter: path => except.some(e => path.startsWith(e))
+  })
+}
+staticFiles.reset = () => _staticFile.cache.reset()
+staticFiles.preloadCovers = async root => {
+  root = resolve(root)
+  debug('Scanning cover art...')
+  const files = await readdir(root, { recursive: true })
+  for (const file of files) {
+    if (file.endsWith('.jpg')) {
+      const path = join(root, file)
+      try {
+        await _staticFile.cache.readFile(path)
+      } catch (err) {
+        console.error(err)
+        return
+      }
+    }
+  }
+  debug('Scanning cover art ... complete')
+}
 
 export function parseBody (opts = {}) {
   const { json = false, methods = ['POST'] } = opts

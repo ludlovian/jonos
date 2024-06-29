@@ -1,8 +1,8 @@
 import polka from 'polka'
-import staticFile from '@ludlovian/static'
 import Debug from '@ludlovian/debug'
+import { config as globalConfig } from '@ludlovian/configure'
 
-import { parseBody, log, wrap, getPlayer } from './wares.mjs'
+import { staticFiles, parseBody, log, wrap, getPlayer } from './wares.mjs'
 
 import config from './config.mjs'
 import {
@@ -28,16 +28,13 @@ class Server {
     return (Server.#instance = Server.#instance ?? new Server())
   }
 
-  start () {
+  async start () {
+    staticFiles.reset()
+
     const p = (this.#polka = polka())
 
     // static files for client
-    p.use(
-      staticFile.serveFiles(config.clientPath, {
-        single: '/',
-        except: ['/api', '/art', '/assets', '/js']
-      })
-    )
+    p.use(staticFiles(config.clientPath, ['/art', '/api']))
 
       // Artwork
       .get('/art/:url', wrap(artwork))
@@ -62,7 +59,7 @@ class Server {
       .post('/api/player/:name/notify', wrap(apiPlayerNotifcation))
 
     // start listening
-    return new Promise((resolve, reject) => {
+    await new Promise((resolve, reject) => {
       p.listen(config.serverPort, '0.0.0.0', err => {
         if (err) return reject(err)
         this.#debug('Listening on port %d', config.serverPort)
@@ -70,6 +67,8 @@ class Server {
       })
       p.server.on('error', reject)
     })
+
+    staticFiles.preloadCovers(globalConfig.jonosModelLibraryRoot)
   }
 }
 

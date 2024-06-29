@@ -48,8 +48,7 @@ export default [
       gzip({
         additionalFiles: [
           'dist/public/assets/bootstrap.min.css',
-          'dist/public/assets/bootstrap.bundle.min.js',
-          'dist/public/assets/font/bootstrap-icons.min.css'
+          'dist/public/assets/bootstrap.bundle.min.js'
         ]
       })
     ]
