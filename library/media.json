@@ -1,0 +1,30 @@
+[
+  {
+    "type": "radio",
+    "url": "x-rincon-mp3radio://https://allclassical.streamguys1.com/ac128kmp3",
+    "title": "All Classical Radio",
+    "artwork": "allclassical.png"
+  },
+  {
+    "type": "tv",
+    "url": "x-sonos-htastream:",
+    "title": "TV",
+    "artwork": "tv.png"
+  },
+  {
+    "type": "web",
+    "url": "https:",
+    "title": "Web stream",
+    "artwork": "web.png"
+  },
+  {
+    "type": "sonos-queue",
+    "url": "x-rincon-queue:",
+    "title": " "
+  },
+  {
+    "type": "sonos-follow",
+    "url": "x-rincon:",
+    "title": " "
+  }
+]
