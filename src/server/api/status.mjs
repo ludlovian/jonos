@@ -1,11 +1,11 @@
 import process from 'node:process'
-
-import Debug from '@ludlovian/debug'
 import send from '@polka/send'
+import Debug from '@ludlovian/debug'
+import Timer from '@ludlovian/timer'
 import { serialize } from '@ludlovian/serialize-json'
 import subscribeSignal from '@ludlovian/subscribe-signal'
-
 import model from '@ludlovian/jonos-model'
+
 import config from '../config.mjs'
 import { log } from '../wares.mjs'
 
@@ -27,6 +27,12 @@ export async function apiStatusUpdates (req, res) {
   })
   log.writeLine(req, res)
 
+  const tmHeartbeat = new Timer({
+    ms: config.heartbeatPeriod,
+    repeat: true,
+    fn: () => res.write(':\n\n')
+  })
+
   const stopListen = listen(sendState)
   req.on('close', stop)
 
@@ -36,6 +42,7 @@ export async function apiStatusUpdates (req, res) {
   }
 
   function stop () {
+    tmHeartbeat.cancel()
     stopListen()
   }
 }
