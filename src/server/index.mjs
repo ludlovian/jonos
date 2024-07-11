@@ -29,8 +29,6 @@ class Server {
   }
 
   async start () {
-    staticFiles.reset()
-
     const p = (this.#polka = polka())
 
     // static files for client
@@ -68,7 +66,7 @@ class Server {
       p.server.on('error', reject)
     })
 
-    staticFiles.preloadCovers(globalConfig.jonosModelLibraryRoot)
+    staticFiles.onStart(globalConfig.jonosModelLibraryRoot)
   }
 }
 

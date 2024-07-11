@@ -1,5 +1,4 @@
-import { readdir } from 'node:fs/promises'
-import { join, resolve } from 'node:path'
+import { resolve } from 'node:path'
 import Debug from '@ludlovian/debug'
 import send from '@polka/send'
 import model from '@ludlovian/jonos-model'
@@ -14,23 +13,14 @@ export function staticFiles (root, except) {
     filter: path => except.some(e => path.startsWith(e))
   })
 }
-staticFiles.reset = () => _staticFile.cache.reset()
-staticFiles.preloadCovers = async root => {
+staticFiles.onStart = async root => {
   root = resolve(root)
-  debug('Scanning cover art...')
-  const files = await readdir(root, { recursive: true })
-  for (const file of files) {
-    if (file.endsWith('.jpg')) {
-      const path = join(root, file)
-      try {
-        await _staticFile.cache.readFile(path)
-      } catch (err) {
-        console.error(err)
-        return
-      }
-    }
-  }
-  debug('Scanning cover art ... complete')
+  debug('Refreshing static files...')
+  await _staticFile.cache.refresh()
+  debug('Fetching cover art...')
+  const isCoverArt = name => name.endsWith('.jpg')
+  await _staticFile.cache.prefetch(root, isCoverArt)
+  debug('Static refresh complete')
 }
 
 export function parseBody (opts = {}) {
