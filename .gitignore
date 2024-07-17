@@ -3,4 +3,5 @@ coverage/
 dist/
 library/files
 *.db
+*.db-journal
 
