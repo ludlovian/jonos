@@ -21,9 +21,15 @@ export function About () {
         {Object.entries(players).map(([name, p]) => (
           <Fragment key={name}>
             <dt>{p.fullName}</dt>
-            <dd><small>{p.model}</small></dd>
-            <dd><small>{p.url}</small></dd>
-            <dd><small>{p.uuid}</small></dd>
+            <dd>
+              <small>{p.model}</small>
+            </dd>
+            <dd>
+              <small>{p.url}</small>
+            </dd>
+            <dd>
+              <small>{p.uuid}</small>
+            </dd>
           </Fragment>
         ))}
       </dl>

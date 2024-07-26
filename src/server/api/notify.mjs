@@ -16,7 +16,7 @@ export async function apiNotify (req, res) {
   debug('notify(%s)', def.name)
 
   // get the real leader of the group
-  sql = 'select leader from playerEx where name=$name'
+  sql = 'select leaderName from playerEx where name=$name'
   const name = db.pluck.get(sql, { name: def.leader })
   const leader = model.byName[name]
 
