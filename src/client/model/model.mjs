@@ -1,19 +1,34 @@
 import { batch } from '@preact/signals'
+import tinydate from 'tinydate'
 import { deserialize } from '@ludlovian/serialize-json'
 import signalbox from '@ludlovian/signalbox'
-
+import sortBy from '@ludlovian/sortby'
 import Player from './player.mjs'
 
 const { fromEntries, entries } = Object
+const fmtDate = tinydate('{DDD} {MMM} {D} {HH}:{mm}', {
+  D: d => d.getDate(),
+  MMM: d => d.toLocaleString('default', { month: 'short' }),
+  DDD: d => d.toLocaleString('default', { weekday: 'short' })
+})
 
 export default class Model {
   constructor () {
     this.catch = this.catch.bind(this)
+    this.system = {}
+
+    signalbox(this.system, {
+      version: undefined,
+      started: undefined,
+      listening: 0,
+      players: {},
+      notifies: {},
+      presets: {},
+
+      startTime: () => fmtDate(new Date(this.system.started))
+    })
 
     signalbox(this, {
-      // system related data
-      system: { players: {} },
-
       // the list of players
       players: [],
 
@@ -23,7 +38,11 @@ export default class Model {
       // derived
       byName: () => fromEntries(this.players.map(p => [p.name, p])),
       isLoading: () => this.players.length === 0,
-      groups: () => Map.groupBy(this.players, p => p.leader)
+      groups: () => Map.groupBy(this.players, p => this.byName[p.leaderName]),
+      leaders: () =>
+        this.players
+          .filter(p => p.isLeader)
+          .sort(sortBy('playing', 'desc').thenBy('fullName'))
     })
   }
 
@@ -35,10 +54,8 @@ export default class Model {
   onUpdate (update) {
     batch(() => {
       if ('system' in update) {
-        const { system } = update
-        this.system = {
-          ...this.system,
-          ...system
+        for (const k in update.system) {
+          this.system[k] = update.system[k]
         }
       }
 
@@ -58,8 +75,7 @@ export default class Model {
 
   start (url) {
     this.source = new window.EventSource(url)
-    this.source.onmessage = ({ data }) =>
-      this.onUpdate(deserialize(JSON.parse(data), { date: true }))
+    this.source.onmessage = ({ data }) => this.onUpdate(JSON.parse(data))
   }
 
   fetchData (url) {
@@ -84,7 +100,13 @@ export default class Model {
   }
 
   async search (text) {
-    if (!text || text.length < 3) return []
+    const isValid =
+      text &&
+      text
+        .trim()
+        .split(/ +/)
+        .filter(x => x.length > 2).length
+    if (!isValid) return []
     const fetchUrl = '/api/search/' + encodeURIComponent(text)
     const { items } = await this.fetchData(fetchUrl)
     return items

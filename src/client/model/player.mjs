@@ -1,6 +1,7 @@
 import { effect } from '@preact/signals'
 import signalbox from '@ludlovian/signalbox'
 import Bouncer from '@ludlovian/bouncer'
+import sortBy from '@ludlovian/sortby'
 import { CIFS } from '@ludlovian/jonos-api/constants'
 
 import config from '../config.mjs'
@@ -14,21 +15,28 @@ export default class Player {
 
     signalbox(this, {
       // core data
+      id: undefined,
       name: '',
       fullName: '',
+      leaderName: '',
       volume: undefined,
       mute: undefined,
-      leaderName: undefined,
-      isPlaying: undefined,
-      trackUrl: undefined,
+      playing: undefined,
+      repeat: undefined,
+      current: undefined,
       queue: undefined,
-      media: undefined,
 
       // derived
       leader: () => this.model.byName[this.leaderName],
       isLeader: () => this.leader === this,
-      followers: () =>
-        this.isLeader && this.players.filter(p => p.leader === this)
+      followers: () => {
+        if (!this.isLeader) return null
+        const members = this.model.groups.get(this)
+        return members.filter(p => p !== this).sort(sortBy('fullName'))
+      },
+      members: () => (this.isLeader ? [this, ...this.followers] : null),
+      hasQueue: () => !!this.queue,
+      groupedQueue: () => this.#groupedQueue()
     })
 
     this.volumeBouncer = new Bouncer({
@@ -46,6 +54,30 @@ export default class Player {
 
   get players () {
     return this.model.players
+  }
+
+  #groupedQueue () {
+    if (!this.hasQueue || !this.queue.length) return null
+    const groups = []
+
+    let tracks = []
+    let media = this.queue[0]
+    let isCurrent = false
+    for (const item of this.queue) {
+      if (item.albumId !== media.albumId) {
+        groups.push({ media, isCurrent, tracks })
+        tracks = []
+        media = item
+        isCurrent = false
+      }
+      tracks.push(item)
+      if (item.id === this.current.id) {
+        isCurrent = true
+        media = item
+      }
+    }
+    groups.push({ media, isCurrent, tracks })
+    return groups
   }
 
   onUpdate (data) {
@@ -91,17 +123,5 @@ export default class Player {
   pause () {
     const url = `/api/player/${this.name}/pause`
     return this.model.postCommand(url)
-  }
-
-  preset (volumes) {
-    const url = `/api/player/${this.name}/preset`
-    const data = { volumes }
-    return this.model.postCommand(url, data)
-  }
-
-  notify (url, opts) {
-    const commandUrl = `/api/player/${this.name}/notify`
-    const data = { url, opts }
-    return this.model.postCommand(commandUrl, data)
   }
 }

@@ -3,49 +3,173 @@ import { h, Fragment } from 'preact'
 import clsx from 'clsx/lite'
 
 import { Row, Col } from './layout.mjs'
-import { PlayerControl } from './player.mjs'
 
-// displays the current media
-// with an image and the track/title etc
+// A flexible Media control
 //
-// If supplied, also shows the tracks (details)
+// It can show
+// -  any playable media item (with a playing indicator)
+// -  an album, with/without track detail
 //
-// Mandatory props
-// item     - the media item
+//  Required props
 //
-// Optional props:
+//  - media     the media metadata object. The "type" property
+//              drives other behaviours
 //
-// player       - the player, from which we get
-//                - an indicator of whether playing
-//                - play controls (see showControls)
+//  Optional props
 //
-// showControls - show the play/pause controls for the given player
+//  - player    if given, will show an isPlaying indicator if this
+//              is the current media item, and the player is playing
 //
-// details      - for albums only, the tracks
-// hilite       - the track to highlight as current
+//  - asAlbum   treat the given media item as representative of the
+//              parent album
 //
+//  - tracks    show the tracks underneath
+//
+//
+//  Any children (eg player control buttons) are shown under the banner
 //
 
 export function Media (props) {
-  const { item, player, showControls, details, hilite } = props
+  const { media, player, children, ...rest } = props
+  const isPlaying = player && player.playing && player.current.id === media.id
 
   return (
     <Row class='row pb-2'>
       <Col.Art class='position-relative'>
-        {item?.url ? <MediaArt url={item.url} /> : ' '}
-        {player && player.isPlaying && <IsPlaying />}
+        <MediaArt media={media} />
+        {isPlaying && <IsPlaying />}
       </Col.Art>
       <Col class='mb-3'>
-        <MediaSummary item={item} details={details} hilite={hilite} />
-        {player && showControls && <PlayerControl player={player} />}
+        <MediaBanner {...{ media, player, ...rest }} />
+        {children}
       </Col>
     </Row>
   )
 }
 
-function MediaArt ({ url }) {
-  if (!url) return <div> </div>
-  const imgUrl = `/art/${encodeURIComponent(url)}`
+function MediaBanner (props) {
+  const { media, asAlbum, ...rest } = props
+  if (!media) return <NoMedia />
+  const { type } = media
+  if (type === 'tv') return <TVMedia />
+  if (type === 'radio') return <Radio media={media} />
+  if (type === 'web') return <WebStream media={media} />
+  if (type === 'track') {
+    if (asAlbum) return <Album media={media} {...rest} />
+    return <Track media={media} {...rest} />
+  }
+}
+
+function ThreeLines ({ lines }) {
+  return (
+    <Fragment>
+      <div class='fw-bold'>{lines[0] || ' '}</div>
+      <div>{lines[1] || ' '}</div>
+      <div class='fst-italic'>{lines[2] || ' '}</div>
+    </Fragment>
+  )
+}
+
+function NoMedia () {
+  return <ThreeLines lines={['', 'No media loaded']} />
+}
+
+function TVMedia () {
+  return <ThreeLines lines={['', 'TV']} />
+}
+
+function Radio ({ media }) {
+  const { title, nowPlaying } = media
+  return <ThreeLines lines={[title, 'Radio', nowPlaying]} />
+}
+
+function WebStream ({ media }) {
+  const title = media.url.replace(/.*\//, '')
+  return <ThreeLines lines={['', 'Web', title]} />
+}
+
+function Track (props) {
+  const { media, tracks, ...rest } = props
+  const { albumArtist, album, title } = media
+  return (
+    <Fragment>
+      <ThreeLines lines={[albumArtist, album, title]} />
+      {tracks && <Tracks tracks={tracks} {...rest} />}
+    </Fragment>
+  )
+}
+
+function Album (props) {
+  const { media, tracks, ...rest } = props
+  const { albumArtist, album } = media
+  return (
+    <Fragment>
+      <ThreeLines lines={[albumArtist, album]} />
+      {tracks && <Tracks tracks={tracks} {...rest} />}
+    </Fragment>
+  )
+}
+
+function Tracks (props) {
+  const { tracks, player } = props
+  return (
+    <Fragment>
+      <TrackExpandButton id={tracks[0].id} />
+      <TrackCollapseGroup
+        id={tracks[0].id}
+        tracks={tracks}
+        current={player?.current}
+        player={player}
+      />
+    </Fragment>
+  )
+}
+
+function TrackExpandButton ({ id }) {
+  return (
+    <Row class='justify-content-start'>
+      <Col class='col-auto'>
+        <a
+          href='#'
+          class='text-decoration-none text-secondary'
+          data-bs-toggle='collapse'
+          data-bs-target={`#album-tracks-${id}`}
+        >
+          <i class='bi bi-three-dots' />
+        </a>
+      </Col>
+    </Row>
+  )
+}
+
+function TrackCollapseGroup (props) {
+  const { id, media, current, tracks, ...rest } = props
+  return (
+    <div class='collapse' id={`album-tracks-${id}`}>
+      <ul class='small'>
+        {tracks.map(media => (
+          <TrackTitle
+            key={media.id}
+            media={media}
+            isCurrent={current && current.id === media.id}
+            {...rest}
+          />
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+function TrackTitle ({ media, isCurrent }) {
+  const text = `${media.seq + 1}. ${media.title}`
+  const cls = isCurrent ? 'text-primary' : 'text-secondary'
+  return <li class={cls}>{text}</li>
+}
+
+function MediaArt ({ media }) {
+  const isValid = ['radio', 'track', 'tv', 'web'].includes(media?.type)
+  if (!isValid) return <div> </div>
+  const imgUrl = `/art/${media.id}`
   return <img src={imgUrl} class='img-fluid media-art' />
 }
 
@@ -59,46 +183,4 @@ function IsPlaying () {
     'bg-success border border-light rounded-circle'
   )
   return <span class={cls} />
-}
-
-function MediaSummary ({ item, details, hilite }) {
-  const [a, b, c] = getSummaryLines(item)
-
-  return (
-    <Fragment>
-      <div class='fw-bold'>{a ?? ''}</div>
-      <div>{b ?? ''}</div>
-      <div class='fst-italic'>{c ?? ''}</div>
-      {details && <MediaDetails details={item.tracks} hilite={hilite} />}
-    </Fragment>
-  )
-}
-
-function MediaDetails ({ details, hilite }) {
-  const items = details.map(item => {
-    const title =
-      item.index === undefined ? item.title : `${item.index + 1}. ${item.title}`
-    return [title, item.url === hilite]
-  })
-
-  return (
-    <ul class='small'>
-      {items.map(([text, hilite], ix) => (
-        <li key={ix} class={hilite && 'fw-bold'}>
-          {text}
-        </li>
-      ))}
-    </ul>
-  )
-}
-
-function getSummaryLines (item) {
-  const { type, album, artist, title, nowPlaying } = item ?? {}
-
-  if (type === 'track') return [album.artist, album.title, title]
-  if (type === 'album') return [artist, title, '']
-  if (type === 'tv') return ['', 'TV', '']
-  if (type === 'web') return ['', 'Web', '']
-  if (type === 'radio') return [title, 'Radio', nowPlaying ?? '']
-  return ['', 'No media loaded', '']
 }

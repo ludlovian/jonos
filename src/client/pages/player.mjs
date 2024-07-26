@@ -5,11 +5,13 @@ import sortBy from '@ludlovian/sortby'
 
 import {
   useModel,
+  Redirect,
   Media,
   Row,
   Col,
   Choice,
   Players,
+  PlayerControl,
   Toggle,
   Search,
   SearchResult
@@ -18,15 +20,13 @@ import {
 export function PlayerSummary ({ name }) {
   const model = useModel()
   const player = model.byName[name]
-  if (!model) return model.catch(new Error(`Not a player: ${name}`))
-  if (!player.isLeader) {
-    return model.catch(new Error(`Not a leader: ${player.name}`))
-  }
+  if (!player) return model.catch(new Error(`Not a player: ${name}`))
+  if (!player.isLeader) return <Redirect url='/' />
 
   return (
     <Fragment>
       <PlayerTitle player={player} />
-      <PlayerQueue player={player} />
+      <SummaryQueue player={player} />
       <hr />
       <PlayerMembers player={player} />
       <hr />
@@ -45,20 +45,26 @@ function PlayerTitle ({ player }) {
   )
 }
 
-function PlayerQueue ({ player }) {
-  const queue = player.queue
-  if (!queue) return null
+function SummaryQueue ({ player }) {
+  if (!player.hasQueue) {
+    return (
+      <Media media={player.current} player={player}>
+        <PlayerControl player={player} />
+      </Media>
+    )
+  }
   return (
     <Fragment>
-      {queue.map((item, ix) => (
+      {player.groupedQueue.map(({ media, tracks, isCurrent }) => (
         <Media
-          key={item}
-          item={item}
-          player={player}
-          showControls={ix === queue.length - 1}
-          details={item.tracks}
-          hilite={player.trackUrl}
-        />
+          key={media.id}
+          media={media}
+          asAlbum={!isCurrent}
+          tracks={tracks}
+          player={isCurrent && player}
+        >
+          {isCurrent && <PlayerControl player={player} />}
+        </Media>
       ))}
     </Fragment>
   )
@@ -66,14 +72,17 @@ function PlayerQueue ({ player }) {
 
 function PlayerMembers ({ player }) {
   const $editable = useSignal(false)
-  const players = [
-    ...new Set([player, ...[...player.followers].sort(sortBy('fullName'))])
-  ]
+  const players = player.members
+  const showGroup = players.length > 1
 
   return (
     <Fragment>
       <Toggle $signal={$editable}>
-        <Players players={players} showGroup editable={$editable.value} />
+        <Players
+          players={players}
+          showGroup={showGroup}
+          editable={$editable.value}
+        />
       </Toggle>
       <GroupCommands player={player} />
     </Fragment>
@@ -83,10 +92,11 @@ function PlayerMembers ({ player }) {
 function GroupCommands ({ player }) {
   const $isAdd = useSignal(false)
 
-  const removes = player.followers
-    .filter(p => p !== player)
-    .sort(sortBy('fullName'))
-    .map(p => [`Remove ${p.fullName}`, () => p.setLeader(p.name), false])
+  const removes = player.followers.map(p => [
+    `Remove ${p.fullName}`,
+    () => p.setLeader(p.name),
+    false
+  ])
   const adds = player.model.players
     .filter(p => p.leader !== player)
     .sort(sortBy('fullName'))
@@ -121,7 +131,7 @@ function MediaSearch ({ player }) {
     <Fragment>
       <Search $results={$results} />
       {$results.value.map(item => (
-        <SearchResult key={item.url} item={item} player={player} />
+        <SearchResult key={item.url} media={item} player={player} />
       ))}
     </Fragment>
   )

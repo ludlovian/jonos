@@ -17,13 +17,13 @@ export function PlayerControl ({ player }) {
             icon='bi-play-fill'
             label='Play'
             onclick={() => player.play()}
-            disabled={!player.isLeader || !player.trackUrl || player.isPlaying}
+            disabled={!player.isLeader || !player.current || player.playing}
           />
           <Button
             icon='bi-pause-fill'
             label='Pause'
             onclick={() => player.pause()}
-            disabled={!player.isLeader || !player.isPlaying}
+            disabled={!player.isLeader || !player.playing}
           />
         </div>
       </Col>

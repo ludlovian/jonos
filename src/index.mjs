@@ -1,7 +1,5 @@
 import process from 'node:process'
 
-import { effect } from '@preact/signals-core'
-
 import Debug from '@ludlovian/debug'
 import model from '@ludlovian/jonos-model'
 
@@ -15,27 +13,22 @@ async function main () {
 
   await server.start()
 
-  reportListening()
+  model.onListening(reportListening)
 
   process.on('SIGINT', stop).on('SIGTERM', stop)
 }
 
-function reportListening () {
-  if (!debug.enabled) return undefined
-  let listening = false
-  effect(() => {
-    const wasListening = listening
-    listening = model.players.someListening
-    if (wasListening && !listening) {
-      debug('Stopped listening')
-    } else if (!wasListening && listening) {
-      debug('Started listening')
-    }
-  })
+function reportListening (listening) {
+  if (listening) {
+    debug('Started listening')
+  } else {
+    debug('Stopped listening')
+  }
 }
 
 async function stop () {
   try {
+    debug('Stopping...')
     await model.stop()
     process.exit()
   } catch (err) {

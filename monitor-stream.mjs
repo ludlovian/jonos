@@ -1,16 +1,14 @@
-import { get } from 'node:http'
 import process from 'node:process'
 import { flattie } from 'flattie'
 
-const url = process.argv[2]
-get(url, handleRequest)
+monitorStream(process.stdin)
 
-async function handleRequest (res) {
+async function monitorStream (stream) {
   process.on('SIGINT', stop)
 
-  res.setEncoding('utf8')
+  stream.setEncoding('utf8')
   let buffer = ''
-  for await (const chunk of res) {
+  for await (const chunk of stream) {
     buffer += chunk
     const messages = buffer.split('\n\n')
     buffer = messages.pop()
@@ -32,7 +30,6 @@ async function handleRequest (res) {
   }
 
   function stop () {
-    res.destroy()
     process.nextTick(() => process.exit(0))
   }
 }

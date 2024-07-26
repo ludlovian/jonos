@@ -47,6 +47,11 @@ export function route (url) {
   })
 }
 
+export function Redirect ({ url }) {
+  route(url)
+  return null
+}
+
 export function matches (pattern, url) {
   if (!url) url = $url.value
   const parms = {}

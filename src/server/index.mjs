@@ -1,20 +1,18 @@
 import polka from 'polka'
 import Debug from '@ludlovian/debug'
-import { config as globalConfig } from '@ludlovian/configure'
 
 import { staticFiles, parseBody, log, wrap, getPlayer } from './wares.mjs'
 
 import config from './config.mjs'
 import {
   apiStatus,
-  apiStatusUpdates,
+  apiPreset,
+  apiNotify,
   apiPlayerVolume,
-  apiPlayerLeader,
   apiPlayerPlay,
   apiPlayerPause,
+  apiPlayerLeader,
   apiPlayerLoad,
-  apiPlayerPreset,
-  apiPlayerNotifcation,
   apiSearch
 } from './api/index.mjs'
 import artwork from './artwork.mjs'
@@ -30,31 +28,35 @@ class Server {
 
   async start () {
     const p = (this.#polka = polka())
+    staticFiles.reset()
 
     // static files for client
     p.use(staticFiles(config.clientPath, ['/art', '/api']))
 
       // Artwork
-      .get('/art/:url', wrap(artwork))
+      .get('/art/:id', wrap(artwork))
 
       // API
       .use('/api', log, parseBody({ json: true }), getPlayer)
 
       // Status
-      .get('/api/status/updates', wrap(apiStatusUpdates))
       .get('/api/status', wrap(apiStatus))
 
       // Search
       .get('/api/search/:search', wrap(apiSearch))
 
+      // Preset
+      .post('/api/preset/:name', wrap(apiPreset))
+
+      // Notify
+      .post('/api/notify/:name', wrap(apiNotify))
+
       // Player
-      .post('/api/player/:name/volume', wrap(apiPlayerVolume))
-      .post('/api/player/:name/leader', wrap(apiPlayerLeader))
-      .post('/api/player/:name/pause', wrap(apiPlayerPause))
-      .post('/api/player/:name/play', wrap(apiPlayerPlay))
-      .post('/api/player/:name/load', wrap(apiPlayerLoad))
-      .post('/api/player/:name/preset', wrap(apiPlayerPreset))
-      .post('/api/player/:name/notify', wrap(apiPlayerNotifcation))
+      .post('/api/player/:player/volume', wrap(apiPlayerVolume))
+      .post('/api/player/:player/leader', wrap(apiPlayerLeader))
+      .post('/api/player/:player/pause', wrap(apiPlayerPause))
+      .post('/api/player/:player/play', wrap(apiPlayerPlay))
+      .post('/api/player/:player/load', wrap(apiPlayerLoad))
 
     // start listening
     await new Promise((resolve, reject) => {
@@ -65,8 +67,6 @@ class Server {
       })
       p.server.on('error', reject)
     })
-
-    staticFiles.onStart(globalConfig.jonosModelLibraryRoot)
   }
 }
 

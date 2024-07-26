@@ -8,6 +8,6 @@ main()
 
 function main () {
   const model = useModel()
-  model.start('/api/status/updates')
+  model.start('/api/status')
   render(h(App), document.body)
 }

@@ -1,11 +1,8 @@
-import { resolve } from 'node:path'
 import Debug from '@ludlovian/debug'
-import send from '@polka/send'
-import model from '@ludlovian/jonos-model'
 import _staticFile from '@ludlovian/static'
+import model from '@ludlovian/jonos-model'
 
 const writeToConsole = Debug('jonos*')
-const debug = Debug('jonos:server')
 
 export function staticFiles (root, except) {
   return _staticFile.serveFiles(root, {
@@ -13,15 +10,7 @@ export function staticFiles (root, except) {
     filter: path => except.some(e => path.startsWith(e))
   })
 }
-staticFiles.onStart = async root => {
-  root = resolve(root)
-  debug('Refreshing static files...')
-  await _staticFile.cache.refresh()
-  debug('Fetching cover art...')
-  const isCoverArt = name => name.endsWith('.jpg')
-  await _staticFile.cache.prefetch(root, isCoverArt)
-  debug('Static refresh complete')
-}
+staticFiles.reset = () => _staticFile.cache.reset()
 
 export function parseBody (opts = {}) {
   const { json = false, methods = ['POST'] } = opts
@@ -73,9 +62,12 @@ export function wrap (handler) {
 }
 
 export function getPlayer (req, res, next) {
-  if (req?.params?.name == null) return next()
-  const player = model.players.byName.get(req.params.name)
-  if (!player) return send(res, 404, 'Unknown player')
+  if (req?.params?.player == null) return next()
+  const player = model.byName[req.params.player]
+  if (!player) {
+    res.writeHead(404)
+    return res.end('Unknown player')
+  }
   req.player = player
   next()
 }

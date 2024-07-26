@@ -46,13 +46,13 @@ export function Search ({ $results }) {
   )
 }
 
-export function SearchResult ({ item, player }) {
+export function SearchResult ({ media, player }) {
   return (
     <Fragment>
       <Row class='mt-2'>
-        <Media item={item} />
+        <Media media={media} asAlbum />
       </Row>
-      <AddToQueue url={item.url} player={player} />
+      <AddToQueue url={media.url} player={player} />
     </Fragment>
   )
 }
