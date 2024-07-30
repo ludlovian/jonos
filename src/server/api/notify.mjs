@@ -41,9 +41,7 @@ export async function apiNotify (req, res) {
   await leader.playNotification(def.url)
 
   // reset volumes
-  await Promise.all(
-    members.map(m => model.byName[m.name].setVolume(m.volume))
-  )
+  await Promise.all(members.map(m => model.byName[m.name].setVolume(m.volume)))
 
   // and restart if needed
   if (wasPlaying && def.resume) await leader.play()
