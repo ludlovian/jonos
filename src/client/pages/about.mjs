@@ -3,9 +3,9 @@ import { h, Fragment } from 'preact'
 import { useModel } from '../components/index.mjs'
 
 export function About () {
-  const { system } = useModel()
+  const model = useModel()
+  const { players, system } = model
   if (!system) return null
-  const { players } = system
   return (
     <Fragment>
       <p class='text'>
@@ -18,8 +18,8 @@ export function About () {
       <hr />
       <h3>Players</h3>
       <dl>
-        {Object.entries(players).map(([name, p]) => (
-          <Fragment key={name}>
+        {players.map(p => (
+          <Fragment key={p.name}>
             <dt>{p.fullName}</dt>
             <dd>
               <small>{p.model}</small>

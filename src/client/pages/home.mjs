@@ -29,7 +29,7 @@ function GroupSummary ({ player }) {
   return (
     <Fragment>
       <Link href={`/player/${player.name}`}>
-        <Media media={player.current} player={player} />
+        <Media media={player.media} player={player} />
         <Players players={player.members} />
       </Link>
       <hr />

@@ -31,7 +31,8 @@ import { Row, Col } from './layout.mjs'
 
 export function Media (props) {
   const { media, player, children, ...rest } = props
-  const isPlaying = player && player.playing && player.current.id === media.id
+  if (!media) return null
+  const isPlaying = player && !!player.playing && player.media?.id === media.id
 
   return (
     <Row class='row pb-2'>
@@ -48,15 +49,17 @@ export function Media (props) {
 }
 
 function MediaBanner (props) {
-  const { media, asAlbum, ...rest } = props
+  const { media, player, asAlbum, ...rest } = props
   if (!media) return <NoMedia />
   const { type } = media
   if (type === 'tv') return <TVMedia />
-  if (type === 'radio') return <Radio media={media} />
+  if (type === 'radio') {
+    return <Radio media={media} nowStream={player?.nowStream} />
+  }
   if (type === 'web') return <WebStream media={media} />
   if (type === 'track') {
     if (asAlbum) return <Album media={media} {...rest} />
-    return <Track media={media} {...rest} />
+    return <Track media={media} player={player} {...rest} />
   }
 }
 
@@ -78,9 +81,9 @@ function TVMedia () {
   return <ThreeLines lines={['', 'TV']} />
 }
 
-function Radio ({ media }) {
-  const { title, nowPlaying } = media
-  return <ThreeLines lines={[title, 'Radio', nowPlaying]} />
+function Radio ({ media, nowStream }) {
+  const { title } = media
+  return <ThreeLines lines={[title, 'Radio', nowStream]} />
 }
 
 function WebStream ({ media }) {
@@ -118,7 +121,7 @@ function Tracks (props) {
       <TrackCollapseGroup
         id={tracks[0].id}
         tracks={tracks}
-        current={player?.current}
+        current={player?.media}
         player={player}
       />
     </Fragment>
@@ -143,15 +146,15 @@ function TrackExpandButton ({ id }) {
 }
 
 function TrackCollapseGroup (props) {
-  const { id, media, current, tracks, ...rest } = props
+  const { id, current, tracks, ...rest } = props
   return (
     <div class='collapse' id={`album-tracks-${id}`}>
       <ul class='small'>
-        {tracks.map(media => (
+        {tracks.map(track => (
           <TrackTitle
-            key={media.id}
-            media={media}
-            isCurrent={current && current.id === media.id}
+            key={track.id}
+            media={track}
+            isCurrent={current && current.id === track.id}
             {...rest}
           />
         ))}

@@ -25,7 +25,7 @@ importers:
         version: https://codeload.github.com/ludlovian/jonos-api/tar.gz/b7a3f885a97c7d85ee44498463a24a300581f5c6
       '@ludlovian/jonos-model':
         specifier: github:ludlovian/jonos-model
-        version: link:../jonos-model
+        version: link:../jonos-model2
       '@ludlovian/link-signals':
         specifier: github:ludlovian/link-signals
         version: https://codeload.github.com/ludlovian/link-signals/tar.gz/ce53caca8a9045b22f4d9cef8515455925167180(@preact/signals-core@1.7.0)

@@ -18,12 +18,17 @@ export async function apiStatus (req, res) {
     fn: () => res.write(':\n\n')
   })
 
-  const unsubscribe = model.subscribe(sendState, { depth: 3 })
+  const unsubscribe = model.subscribe(sendChanges)
   req.on('close', stop)
 
-  function sendState (state) {
-    const data = JSON.stringify(state)
-    res.write(`data: ${data}\n\n`)
+  function sendChanges (changes) {
+    const data =
+      changes
+        .map(change => JSON.stringify(change))
+        .map(data => 'data: ' + data)
+        .join('\n') + '\n\n'
+
+    res.write(data)
   }
 
   function stop () {

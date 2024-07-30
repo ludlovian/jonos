@@ -17,7 +17,7 @@ export function PlayerControl ({ player }) {
             icon='bi-play-fill'
             label='Play'
             onclick={() => player.play()}
-            disabled={!player.isLeader || !player.current || player.playing}
+            disabled={!player.isLeader || !player.media || !!player.playing}
           />
           <Button
             icon='bi-pause-fill'

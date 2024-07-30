@@ -13,7 +13,7 @@ async function main () {
 
   await server.start()
 
-  model.onListening(reportListening)
+  model.onListening = reportListening
 
   process.on('SIGINT', stop).on('SIGTERM', stop)
 }

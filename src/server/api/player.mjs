@@ -5,7 +5,7 @@ export async function apiPlayerVolume (req, res) {
   const { volume } = req.json
   if (typeof volume !== 'number') return send(res, 400)
 
-  await req.player.doTask('setVolume', volume)
+  await req.player.setVolume(volume)
   return send(res, 200)
 }
 
@@ -13,26 +13,26 @@ export async function apiPlayerLeader (req, res) {
   const { leader: name } = req.json
   if (!model.byName[name]) return send(res, 400)
   if (name === req.player.name) {
-    await req.player.doTask('startGroup')
+    await req.player.startGroup()
   } else {
-    await req.player.doTask('joinGroup', name)
+    await req.player.joinGroup(name)
   }
   return send(res, 200)
 }
 
 export async function apiPlayerPause (req, res) {
-  await req.player.doTask('pause')
+  await req.player.pause()
   return send(res, 200)
 }
 
 export async function apiPlayerPlay (req, res) {
-  await req.player.doTask('play')
+  await req.player.play()
   return send(res, 200)
 }
 
 export async function apiPlayerLoad (req, res) {
   const { url, opts } = req.json
-  await req.player.doTask('loadMedia', url, opts)
+  await req.player.loadMedia({ url, ...opts })
   return send(res, 200)
 }
 

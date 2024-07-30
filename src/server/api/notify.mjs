@@ -21,7 +21,7 @@ export async function apiNotify (req, res) {
   const leader = model.byName[name]
 
   // get their current state
-  sql = 'select * from playerEx where name=$name'
+  sql = 'select playing from playerEx where name=$name'
   const curr = db.get(sql, { name })
 
   // and members of their group with current volumes
@@ -30,23 +30,23 @@ export async function apiNotify (req, res) {
 
   // stop any current playing
   const wasPlaying = !!curr.playing
-  if (wasPlaying) await leader.doTask('pause')
+  if (wasPlaying) await leader.pause()
 
   // set all volumes
   await Promise.all(
-    members.map(m => model.byName[m.name].doTask('setVolume', def.volume))
+    members.map(m => model.byName[m.name].setVolume(def.volume))
   )
 
   // play the notification
-  await leader.doTask('notify', def.url, 30 * 1000)
+  await leader.playNotification(def.url)
 
   // reset volumes
   await Promise.all(
-    members.map(m => model.byName[m.name].doTask('setVolume', m.volume))
+    members.map(m => model.byName[m.name].setVolume(m.volume))
   )
 
   // and restart if needed
-  if (wasPlaying && def.resume) await leader.doTask('play')
+  if (wasPlaying && def.resume) await leader.play()
 
   res.writeHead(200)
   res.end()

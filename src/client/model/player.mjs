@@ -7,31 +7,35 @@ import { CIFS } from '@ludlovian/jonos-api/constants'
 import config from '../config.mjs'
 
 export default class Player {
-  #model
-  #prev = { volume: undefined }
+  parent
+  prev = { volume: undefined }
 
-  constructor (model, data = {}) {
-    this.#model = model
+  constructor (parent) {
+    this.parent = parent
 
     signalbox(this, {
       // core data
       id: undefined,
       name: '',
+      uuid: undefined,
       fullName: '',
+      url: '',
+      model: '',
       leaderName: '',
       volume: undefined,
       mute: undefined,
       playing: undefined,
-      repeat: undefined,
-      current: undefined,
+      media: undefined,
       queue: undefined,
+      nowStream: undefined,
 
       // derived
-      leader: () => this.model.byName[this.leaderName],
+      isLoading: () => !this.leaderName,
+      leader: () => this.parent.byName[this.leaderName],
       isLeader: () => this.leader === this,
       followers: () => {
         if (!this.isLeader) return null
-        const members = this.model.groups.get(this)
+        const members = this.parent.groups.get(this)
         return members.filter(p => p !== this).sort(sortBy('fullName'))
       },
       members: () => (this.isLeader ? [this, ...this.followers] : null),
@@ -44,16 +48,7 @@ export default class Player {
       fn: () => this.#updateVolume()
     })
 
-    this.onUpdate(data)
     effect(() => this.volumeBouncer.fire(this.volume))
-  }
-
-  get model () {
-    return this.#model
-  }
-
-  get players () {
-    return this.model.players
   }
 
   #groupedQueue () {
@@ -71,7 +66,7 @@ export default class Player {
         isCurrent = false
       }
       tracks.push(item)
-      if (item.id === this.current.id) {
+      if (item.id === this.media.id) {
         isCurrent = true
         media = item
       }
@@ -80,27 +75,20 @@ export default class Player {
     return groups
   }
 
-  onUpdate (data) {
-    for (const [key, val] of Object.entries(data)) {
-      if (key in this) this[key] = val
-      if (key in this.#prev) this.#prev[key] = val
-    }
-  }
-
   #updateVolume () {
-    if (this.model.error) return
-    if (this.volume === this.#prev.volume) return
+    if (this.parent.error) return
+    if (this.volume === this.prev.volume) return
     const url = `/api/player/${this.name}/volume`
     const data = { volume: this.volume }
-    this.#prev.volume = this.volume
-    this.model.postCommand(url, data)
+    this.prev.volume = this.volume
+    this.parent.postCommand(url, data)
   }
 
   async setLeader (leaderName) {
     if (leaderName === this.leaderName) return
     const url = `/api/player/${this.name}/leader`
     const data = { leader: leaderName }
-    await this.model.postCommand(url, data)
+    await this.parent.postCommand(url, data)
     this.leaderName = leaderName
   }
 
@@ -112,16 +100,16 @@ export default class Player {
       delete opts.add
     }
     const data = { url, opts }
-    await this.model.postCommand(commandUrl, data)
+    await this.parent.postCommand(commandUrl, data)
   }
 
   play () {
     const url = `/api/player/${this.name}/play`
-    return this.model.postCommand(url)
+    return this.parent.postCommand(url)
   }
 
   pause () {
     const url = `/api/player/${this.name}/pause`
-    return this.model.postCommand(url)
+    return this.parent.postCommand(url)
   }
 }

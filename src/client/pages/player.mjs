@@ -48,7 +48,7 @@ function PlayerTitle ({ player }) {
 function SummaryQueue ({ player }) {
   if (!player.hasQueue) {
     return (
-      <Media media={player.current} player={player}>
+      <Media media={player.media} player={player}>
         <PlayerControl player={player} />
       </Media>
     )
@@ -97,7 +97,7 @@ function GroupCommands ({ player }) {
     () => p.setLeader(p.name),
     false
   ])
-  const adds = player.model.players
+  const adds = player.parent.players
     .filter(p => p.leader !== player)
     .sort(sortBy('fullName'))
     .map(p => [`Add ${p.fullName}`, () => p.setLeader(player.name), true])

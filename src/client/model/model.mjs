@@ -5,7 +5,7 @@ import signalbox from '@ludlovian/signalbox'
 import sortBy from '@ludlovian/sortby'
 import Player from './player.mjs'
 
-const { fromEntries, entries } = Object
+const { fromEntries } = Object
 const fmtDate = tinydate('{DDD} {MMM} {D} {HH}:{mm}', {
   D: d => d.getDate(),
   MMM: d => d.toLocaleString('default', { month: 'short' }),
@@ -18,10 +18,12 @@ export default class Model {
     this.system = {}
 
     signalbox(this.system, {
-      version: undefined,
+      lastChange: 0,
       started: undefined,
+      version: undefined,
+      listeners: 0,
       listening: 0,
-      players: {},
+      jonosRefresh: 0,
       notifies: {},
       presets: {},
 
@@ -37,7 +39,8 @@ export default class Model {
 
       // derived
       byName: () => fromEntries(this.players.map(p => [p.name, p])),
-      isLoading: () => this.players.length === 0,
+      isLoading: () =>
+        this.players.length === 0 || this.players.some(p => p.isLoading),
       groups: () => Map.groupBy(this.players, p => this.byName[p.leaderName]),
       leaders: () =>
         this.players
@@ -51,31 +54,36 @@ export default class Model {
     this.error = err
   }
 
-  onUpdate (update) {
-    batch(() => {
-      if ('system' in update) {
-        for (const k in update.system) {
-          this.system[k] = update.system[k]
-        }
-      }
-
-      if ('players' in update) {
-        const { players } = update
-        for (const [name, data] of entries(players)) {
-          let player = this.byName[name]
-          if (!player) {
-            player = new Player(this, { name })
-            this.players = [...this.players, player]
-          }
-          player.onUpdate(data)
-        }
-      }
-    })
-  }
-
   start (url) {
     this.source = new window.EventSource(url)
-    this.source.onmessage = ({ data }) => this.onUpdate(JSON.parse(data))
+    this.source.onmessage = ({ data }) => this.onDataMessage(data)
+  }
+
+  onDataMessage (data) {
+    batch(() => {
+      for (let change of data.split('\n')) {
+        change = JSON.parse(change)
+        const [id, name, key, value_] = change
+        this.lastChange = id
+        let value = value_
+        if (isJSON(value)) value = JSON.parse(value)
+        let obj = name === 'system' ? this.system : this.byName[name]
+        if (!obj) {
+          const player = new Player(this)
+          player.name = name
+          this.players = [...this.players, player]
+          obj = player
+        }
+        if (key in obj) obj[key] = value
+        if (obj.prev && key in obj.prev) obj.prev[key] = value
+      }
+    })
+
+    function isJSON (x) {
+      return (
+        typeof x === 'string' && (x.charAt(0) === '{' || x.charAt(0) === '[')
+      )
+    }
   }
 
   fetchData (url) {
