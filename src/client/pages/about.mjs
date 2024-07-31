@@ -15,6 +15,9 @@ export function About () {
       <p>
         Server started: <small>{system.startTime}</small>
       </p>
+      <p>Listeners: {system.listeners}</p>
+      <p>Listening: {system.listening ? 'yes' : 'no'}</p>
+      <p>Refreshing: {system.jonosRefresh ? 'yes' : 'no'}</p>
       <hr />
       <h3>Players</h3>
       <dl>
