@@ -61,6 +61,7 @@ function MediaBanner (props) {
     if (asAlbum) return <Album media={media} {...rest} />
     return <Track media={media} player={player} {...rest} />
   }
+  return <NoMedia />
 }
 
 function ThreeLines ({ lines }) {
