@@ -43,7 +43,7 @@ async function transferMusicTo (leader) {
   if (isPlaying) return
 
   sql = `
-    select name, media, queue from playerEx
+    select name, media, queue from player
     where playing = true and isLeader = true
   `
   const curr = db.get(sql)
@@ -63,7 +63,7 @@ async function transferMusicTo (leader) {
 async function ensureGroup (leader, names) {
   const { db } = model
   names = new Set(names)
-  const sql = 'select name from playerEx where leaderName=$leaderName'
+  const sql = 'select name from player where leaderName=$leaderName'
   const curr = new Set(db.pluck.all(sql, { leaderName: leader.name }))
   const toGo = Array.from(curr).filter(name => !names.has(name))
   const toAdd = Array.from(names).filter(name => !curr.has(name))

@@ -23,7 +23,6 @@ export default class Model {
       version: undefined,
       listeners: 0,
       listening: 0,
-      jonosRefresh: 0,
       notifies: {},
       presets: {},
 

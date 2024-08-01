@@ -16,16 +16,16 @@ export async function apiNotify (req, res) {
   debug('notify(%s)', def.name)
 
   // get the real leader of the group
-  sql = 'select leaderName from playerEx where name=$name'
+  sql = 'select leaderName from player where name=$name'
   const name = db.pluck.get(sql, { name: def.leader })
   const leader = model.byName[name]
 
   // get their current state
-  sql = 'select playing from playerEx where name=$name'
+  sql = 'select playing from player where name=$name'
   const curr = db.get(sql, { name })
 
   // and members of their group with current volumes
-  sql = 'select name,volume from playerEx where leaderName=$name'
+  sql = 'select name,volume from player where leaderName=$name'
   const members = db.all(sql, { name })
 
   // stop any current playing
