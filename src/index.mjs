@@ -15,7 +15,7 @@ async function main () {
 
   model.onListening = reportListening
 
-  process.on('SIGINT', stop).on('SIGTERM', stop)
+  process.on('SIGINT', stop).on('SIGTERM', stop).on('SIGPIPE', stop)
 }
 
 function reportListening (listening) {
@@ -30,6 +30,7 @@ async function stop () {
   try {
     debug('Stopping...')
     await model.stop()
+    debug('Stopped')
     process.exit()
   } catch (err) {
     console.error(err)
