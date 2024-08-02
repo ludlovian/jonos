@@ -2,7 +2,6 @@ import Timer from '@ludlovian/timer'
 import model from '@ludlovian/jonos-model'
 
 import config from '../config.mjs'
-import { log } from '../wares.mjs'
 
 export async function apiStatus (req, res) {
   res.writeHead(200, {
@@ -10,7 +9,6 @@ export async function apiStatus (req, res) {
     Connection: 'keep-alive',
     'Content-Type': 'text/event-stream'
   })
-  log.writeLine(req, res)
 
   const tmHeartbeat = new Timer({
     ms: config.heartbeatPeriod,
