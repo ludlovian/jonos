@@ -1,7 +1,7 @@
 import polka from 'polka'
 import Debug from '@ludlovian/debug'
 
-import { staticFiles, parseBody, log, wrap, getPlayer } from './wares.mjs'
+import { staticFiles, parseBody, wrap, getPlayer } from './wares.mjs'
 
 import config from './config.mjs'
 import {
@@ -37,7 +37,7 @@ class Server {
       .get('/art/:id', wrap(artwork))
 
       // API
-      .use('/api', log, parseBody({ json: true }), getPlayer)
+      .use('/api', parseBody({ json: true }), getPlayer)
 
       // Status
       .get('/api/status', wrap(apiStatus))
