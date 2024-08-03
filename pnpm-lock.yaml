@@ -25,7 +25,7 @@ importers:
         version: https://codeload.github.com/ludlovian/jonos-api/tar.gz/d4349033d81c998b320f600fb3af2a10a27392eb
       '@ludlovian/jonos-model':
         specifier: github:ludlovian/jonos-model
-        version: https://codeload.github.com/ludlovian/jonos-model/tar.gz/ac8e48ca1325575d7785f67e43bc80eb21a258a4(better-sqlite3@11.1.2)
+        version: https://codeload.github.com/ludlovian/jonos-model/tar.gz/f5dd694f8bffbddbe6d3c34963028dd4443f16e1(better-sqlite3@11.1.2)
       '@ludlovian/link-signals':
         specifier: github:ludlovian/link-signals
         version: https://codeload.github.com/ludlovian/link-signals/tar.gz/ce53caca8a9045b22f4d9cef8515455925167180(@preact/signals-core@1.7.0)
@@ -279,9 +279,10 @@ packages:
     resolution: {tarball: https://codeload.github.com/ludlovian/jonos-api/tar.gz/d4349033d81c998b320f600fb3af2a10a27392eb}
     version: 0.7.6
 
-  '@ludlovian/jonos-model@https://codeload.github.com/ludlovian/jonos-model/tar.gz/ac8e48ca1325575d7785f67e43bc80eb21a258a4':
-    resolution: {tarball: https://codeload.github.com/ludlovian/jonos-model/tar.gz/ac8e48ca1325575d7785f67e43bc80eb21a258a4}
-    version: 0.7.1
+  '@ludlovian/jonos-model@https://codeload.github.com/ludlovian/jonos-model/tar.gz/f5dd694f8bffbddbe6d3c34963028dd4443f16e1':
+    resolution: {tarball: https://codeload.github.com/ludlovian/jonos-model/tar.gz/f5dd694f8bffbddbe6d3c34963028dd4443f16e1}
+    version: 0.7.3
+    hasBin: true
 
   '@ludlovian/link-signals@https://codeload.github.com/ludlovian/link-signals/tar.gz/ce53caca8a9045b22f4d9cef8515455925167180':
     resolution: {tarball: https://codeload.github.com/ludlovian/link-signals/tar.gz/ce53caca8a9045b22f4d9cef8515455925167180}
@@ -1375,7 +1376,7 @@ snapshots:
       '@ludlovian/timer': https://codeload.github.com/ludlovian/timer/tar.gz/fa5cf51fba00f2715de2b182d1d546d7a8cbe883
       '@lukeed/ms': 2.0.2
 
-  '@ludlovian/jonos-model@https://codeload.github.com/ludlovian/jonos-model/tar.gz/ac8e48ca1325575d7785f67e43bc80eb21a258a4(better-sqlite3@11.1.2)':
+  '@ludlovian/jonos-model@https://codeload.github.com/ludlovian/jonos-model/tar.gz/f5dd694f8bffbddbe6d3c34963028dd4443f16e1(better-sqlite3@11.1.2)':
     dependencies:
       '@ludlovian/configure': https://codeload.github.com/ludlovian/configure/tar.gz/bbd23d329e3b15a09e5953940ee81486a0d1465c
       '@ludlovian/debug': https://codeload.github.com/ludlovian/debug/tar.gz/720a2f06021239565dd0b62aa823fd8741705a30
