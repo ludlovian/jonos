@@ -52,7 +52,12 @@ export function Choice (props) {
 
   return (
     <div class={clsx(klass, 'input-group')}>
-      <ChoiceSelect choices={choices} $current={$current} $enabled={$enabled} />
+      <ChoiceSelect
+        name={label}
+        choices={choices}
+        $current={$current}
+        $enabled={$enabled}
+      />
       <Button
         label={label}
         onclick={disabled ? undefined : onclick}
@@ -63,7 +68,7 @@ export function Choice (props) {
   )
 }
 
-function ChoiceSelect ({ choices, $current, $enabled }) {
+function ChoiceSelect ({ name, choices, $current, $enabled }) {
   const disabled = !$enabled.value
   const options = choices.map((choice, ix) => {
     const { icon, label } = choice.props
@@ -81,6 +86,7 @@ function ChoiceSelect ({ choices, $current, $enabled }) {
 
   return (
     <select
+      name={name}
       class='form-select'
       oninput={!disabled ? oninput : undefined}
       disabled={disabled}
