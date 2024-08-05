@@ -25,7 +25,7 @@ importers:
         version: https://codeload.github.com/ludlovian/jonos-api/tar.gz/d4349033d81c998b320f600fb3af2a10a27392eb
       '@ludlovian/jonos-model':
         specifier: github:ludlovian/jonos-model
-        version: https://codeload.github.com/ludlovian/jonos-model/tar.gz/cc444bf2134152dac2a3cd4b65183f2c3556c32c(better-sqlite3@11.1.2)
+        version: https://codeload.github.com/ludlovian/jonos-model/tar.gz/9ad0a1d1d8526979cbdf75ae78febd79e04cc454(better-sqlite3@11.1.2)
       '@ludlovian/link-signals':
         specifier: github:ludlovian/link-signals
         version: https://codeload.github.com/ludlovian/link-signals/tar.gz/ce53caca8a9045b22f4d9cef8515455925167180(@preact/signals-core@1.8.0)
@@ -279,9 +279,9 @@ packages:
     resolution: {tarball: https://codeload.github.com/ludlovian/jonos-api/tar.gz/d4349033d81c998b320f600fb3af2a10a27392eb}
     version: 0.7.6
 
-  '@ludlovian/jonos-model@https://codeload.github.com/ludlovian/jonos-model/tar.gz/cc444bf2134152dac2a3cd4b65183f2c3556c32c':
-    resolution: {tarball: https://codeload.github.com/ludlovian/jonos-model/tar.gz/cc444bf2134152dac2a3cd4b65183f2c3556c32c}
-    version: 0.7.4
+  '@ludlovian/jonos-model@https://codeload.github.com/ludlovian/jonos-model/tar.gz/9ad0a1d1d8526979cbdf75ae78febd79e04cc454':
+    resolution: {tarball: https://codeload.github.com/ludlovian/jonos-model/tar.gz/9ad0a1d1d8526979cbdf75ae78febd79e04cc454}
+    version: 0.7.5
     hasBin: true
 
   '@ludlovian/link-signals@https://codeload.github.com/ludlovian/link-signals/tar.gz/ce53caca8a9045b22f4d9cef8515455925167180':
@@ -608,8 +608,8 @@ packages:
     resolution: {integrity: sha512-zhaCDicdLuWN5UbN5IMnFqNMhNfo919sH85y2/ea+5Yg9TsTkeZxpL+JLbp6cgYFS4sRLp3YV4S6yDuqVWHYOw==}
     engines: {node: '>=6'}
 
-  caniuse-lite@1.0.30001647:
-    resolution: {integrity: sha512-n83xdNiyeNcHpzWY+1aFbqCK7LuLfBricc4+alSQL2Xb6OR3XpnQAmlDG+pQcdTfiHRuLcQ96VOfrPSGiNJYSg==}
+  caniuse-lite@1.0.30001649:
+    resolution: {integrity: sha512-fJegqZZ0ZX8HOWr6rcafGr72+xcgJKI9oWfDW5DrD7ExUtgZC7a7R7ZYmZqplh7XDocFdGeIFn7roAxhOeYrPQ==}
 
   chalk@2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
@@ -1376,7 +1376,7 @@ snapshots:
       '@ludlovian/timer': https://codeload.github.com/ludlovian/timer/tar.gz/fa5cf51fba00f2715de2b182d1d546d7a8cbe883
       '@lukeed/ms': 2.0.2
 
-  '@ludlovian/jonos-model@https://codeload.github.com/ludlovian/jonos-model/tar.gz/cc444bf2134152dac2a3cd4b65183f2c3556c32c(better-sqlite3@11.1.2)':
+  '@ludlovian/jonos-model@https://codeload.github.com/ludlovian/jonos-model/tar.gz/9ad0a1d1d8526979cbdf75ae78febd79e04cc454(better-sqlite3@11.1.2)':
     dependencies:
       '@ludlovian/configure': https://codeload.github.com/ludlovian/configure/tar.gz/bbd23d329e3b15a09e5953940ee81486a0d1465c
       '@ludlovian/debug': https://codeload.github.com/ludlovian/debug/tar.gz/720a2f06021239565dd0b62aa823fd8741705a30
@@ -1641,7 +1641,7 @@ snapshots:
 
   browserslist@4.23.3:
     dependencies:
-      caniuse-lite: 1.0.30001647
+      caniuse-lite: 1.0.30001649
       electron-to-chromium: 1.5.4
       node-releases: 2.0.18
       update-browserslist-db: 1.1.0(browserslist@4.23.3)
@@ -1655,7 +1655,7 @@ snapshots:
 
   builtin-modules@3.3.0: {}
 
-  caniuse-lite@1.0.30001647: {}
+  caniuse-lite@1.0.30001649: {}
 
   chalk@2.4.2:
     dependencies:
