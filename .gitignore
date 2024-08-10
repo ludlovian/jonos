@@ -3,4 +3,4 @@ coverage/
 dist/
 library/files
 db/*.db*
-
+*.env
