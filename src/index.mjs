@@ -18,7 +18,6 @@ async function main () {
   process
     .on('SIGINT', stop)
     .on('SIGTERM', stop)
-    .on('SIGPIPE', stop)
 }
 
 function reportListening (listening) {
