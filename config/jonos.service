@@ -5,10 +5,8 @@ After=network.target
 [Service]
 User=alan
 WorkingDirectory=/home/alan/dev/jonos
-Environment=NODE_ENV=production
-Environment=DEBUG=jonos:*
-Environment=DEBUG_HIDE_DATE=1
-ExecStart=/usr/local/bin/npm start
+Environment=PATH=/home/alan/bin:/home/alan/.local/share/pnpm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games:/home/alan/n/bin
+ExecStart=sh -c 'npm run start:prod'
 
 [Install]
 WantedBy=multi-user.target
