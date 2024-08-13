@@ -15,9 +15,7 @@ async function main () {
 
   model.onListening = reportListening
 
-  process
-    .on('SIGINT', stop)
-    .on('SIGTERM', stop)
+  process.on('SIGINT', stop).on('SIGTERM', stop)
 }
 
 function reportListening (listening) {
